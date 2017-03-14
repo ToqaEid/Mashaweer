@@ -13,4 +13,10 @@
         completions."
     </string>
     <string name="title_activity_sigup">Sign up</string>
+    <!-- Strings related to register -->
+    <!-- Strings related to home -->
+    <!-- Strings related to trip add / edit-->
+    <!-- Strings related to trip details -->
+    <!-- Strings related to trip history -->
+
 </resources>
