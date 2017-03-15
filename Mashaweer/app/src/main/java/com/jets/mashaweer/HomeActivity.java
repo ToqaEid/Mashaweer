@@ -1,12 +1,14 @@
 package com.jets.mashaweer;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
-public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener {
+public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator{
 
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
@@ -69,6 +71,17 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void sendMsg(int tripId) {
+
+        Toast.makeText(this, "Going To "+ tripId +" TripDetails", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
+        intent.putExtra("tripId", tripId);
+        startActivity(intent);
 
     }
 }
