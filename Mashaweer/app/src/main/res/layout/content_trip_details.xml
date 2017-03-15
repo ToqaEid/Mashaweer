@@ -15,9 +15,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingLeft="@dimen/details_status_padding_left"
+            android:paddingTop="@dimen/details_status_padding_top"
+            android:paddingBottom="@dimen/details_status_padding_bottom"
             android:text="UpComming"
             android:backgroundTint="?android:attr/colorControlNormal"
             android:background="@android:color/darker_gray" />
@@ -30,9 +30,9 @@
             <RelativeLayout
                 android:id="@+id/layoutTop"
                 app:layout_widthPercent="50%"
-                android:layout_height="150dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="19dp"
+                android:layout_height="@dimen/details_from_place_relative_padding_height"
+                android:paddingLeft="@dimen/details_from_place_relative_padding_left"
+                android:paddingRight="@dimen/details_from_place_relative_padding_right"
                 android:layout_alignParentLeft="true"
                 android:background="@drawable/trip_details_border">
 
@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Information Technology Institute, SmartVillage, Cairo, Egypt."
-                    android:textSize="16sp"
+                    android:textSize="@dimen/details_from_place_text_size"
                     android:gravity="center_vertical|center_horizontal"/>
             </RelativeLayout>
 

@@ -12,12 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jets.classes.Trip;
+
 public class TripDetails extends AppCompatActivity {
 
+    Intent previousIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_details2);
+
+//        previousIntent = getIntent();
+//        Trip trip = previousIntent.getParcelableExtra("trip");
+//        trip.getName();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Cairo");
         setSupportActionBar(toolbar);

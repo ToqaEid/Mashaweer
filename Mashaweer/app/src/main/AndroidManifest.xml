@@ -2,19 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jets.mashaweer">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <!-- *** PERMISSIONS *** -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- End of Permissions -->
 
     <application
         android:allowBackup="true"
@@ -22,35 +18,52 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- *** SplashScreenAvtivity *** -->
         <activity android:name=".SplashScreenAvtivity">
+
+        </activity>
+        <!-- End of SplashScreenAvtivity -->
+
+        <!-- *** LoginActivity *** -->
+        <activity android:name=".LoginActivity" />
+        <!-- End of LoginActivity -->
+
+        <!-- *** SignupActivity *** -->
+        <activity android:name=".SignupActivity"
+            android:label="@string/title_activity_sigup" />
+        <!-- End of SignupActivity -->
+
+        <!-- *** HomeActivity *** -->
+        <activity android:name=".HomeActivity" />
+        <!-- End of HomeActivity -->
+
+        <!-- *** HistoryActivity *** -->
+        <activity android:name=".HistoryActivity"
+            android:label="@string/title_activity_history" >
+        </activity>
+        <!-- End of HistoryActivity -->
+
+        <!-- *** TripAddActivity *** -->
+        <activity android:name=".TripAddActivity" />
+        <!-- End of TripAddActivity -->
+
+        <!-- *** TripEditActivity *** -->
+        <activity android:name=".TripEditActivity" />
+        <!-- End of TripEditActivity -->
+
+        <!-- *** TripDetails *** -->
+        <activity android:name=".TripDetails"
+            android:label="@string/title_activity_trip_details"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity
-            android:name=".SigupActivity"
-            android:label="@string/title_activity_sigup" />
-        <activity android:name=".HomeActivity" />
-        <activity
-            android:name=".HistoryActivity"
-            android:label="@string/title_activity_history" >
+        <!-- End of TripDetails -->
 
-        </activity>
-        <activity android:name=".TripAddActivity" />
-        <activity android:name=".TripEditActivity" />
-        <activity
-            android:name=".TripDetails"
-            android:label="@string/title_activity_trip_details"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- *** META-DATA *** -->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -59,9 +72,9 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
+        <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <!-- End of meta-data -->
     </application>
 
 </manifest>
