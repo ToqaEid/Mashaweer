@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
         Toast.makeText(this, "Going To "+ tripId +" TripDetails", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
+        Intent intent = new Intent(getApplicationContext(),TripDetails.class);
         intent.putExtra("tripId", tripId);
         startActivity(intent);
 
