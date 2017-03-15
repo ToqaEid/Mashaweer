@@ -105,7 +105,9 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="action_delete">Delete</string>
+    <string name="action_done">Done</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_history">Map</string>
     <!-- Strings related to register -->
     <!-- Strings related to home -->
     <!-- Strings related to trip add / edit-->

@@ -19,6 +19,7 @@ public class TripDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_details2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Cairo");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
@@ -31,10 +32,11 @@ public class TripDetails extends AppCompatActivity {
         });
 
         FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(TripDetails.this, HistoryActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -52,10 +54,17 @@ public class TripDetails extends AppCompatActivity {
             case R.id.action_delete:
                 deleteTrip();
                 return true;
+            case R.id.action_done:
+                doneTrip();
+                return true;
             
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void doneTrip() {
+        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
     }
 
     private void deleteTrip() {
