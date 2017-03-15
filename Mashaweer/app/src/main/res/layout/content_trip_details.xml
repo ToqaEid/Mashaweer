@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.jets.mashaweer.TripDetails"
+    tools:showIn="@layout/activity_trip_details2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.percent.PercentRelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/layoutTop"
+                app:layout_widthPercent="50%"
+                android:layout_height="150dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="19dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/trip_details_border">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Information Technology Institute, SmartVillage, Cairo, Egypt."
+                    android:textSize="16sp"
+                    android:gravity="center_vertical|center_horizontal"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layoutBottom"
+                app:layout_widthPercent="50%"
+                android:layout_height="150dp"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="19dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/trip_details_border">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="7th district, Obour City"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical|center_horizontal" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/overlapImage"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_above="@id/layoutBottom"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="-100dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/car"
+                />
+            <!-- This should be always half the height, can also be calculated and added programtically -->
+
+        </android.support.percent.PercentRelativeLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/dateLayout"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:background="@drawable/trip_details_time_border"
+                android:weightSum="4">
+
+                    <TextView
+                        android:text="Monday 7th Sep 2016"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/textView6" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        android:layout_weight="3"
+                        android:weightSum="2"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:text="7:00"
+                            android:textStyle="bold"
+                            android:textSize="38sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="20dp"
+                            android:id="@+id/textView7"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal|right"/>
+                        <TextView
+                            android:text="AM"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center_horizontal|left|top"
+                            android:id="@+id/textView8"
+                            android:layout_weight="1.25"
+                            />
+
+                    </LinearLayout>
+
+
+
+            </LinearLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dateLayout"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentBottom="true"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.NestedScrollView>
