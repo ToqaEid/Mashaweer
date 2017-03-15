@@ -1,9 +1,11 @@
 package com.jets.mashaweer;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,7 @@ import android.widget.Toast;
 public class UpcomingTripsFragment extends Fragment {
 
     private ListView upcoming_listView;
-
+    private Communicator communicator;
     public UpcomingTripsFragment() {
         // Required empty public constructor
     }
@@ -35,7 +37,9 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        Log.i("MyTag","OnCreateView");
+
         View rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
 
         upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
@@ -79,11 +83,17 @@ public class UpcomingTripsFragment extends Fragment {
 
         UpcomingCustomAdapter adapter = new UpcomingCustomAdapter(getContext(),tripNames, tripDatesTimes, tripRoundType );
         upcoming_listView.setAdapter(adapter);
-
+        Log.i("MyTag","Adapter is set");
         upcoming_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              //  Toast.makeText(MainActivity.this,  upcoming_listView.getAdapter().getItem(position).toString() , Toast.LENGTH_SHORT).show();
+                Log.i("MyTag",  "---Position = " + position);
+               Toast.makeText(getActivity(),  "Position = " + position, Toast.LENGTH_SHORT).show();
+                Log.i("MyTag",  "+++Position = " + position);
+
+              communicator.sendMsg(position);
+
+
             }
         });
 
@@ -91,4 +101,11 @@ public class UpcomingTripsFragment extends Fragment {
         return rootView;
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        communicator = (Communicator) getActivity();
+    }
 }
