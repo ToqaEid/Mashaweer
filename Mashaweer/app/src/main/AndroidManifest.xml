@@ -5,54 +5,64 @@
     <!-- *** PERMISSIONS *** -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <!-- End of Permissions -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- End of Permissions -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name=".SplashScreenAvtivity">
 
-        </activity>
+        <!-- *** SplashScreenAvtivity *** -->
+        <activity android:name=".SplashScreenAvtivity"></activity>
         <!-- End of SplashScreenAvtivity -->
+
 
         <!-- *** LoginActivity *** -->
         <activity android:name=".LoginActivity" />
         <!-- End of LoginActivity -->
 
+
         <!-- *** SignupActivity *** -->
-        <activity android:name=".SignupActivity"
+        <activity
+            android:name=".SignupActivity"
             android:label="@string/title_activity_sigup" />
         <!-- End of SignupActivity -->
+
 
         <!-- *** HomeActivity *** -->
         <activity android:name=".HomeActivity" />
         <!-- End of HomeActivity -->
 
+
         <!-- *** HistoryActivity *** -->
-        <activity android:name=".HistoryActivity"
-            android:label="@string/title_activity_history" >
-        </activity>
+        <activity
+            android:name=".HistoryActivity"
+            android:label="@string/title_activity_history"></activity>
         <!-- End of HistoryActivity -->
+
 
         <!-- *** TripAddActivity *** -->
         <activity android:name=".TripAddActivity" />
         <!-- End of TripAddActivity -->
 
+
         <!-- *** TripEditActivity *** -->
         <activity android:name=".TripEditActivity" />
         <!-- End of TripEditActivity -->
 
+
         <!-- *** TripDetails *** -->
-        <activity android:name=".TripDetails"
+        <activity
+            android:name=".TripDetails"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -63,6 +73,11 @@
         </activity>
         <!-- End of TripDetails -->
 
+        <!-- *** ReminderActivity *** -->
+        <activity android:name=".ReminderActivity"
+            android:theme="@android:style/Theme.Holo.Dialog"></activity>
+        <!-- End of ReminderActivity -->
+
         <!-- *** META-DATA *** -->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -72,9 +87,16 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <meta-data android:name="com.google.android.geo.API_KEY"
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <!-- End of meta-data -->
+
+
+        <!-- *** RECEIVERS *** -->
+        <receiver android:name="com.jets.classes.Alarm"></receiver>
+        <!-- End of Receivers -->
+
     </application>
 
 </manifest>
