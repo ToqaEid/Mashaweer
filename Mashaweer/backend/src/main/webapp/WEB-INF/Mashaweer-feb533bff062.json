@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mashaweer-161817",
+  "private_key_id": "feb533bff062f8ad9da6e7a2cd0d358383dc301f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC8rrMjsi7VxjgY\ng9LZpNUgFhmKSQ2h2tpL5gLBs3+0XrTpdBJ1BPKIkZbEI4V/IWC1BTmUN0VeftVA\nPvFYbET6oyjeNx7EngrT+E5+e6hfWcx3BP13i6F9H6YcEDhmozUXdqrOs/Inwf8w\n2meHTt1b3GOyd+7M15JXL/uV5w6MR+1vXGydjyQ9x1+rHZ9O1eB1cI7a5KPyjlHs\nzDjpxCZja7Sxpv+a+mMPuag8758wW2uuGJAnblDzETvOwbSRbwmKadbrQkRcnHvR\nxF1Z86ubMy3aOt2hSKF0aI3SENgAPOGbmDzqbjWBtlADgeFQCvxwOEwLIvx60nL+\nw/nzhNJ7AgMBAAECggEBAJl3WvuIvTFhdVTzO7eMq1DayNFCVBU2xeF/5vQYBKH3\nehx8LVsCuCY+jKth3P4nbtotssSMJB8U+Gy2BWWPQpe9x8reeGchyNraFzYnbC6K\nApU3+NWYO7Ri3p/qzYUl8FPyUEGp+Sc/UkoxCo3ypndGDc0mYZQ5Lq09uNsXQSz1\nGeY7bV4h5sg+7544joo2tsx865lBr4lixfRu4ieHy2qrA8QddtuWimxK9IFPyT6Z\nwpDOZuE4ZhRydVjbulKUL3ssh79AHNUIclDuPM94aArdd8leJrMxl0D/3RCPZbHl\ncqeIJo/A+Sgi+3uUDDk9hebVAOFc4BqS7SACOn9MLjkCgYEA6FRs6xukCOl0E+ys\nAxhXZ6jO7qrQ3lm5JSPNIOSFZrnybT/X2kzOATNKvsD0VaMWfzt7+DbbsPBaBl38\ninlb6UNloGfpXlG9695klvwHGpyZ2XEsybYmcpE8knA9yDr02hjFhkkXgssHyfQn\nNITE2+7+7l9B8RdUASyLx2WfU38CgYEAz+ffjvxOKOfO60PEPnpPRH0t5fLlaytf\nGQgAfRGo8p/cnOt06SS/2+UK205O1G9ZbMdcywprMw+H9RqgXwf1r6fl9Q4rpM3M\nflGWgYiIAhL4CuJUTiDpPfDIG5h5q6VIAeqI/mjc5qmKkZy6qh4dRpoKESQXyVn1\n8XHJkrVcTwUCgYEA1uRQIl7cqMmWbl948xvurJi9XpBsxV1kHPAyafw1T8EqdNaa\nhvaHjSCuQCYlWZiR1Hlmvz2uksid3EnOrx51XxrRwz6Z4n3lF2gKzoSq5Xh37WH7\nNU/f3BRuXFypKK0vkRNckErHDllRCQFlyfQMSgmTj1RYn/Ed6EAVwgdDCW0CgYAS\n4owTD+YFnzDTe/9acX+7x+cgaRTfzDvCKVDqC22eRFkkw9qFxvnKfp6i1xUgBNFJ\nqT5LjzG3nKSL5hRFLZLqlsSzosriGHOH0d9q+rzn+1MeofpocmLdZn62yv3aUpQc\n4HH7MglGxoW4vlTSWRPtstZRQkcK2ioV+XEG64RsBQKBgC2GtgnnLejnWEK0CtJq\nZLUBwVDCJ6/WqT4WWF05WjtvaRHalmCudCX13YUuhEO7UKyUcbVy2c7r/Cl3DscP\nuVjtzw+C+n5VlJaGu5JyC8WXQ4U3xiUqEHIGEN3w8b+/3fftw8NFhiqRVn77Xl0z\nwNyQP3mbpnTEZwFMm3aeapKn\n-----END PRIVATE KEY-----\n",
+  "client_email": "mashaweer-backend@mashaweer-161817.iam.gserviceaccount.com",
+  "client_id": "110403717314451388505",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mashaweer-backend%40mashaweer-161817.iam.gserviceaccount.com"
+}

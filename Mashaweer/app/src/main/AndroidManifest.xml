@@ -21,13 +21,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name=".SplashScreenAvtivity"></activity>
+        <activity android:name=".SplashScreenAvtivity" />
         <!-- End of SplashScreenAvtivity -->
 
 
         <!-- *** LoginActivity *** -->
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!-- End of LoginActivity -->
 
 
@@ -46,7 +54,7 @@
         <!-- *** HistoryActivity *** -->
         <activity
             android:name=".HistoryActivity"
-            android:label="@string/title_activity_history"></activity>
+            android:label="@string/title_activity_history" />
         <!-- End of HistoryActivity -->
 
 
@@ -65,18 +73,17 @@
             android:name=".TripDetails"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- End of TripDetails -->
 
+
         <!-- *** ReminderActivity *** -->
-        <activity android:name=".ReminderActivity"
-            android:theme="@android:style/Theme.Holo.Dialog"></activity>
+        <activity
+            android:name=".ReminderActivity"
+            android:theme="@android:style/Theme.Holo.Dialog" />
         <!-- End of ReminderActivity -->
+
 
         <!-- *** META-DATA *** -->
         <!--
@@ -94,7 +101,7 @@
 
 
         <!-- *** RECEIVERS *** -->
-        <receiver android:name="com.jets.classes.Alarm"></receiver>
+        <receiver android:name="com.jets.classes.Alarm" />
         <!-- End of Receivers -->
 
     </application>

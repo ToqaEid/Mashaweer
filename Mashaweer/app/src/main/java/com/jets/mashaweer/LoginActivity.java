@@ -1,22 +1,13 @@
 package com.jets.mashaweer;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +17,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.jets.classes.VolleySingleton;
 import com.jets.constants.Alert;
 import com.jets.constants.SharedPreferenceInfo;
@@ -34,12 +34,13 @@ import com.jets.constants.URLs;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A login screen that offers login via email/password.
@@ -51,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.button_facebook_login) com.facebook.login.widget.LoginButton _fbLogin;
+
+    //Firebase Auth object
+    private FirebaseAuth auth;
+    private CallbackManager mCallbackManager;
 
     //error titles and msgs
     private final String ERROR_LOGIN_DIALOG_TITLE = "Error Login";
@@ -71,16 +77,29 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        //Get Firebase auth instance
+        auth = FirebaseAuth.getInstance();
+
+        //Method to sign in automatically if the user has already signed in
+//                if (auth.getCurrentUser() != null) {
+//                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//                    finish();
+//                }
+
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        // Set up the login form.
+
+        mCallbackManager = CallbackManager.Factory.create();
+
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //TODO: implement login authentication in login method
-                //login();
+
+                login();
             }
         });
 
@@ -96,11 +115,48 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        _fbLogin.setReadPermissions("email", "public_profile");
+        _fbLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.i("3lama", "Inside the success method");
+                AccessToken token = loginResult.getAccessToken();
+                AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                auth.signInWithCredential(credential)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (!task.isSuccessful()){
+                                    Toast.makeText(LoginActivity.this, "Failed SignIn", Toast.LENGTH_SHORT).show();
+                                    Log.i("3lama", "Failure facebook");
+                                }else{
+                                    onLoginSuccess();
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    Toast.makeText(LoginActivity.this, "Successfull signIn", Toast.LENGTH_SHORT).show();
+                                    Log.i("3lama", "success facebook");
+                                }
+                            }
+                        });
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.i("3lama", "error facebook");
+            }
+        });
+
     }
 
     @Override
     public void onBackPressed() {
-        //TODO: exit application on back pressed in this view
         // Disable going back to the MainActivity
         moveTaskToBack(true);
     }
@@ -110,22 +166,24 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
-                // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
                 this.finish();
+                return;
             }
         }
+
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     //Helper Classes
     public void login() {
 
+        _loginButton.setEnabled(false);
+
         if (!validate()) {
             onLoginFailed();
             return;
         }
-
-        _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme);// TODO: add appTheme_Dark_Dialog theme
@@ -136,27 +194,40 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
+
+        //authenticate user
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                            onLoginFailed();
+                            progressDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "Sign In failed", Toast.LENGTH_LONG).show();
+                        } else {
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
-                }, 3000);
+                });
+
     }
 
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(false);
+        _fbLogin.setEnabled(false);
         finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }
@@ -174,8 +245,8 @@ public class LoginActivity extends AppCompatActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 6 || password.length() > 20) {
+            _passwordText.setError("Too short password");
             valid = false;
         } else {
             _passwordText.setError(null);
