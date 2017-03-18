@@ -9,45 +9,58 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jets.classes.Trip;
+
+import java.util.ArrayList;
+
 /**
  * Created by mohamed on 04/03/2017.
  */
 
-public class UpcomingCustomAdapter extends ArrayAdapter<String> {
+public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
 
-    private String [] tripNames;
-    private String [] tripDatesAndTime;
-    private String [] RoundOrNot;
+    private ArrayList<Trip> trips;
 
     private Context context;
 
-    public UpcomingCustomAdapter(Context context, String [] tripNames, String [] tripDatesAndTime, String [] RoundOrNot) {
-        super(context, R.layout.list_item_upcoming, R.id.upcoming_tripName, tripNames);
+    public UpcomingCustomAdapter(Context context, ArrayList<Trip> trips) {
+        super(context, R.layout.list_item_upcoming, R.id.upcoming_tripName, trips);
         this.context = context;
-        this.tripNames = tripNames;
-        this.tripDatesAndTime = tripDatesAndTime;
-        this.RoundOrNot = RoundOrNot;
+
+        this.trips = trips;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = convertView;
+        UpcomingListViewHolder holder;
 
-        View view = layoutInflater.inflate(R.layout.list_item_upcoming, parent, false);
 
-        TextView tv_tripName = (TextView) view.findViewById(R.id.upcoming_tripName);
-        TextView tv_tripDate = (TextView) view.findViewById(R.id.upcoming_tripDate);
-        TextView tv_tripTime = (TextView) view.findViewById(R.id.upcoming_tripTime);
-        TextView tv_tripType = (TextView) view.findViewById(R.id.upcoming_tripType);
+        if (rowView == null)
+        {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        tv_tripName.setText(   tripNames[position]   );
-        tv_tripDate.setText(  tripDatesAndTime[position].split(",")[1]   );
-        tv_tripTime.setText(    tripDatesAndTime[position].split(",")[0]   );
-        tv_tripType.setText(  RoundOrNot[position]   );
+            rowView = layoutInflater.inflate(R.layout.list_item_upcoming, parent, false);
 
-        return  view;
+            holder = new UpcomingListViewHolder(rowView);
+
+            rowView.setTag(holder);
+
+        }
+        else{
+
+                holder = (UpcomingListViewHolder) rowView.getTag();
+        }
+
+
+        holder.getTripName_tv().setText(   trips.get(position).getTripTitle()   );
+        holder.getTripDate_tv().setText(  (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[0] +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[1]  );
+        holder.getTripTime_tv().setText(    trips.get(position).getTripDateTime().split(" ")[1]  );
+        holder.getTripType_tv().setText(  trips.get(position).getTripType() + ""   );
+
+        return  rowView;
     }
 
 
