@@ -12,8 +12,16 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="sever_error_email_title">Incorrect Email</string>
+    <string name="sever_error_email_msg">The email you entered does not appear to belong to an account. Please check your email address and try again.</string>
+    <string name="sever_error_password_title">Incorrect Password</string>
+    <string name="sever_error_password_msg">The password you entered is incorrect. Please try again.</string>
+    <string name="sever_error_login_title">Error Login</string>
+    <string name="sever_error_login_msg">Connection Error</string>
+
     <string name="title_activity_sigup">Sign up</string>
     <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">1924317381135713</string>
     <!-- End of login-->
 
     <!-- Strings related to register -->
@@ -34,5 +42,11 @@
     <!-- Strings related to trip history -->
     <string name="title_activity_history">Map</string>
     <!-- End of history-->
+
+    <!-- Strings related to reminder dialog -->
+    <string name="reminder_start_btn">START</string>
+    <string name="reminder_later_btn">LATER</string>
+    <string name="reminder_cancel_btn">CANCEL</string>
+    <!-- End of reminder dialog-->
 
 </resources>

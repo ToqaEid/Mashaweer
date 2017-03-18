@@ -1,6 +1,8 @@
 package com.jets.mashaweer;
 
 import android.*;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,7 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jets.classes.Trip;
+import com.jets.classes.Alarm;
 
 import org.w3c.dom.Text;
 
@@ -37,6 +39,7 @@ public class TripDetails extends AppCompatActivity {
     private LocationProvider locationProvider;
     private double longitude=0, latitude=0;
 
+    String tripName = "TripOne";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +90,13 @@ public class TripDetails extends AppCompatActivity {
                 startActivity(intent);
 
                 Toast.makeText(TripDetails.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(TripDetails.this, Alarm.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        TripDetails.this.getApplicationContext(), 234324243, intent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                        + (3*1000), pendingIntent);
+                Toast.makeText(TripDetails.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
             }
         });
 

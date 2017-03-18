@@ -5,13 +5,15 @@
     <!-- *** PERMISSIONS *** -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <!-- End of Permissions -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- End of Permissions -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,20 +21,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name=".SplashScreenAvtivity">
-
-        </activity>
+        <activity android:name=".SplashScreenAvtivity" />
         <!-- End of SplashScreenAvtivity -->
+
 
         <!-- *** LoginActivity *** -->
         <activity android:name=".LoginActivity" />
         <!-- End of LoginActivity -->
 
         <!-- *** SignupActivity *** -->
-        <activity android:name=".SignupActivity"
+        <activity
+            android:name=".SignupActivity"
             android:label="@string/title_activity_sigup" />
         <!-- End of SignupActivity -->
 
@@ -69,9 +71,21 @@
         <activity android:name=".TripDetails"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- End of TripDetails -->
+
+
+        <!-- *** ReminderActivity *** -->
+        <activity
+            android:name=".ReminderActivity"
+            android:theme="@android:style/Theme.Holo.Dialog" />
+        <!-- End of ReminderActivity -->
+
 
         <!-- *** META-DATA *** -->
         <!--
@@ -95,6 +109,12 @@
         <!-- -->
 
         <!-- End of meta-data -->
+
+
+        <!-- *** RECEIVERS *** -->
+        <receiver android:name="com.jets.classes.Alarm" />
+        <!-- End of Receivers -->
+
     </application>
 
 </manifest>
