@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jets.classes.Alarm;
+import com.jets.classes.Trip;
 
 import org.w3c.dom.Text;
 
@@ -90,13 +91,13 @@ public class TripDetails extends AppCompatActivity {
                 startActivity(intent);
 
                 Toast.makeText(TripDetails.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(TripDetails.this, Alarm.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripDetails.this.getApplicationContext(), 234324243, intent, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                        + (3*1000), pendingIntent);
-                Toast.makeText(TripDetails.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(TripDetails.this, Alarm.class);
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                        TripDetails.this.getApplicationContext(), 234324243, intent, 0);
+//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+//                        + (3*1000), pendingIntent);
+//                Toast.makeText(TripDetails.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
             }
         });
 
