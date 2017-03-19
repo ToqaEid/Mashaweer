@@ -14,7 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jets.classes.Trip;
+import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.ArrayList;
 
@@ -26,9 +32,11 @@ public class UpcomingTripsFragment extends Fragment {
 
     private ListView upcoming_listView;
     private Communicator communicator;
+    private UpcomingCustomAdapter adapter;
 
     private DB_Adapter db_adapter;
-    ArrayList<Trip> upcomingTrips;
+    private ArrayList<Trip> upcomingTrips = new ArrayList<>();
+    private String userID;
 
 
     boolean isEmpty;
@@ -42,38 +50,66 @@ public class UpcomingTripsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db_adapter = new DB_Adapter(getContext());
-        upcomingTrips = new ArrayList<>();
+        userID = SharedPreferenceInfo.getUserId(getActivity());
 
-//        for (int i=0; i<3; i++)
-//        {
-//            Trip trip = new Trip();
-//            db_adapter.insertTripInfo(trip);
-//            Log.i("MyTag","Inserted #" + i);
-//        }
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
+                while (trips.iterator().hasNext()){
+//                    Log.i("3lama", trips.iterator().next().getValue().toString());
+                    Trip trip = trips.iterator().next().getValue(Trip.class);
+                    Log.i("3lama", trip.toString());
+                    upcomingTrips.add(trip);
+                    if(adapter != null){
+                        adapter.notifyDataSetChanged();
+                    }
 
-        Log.i("MyTag","----------------------------------");
-        Cursor cursor = db_adapter.getAllTrips();
-        if (cursor.getCount() == 0){
-           Log.i("MyTag"," > >  >  >   . . Empty DB");
-            isEmpty = true;
-        }
+                }
 
-       else{
-
-            isEmpty = false;
-            while (cursor.moveToNext()){
-
-                Trip trip = new Trip(0,cursor.getInt(8), cursor.getInt(9), cursor.getString(1),
-                                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
-                                    cursor.getString(5),cursor.getString(6), cursor.getString(7));
-
-                Log.i("MyTag","-=-= Obj # " +trip);
-                upcomingTrips.add(trip);
             }
 
-            Log.i("MyTag"," > >  >  >  Size of tripsArray " + upcomingTrips.size());
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//
+//        db_adapter = new DB_Adapter(getContext());
+//        upcomingTrips = new ArrayList<>();
+//
+////        for (int i=0; i<3; i++)
+////        {
+////            Trip trip = new Trip();
+////            db_adapter.insertTripInfo(trip);
+////            Log.i("MyTag","Inserted #" + i);
+////        }
+//
+//        Log.i("MyTag","----------------------------------");
+//        Cursor cursor = db_adapter.getAllTrips();
+//        if (cursor.getCount() == 0){
+//           Log.i("MyTag"," > >  >  >   . . Empty DB");
+//            isEmpty = true;
+//        }
+//
+//       else{
+//
+//            isEmpty = false;
+//            while (cursor.moveToNext()){
+//
+//                Trip trip = new Trip(0,cursor.getInt(8), cursor.getInt(9), cursor.getString(1),
+//                                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
+//                                    cursor.getString(5),cursor.getString(6), cursor.getString(7));
+//
+//                Log.i("MyTag","-=-= Obj # " +trip);
+//                upcomingTrips.add(trip);
+//            }
+//
+//            Log.i("MyTag"," > >  >  >  Size of tripsArray " + upcomingTrips.size());
+//        }
     }
 
     @Override
@@ -88,7 +124,8 @@ public class UpcomingTripsFragment extends Fragment {
 
             upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
 
-            UpcomingCustomAdapter adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
+            adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
+            adapter.notifyDataSetChanged();
             upcoming_listView.setAdapter(adapter);
             Log.i("MyTag","Upcoming adapter is set");
             upcoming_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

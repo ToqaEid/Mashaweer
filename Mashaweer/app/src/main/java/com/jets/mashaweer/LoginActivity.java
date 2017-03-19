@@ -21,10 +21,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.jets.classes.VolleySingleton;
 import com.jets.constants.Alert;
@@ -128,13 +126,12 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()){
-                                    Toast.makeText(LoginActivity.this, "Failed SignIn", Toast.LENGTH_SHORT).show();
-                                    Log.i("3lama", "Failure facebook");
+
                                 }else{
-                                    onLoginSuccess();
+                                    SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(intent);
-                                    finish();
+                                    onLoginSuccess();
                                     Toast.makeText(LoginActivity.this, "Successfull signIn", Toast.LENGTH_SHORT).show();
                                     Log.i("3lama", "success facebook");
                                 }
@@ -211,6 +208,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Sign In failed", Toast.LENGTH_LONG).show();
                         } else {
                             progressDialog.dismiss();
+                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             finish();
@@ -262,13 +260,7 @@ public class LoginActivity extends AppCompatActivity {
      ***/
 
     //TOQA
-    public void addUserDataToSharedPreference(String authorization) {
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SharedPreferenceInfo.LOGIN_KEY, authorization);
-        editor.commit();
 
-    }
 
 
     //TOQA
@@ -290,7 +282,7 @@ public class LoginActivity extends AppCompatActivity {
                             Alert.showErrorMsg(ERROR_PASSWORD_TITLE, ERROR_PASSWORD_MSG, LoginActivity.this);
                             break;
                         case "success": //auhtorized user
-                            addUserDataToSharedPreference(SHAREDPREFERNCE_AUTHORIZED_DATA);
+                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, SHAREDPREFERNCE_AUTHORIZED_DATA);
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             break;

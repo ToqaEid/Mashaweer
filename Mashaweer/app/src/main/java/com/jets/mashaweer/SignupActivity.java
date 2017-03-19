@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.jets.constants.SharedPreferenceInfo;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -119,7 +120,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
-        //TODO: forward to the empty home page with an intent
+        SharedPreferenceInfo.addUserDataToSharedPreference(SignupActivity.this, auth.getCurrentUser().getUid());
         startActivity(new Intent(SignupActivity.this, HomeActivity.class));
         finish();
     }

@@ -18,11 +18,15 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
     private ActionBar actionBar;
+    public static String userID ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
+
+        //getting userID from intent
+        userID = getIntent().getStringExtra("userID");
 
         viewPager = (ViewPager) findViewById(R.id.pager2);
         Log.i("MyTag", String.valueOf(viewPager == null));
