@@ -6,10 +6,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator{
+import com.jets.classes.TabsAdapter;
+import com.jets.interfaces.Communicator;
+
+public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {
 
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;

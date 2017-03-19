@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.jets.classes.Alarm;
 
+import java.util.Random;
+
 public class TripDetails extends AppCompatActivity {
 
     Intent previousIntent;
@@ -38,7 +40,7 @@ public class TripDetails extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(TripDetails.this, Alarm.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripDetails.this.getApplicationContext(), 234324243, intent, 0);
+                        TripDetails.this.getApplicationContext(), new Random().nextInt(), intent, 0);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                         + (3*1000), pendingIntent);

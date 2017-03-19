@@ -1,7 +1,6 @@
 package com.jets.mashaweer;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.jets.classes.UpcomingCustomAdapter;
+import com.jets.interfaces.Communicator;
 
 
 /**
