@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.interfaces;
 
 import com.jets.classes.Trip;
 
@@ -8,6 +8,6 @@ import com.jets.classes.Trip;
 
 public interface Communicator {
 
-    public void sendMsg(Trip selectedTrip);
+    public void sendMsg(Trip trip);
 
 }

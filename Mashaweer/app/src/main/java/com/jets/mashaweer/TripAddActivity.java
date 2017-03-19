@@ -1,6 +1,8 @@
 package com.jets.mashaweer;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.nfc.tech.NfcBarcode;
@@ -13,14 +15,20 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
+import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 public class TripAddActivity extends AppCompatActivity {
 
@@ -29,6 +37,8 @@ public class TripAddActivity extends AppCompatActivity {
     private Trip tripObj;
     private int hours, minutes, year, month, day;
     private DB_Adapter db_adapter;
+    private String userID;
+    DatabaseReference db;
     ////// hint:: Mohem Gdn Gdn Gdnzzzz
     /////////////// for DB and TripBean
     //////////////////// StartLongitude will hold Long&Lat for start location "Semicolon Separated"
@@ -42,6 +52,11 @@ public class TripAddActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_add_ramadan);
+
+        userID = SharedPreferenceInfo.getUserId(getApplicationContext());
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        db = database.getReference("users/" + userID + "/trips");
 
         addTrip = (Button) findViewById(R.id.addTrip_addBtn);
         tripDate = (Button) findViewById(R.id.addTrip_tripDate);
@@ -85,7 +100,7 @@ public class TripAddActivity extends AppCompatActivity {
 
 
         ////////////////// 3. get destination location [Long&Lat + place name]
-        PlaceAutocompleteFragment autocompleteFragment_TO = (PlaceAutocompleteFragment)
+        final PlaceAutocompleteFragment autocompleteFragment_TO = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
 
         autocompleteFragment_TO.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -102,6 +117,7 @@ public class TripAddActivity extends AppCompatActivity {
 
                 tripObj.setTripEndLong( long_lat );   /////////////////////////////// 5ally balk
                 tripObj.setTripEndLAt( place.getName().toString() ); //////////////// 5ally balk
+
 
             }
 
@@ -179,20 +195,36 @@ public class TripAddActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 tripObj.setTripTitle( tripName.getEditText().getText().toString() );
+                tripObj.setTripId(UUID.randomUUID().toString());
 
-                Log.i("MyTag","Accumulated Object >>> " + tripObj.toString());
+                db.child(tripObj.getTripId()).setValue(tripObj);
 
+                Log.i("3lama","added to database");
 
+                Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
+                startActivity(intent);
 
-                if( db_adapter.insertTripInfo(tripObj))
-                {
-                    Log.i("MyTag", "Insertion process >>>>>>> SUCCESS " );
-                    Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                }else{
+                // Adding Alarm
+                Intent alarmIntent = new Intent(TripAddActivity.this, Alarm.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        TripAddActivity.this.getApplicationContext(), 234324243, alarmIntent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                        + (10*1000), pendingIntent);
+                Toast.makeText(TripAddActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
 
-                    Log.i("MyTag", "Insertion process >>>>>>> FAILED " );
-                }
+                finish();
+//
+//
+//
+//                if( db_adapter.insertTripInfo(tripObj))
+//                {
+//                    Log.i("MyTag", "Insertion process >>>>>>> SUCCESS " );
+
+//                }else{
+//
+//                    Log.i("MyTag", "Insertion process >>>>>>> FAILED " );
+//                }
 
             }
         });

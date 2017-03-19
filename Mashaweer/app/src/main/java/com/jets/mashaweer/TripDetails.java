@@ -40,6 +40,7 @@ public class TripDetails extends AppCompatActivity {
     private LocationProvider locationProvider;
     private double longitude=0, latitude=0;
 
+    private Trip trip;
     String tripName = "TripOne";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class TripDetails extends AppCompatActivity {
         setContentView(R.layout.activity_trip_details2);
 
         previousIntent = getIntent();
-        final Trip trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+        trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,7 +88,8 @@ public class TripDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetails.this, TripAddActivity.class);
+                Intent intent = new Intent(TripDetails.this, TripEditActivity.class);
+                intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
                 Toast.makeText(TripDetails.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();

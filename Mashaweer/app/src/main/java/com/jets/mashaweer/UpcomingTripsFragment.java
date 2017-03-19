@@ -1,7 +1,6 @@
 package com.jets.mashaweer;
 
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
+import com.jets.classes.UpcomingCustomAdapter;
+import com.jets.interfaces.Communicator;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,9 @@ public class UpcomingTripsFragment extends Fragment {
                 Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
                 while (trips.iterator().hasNext()){
 //                    Log.i("3lama", trips.iterator().next().getValue().toString());
-                    Trip trip = trips.iterator().next().getValue(Trip.class);
+                    DataSnapshot returnedData = trips.iterator().next();
+                    Trip trip = returnedData.getValue(Trip.class);
+                    trip.setTripId(returnedData.getKey());
                     Log.i("3lama", trip.toString());
                     upcomingTrips.add(trip);
                     if(adapter != null){
@@ -76,6 +79,15 @@ public class UpcomingTripsFragment extends Fragment {
 
             }
         });
+
+//        if (upcomingTrips.size() == 0){
+//           Log.i("MyTag"," > >  >  >   . . Empty DB");
+//            isEmpty = true;
+//        }else {
+//            isEmpty = false;
+//        }
+
+
 
 //
 //        db_adapter = new DB_Adapter(getContext());

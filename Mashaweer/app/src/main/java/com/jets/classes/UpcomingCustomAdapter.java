@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.classes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jets.classes.Trip;
+import com.jets.mashaweer.R;
+import com.jets.mashaweer.UpcomingListViewHolder;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
     private Context context;
 
     public UpcomingCustomAdapter(Context context, ArrayList<Trip> trips) {
-        super(context, R.layout.list_item_upcoming, R.id.upcoming_tripName, trips);
+        super(context, R.layout.list_item_upcoming_library, R.id.upcoming_tripName, trips);
         this.context = context;
 
         this.trips = trips;
@@ -42,7 +44,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
         {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rowView = layoutInflater.inflate(R.layout.list_item_upcoming, parent, false);
+            rowView = layoutInflater.inflate(R.layout.list_item_upcoming_library, parent, false);
 
             holder = new UpcomingListViewHolder(rowView);
 

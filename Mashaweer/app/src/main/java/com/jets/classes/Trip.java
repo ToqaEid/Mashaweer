@@ -8,12 +8,12 @@ import java.io.Serializable;
 
 public class Trip implements Serializable {
 
-    int tripId, tripType, tripStatus;
-    String tripTitle, tripNotes, tripStartLong, tripStartLat, tripEndLong, tripEndLAt, tripDateTime;
+    private int  tripType, tripStatus;
+    private String tripTitle, tripNotes, tripStartLong, tripStartLat, tripEndLong, tripEndLAt, tripDateTime, tripId;
 
     public Trip() {
 
-        this.tripId = 0;
+        this.tripId = "0";
         this.tripType = 0;
         this.tripStatus = 0;
         this.tripTitle = "Virtual";
@@ -25,7 +25,7 @@ public class Trip implements Serializable {
         this.tripDateTime = "22/3/2017 6:30";
     }
 
-    public Trip(int tripId, int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLong, String tripStartLat, String tripEndLong, String tripEndLAt, String tripDateTime) {
+    public Trip(String tripId, int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLong, String tripStartLat, String tripEndLong, String tripEndLAt, String tripDateTime) {
         this.tripId = tripId;
         this.tripType = tripType;
         this.tripStatus = tripStatus;
@@ -38,11 +38,11 @@ public class Trip implements Serializable {
         this.tripDateTime = tripDateTime;
     }
 
-    public int getTripId() {
+    public String getTripId() {
         return tripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(String tripId) {
         this.tripId = tripId;
     }
 

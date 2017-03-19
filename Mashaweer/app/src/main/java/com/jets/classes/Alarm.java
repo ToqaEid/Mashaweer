@@ -10,8 +10,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jets.mashaweer.ReminderActivity;
-import com.jets.mashaweer.TripEditActivity;
-
 /**
  * Created by toqae on 17/03/2017.
  */
@@ -22,8 +20,11 @@ public class Alarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Alarm", Toast.LENGTH_SHORT).show();
+//        Intent editIntent = new Intent(context.getApplicationContext(), TEST.class);
+//        editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.getApplicationContext().startActivity(editIntent);
         Intent editIntent = new Intent(context.getApplicationContext(), ReminderActivity.class);
-        editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        editIntent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK |Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         context.getApplicationContext().startActivity(editIntent);
 
     }

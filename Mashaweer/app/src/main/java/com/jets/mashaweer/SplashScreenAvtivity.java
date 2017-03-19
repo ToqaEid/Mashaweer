@@ -20,9 +20,11 @@ public class SplashScreenAvtivity extends AppCompatActivity {
         String authorized = sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
         if (authorized == null) {
             intent = new Intent(SplashScreenAvtivity.this, LoginActivity.class);
+
         }else{
             intent = new Intent(SplashScreenAvtivity.this, HomeActivity.class);
         }
         startActivity(intent);
+        finish();
     }
 }

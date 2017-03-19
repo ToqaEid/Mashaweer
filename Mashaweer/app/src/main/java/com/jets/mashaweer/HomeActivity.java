@@ -1,5 +1,6 @@
 package com.jets.mashaweer;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -11,24 +12,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.jets.classes.TabsAdapter;
 import com.jets.classes.Trip;
+import com.jets.interfaces.Communicator;
 
-public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator{
+public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {
 
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
     private ActionBar actionBar;
     public static String userID ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
 
+        viewPager = (ViewPager) findViewById(R.id.pager);
         //getting userID from intent
         userID = getIntent().getStringExtra("userID");
 
-        viewPager = (ViewPager) findViewById(R.id.pager2);
         Log.i("MyTag", String.valueOf(viewPager == null));
         actionBar = getSupportActionBar();
         tabsAdapter = new TabsAdapter(getSupportFragmentManager());

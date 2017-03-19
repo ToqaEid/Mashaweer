@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
         <TextView
             android:id="@+id/tripDetails_tv_status"
             android:layout_width="match_parent"
@@ -20,8 +21,10 @@
             android:paddingTop="@dimen/details_status_padding_top"
             android:paddingBottom="@dimen/details_status_padding_bottom"
             android:text="UpComming"
-            android:backgroundTint="?android:attr/colorControlNormal"
-            android:background="@android:color/darker_gray" />
+            android:textColor="@color/card_section_title_color"
+            android:backgroundTint="@color/card_activated"
+            android:background="@color/card_activated"
+            android:layout_weight="0.17" />
 
         <android.support.percent.PercentRelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -72,7 +75,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="-100dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/car"
+                android:src="@drawable/car5"
                 />
             <!-- This should be always half the height, can also be calculated and added programtically -->
 
