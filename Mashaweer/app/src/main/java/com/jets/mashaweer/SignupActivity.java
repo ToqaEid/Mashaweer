@@ -1,45 +1,24 @@
 package com.jets.mashaweer;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -55,12 +34,18 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.link_login)
     TextView _loginLink;
 
+    //firebase auth
+    private FirebaseAuth auth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        //Get Firebase auth instance
+        auth = FirebaseAuth.getInstance();
 
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +74,8 @@ public class SignupActivity extends AppCompatActivity {
 
     public void signup() {
 
+        _signupButton.setEnabled(false);
+
         if (!validate()) {
             onSignupFailed();
             return;
@@ -97,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme); //TODO: apply the theme to the view
+                R.style.AppTheme); //TODO: apply the Dialgoue theme to the view
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
@@ -108,27 +95,37 @@ public class SignupActivity extends AppCompatActivity {
 
         // TODO: Implement your own signup logic here.
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            onSignupFailed();
+                            progressDialog.dismiss();
+                            Toast.makeText(SignupActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+                        } else {
+                            progressDialog.dismiss();
+                            onSignupSuccess();
+                        }
                     }
-                }, 3000);
+                });
+
+
     }
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+        //TODO: forward to the empty home page with an intent
+        startActivity(new Intent(SignupActivity.this, HomeActivity.class));
         finish();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        
         _signupButton.setEnabled(true);
     }
 
@@ -138,15 +135,14 @@ public class SignupActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-
-        if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+        
+        if (name.isEmpty() || name.length() < 6) {
+            _nameText.setError("at least 6 characters");
             valid = false;
         } else {
             _nameText.setError(null);
         }
-
-
+        
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");
@@ -156,13 +152,12 @@ public class SignupActivity extends AppCompatActivity {
         }
 
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 6 || password.length() > 20) {
+            _passwordText.setError("Too short, must be more than 6 characters");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
-
 
         return valid;
     }

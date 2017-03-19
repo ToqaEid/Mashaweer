@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "923038524060",
+    "firebase_url": "https://mashaweer-24be7.firebaseio.com",
+    "project_id": "mashaweer-24be7",
+    "storage_bucket": "mashaweer-24be7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923038524060:android:9842bc39a4ae5463",
+        "android_client_info": {
+          "package_name": "com.jets.mashaweer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923038524060-9fd883uoth46plf9mljk9o2t8v563qgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpnYKdn62InMbZl9TrpiQXgCuXBWbJRlE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

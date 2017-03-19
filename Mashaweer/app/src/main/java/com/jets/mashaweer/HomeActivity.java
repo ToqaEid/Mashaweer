@@ -1,14 +1,18 @@
 package com.jets.mashaweer;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.jets.classes.TabsAdapter;
+import com.jets.classes.Trip;
 import com.jets.interfaces.Communicator;
 
 public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {
@@ -20,9 +24,10 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main_home);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
+        Log.i("MyTag", String.valueOf(viewPager == null));
         actionBar = getSupportActionBar();
         tabsAdapter = new TabsAdapter(getSupportFragmentManager());
 
@@ -30,6 +35,25 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
+
+        //////////////// handling add trip buttons' click listener
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton_addTrip);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(HomeActivity.this, TripAddActivity.class);
+                startActivity(intent);
+
+                Toast.makeText(HomeActivity.this, "--- Going to tripAdd ---", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
 
         ///////// add your tabs
         for(int i=0; i<TabsAdapter.tabNames.length; i++)
@@ -78,12 +102,12 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     }
 
     @Override
-    public void sendMsg(int tripId) {
+    public void sendMsg(Trip trip) {
 
-        Toast.makeText(this, "Going To "+ tripId +" TripDetails", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Going To TripDetails", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(),TripDetails.class);
-        intent.putExtra("tripId", tripId);
+        intent.putExtra("selectedTrip", trip);
         startActivity(intent);
 
     }

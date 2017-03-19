@@ -22,6 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
         <!-- *** SplashScreenAvtivity *** -->
         <activity android:name=".SplashScreenAvtivity" >
 
@@ -53,14 +55,19 @@
 
 
         <!-- *** HistoryActivity *** -->
-        <activity
-            android:name=".HistoryActivity"
-            android:label="@string/title_activity_history" />
+        <activity android:name=".HistoryActivity"
+            android:label="@string/title_activity_history" >
+
+        </activity>
         <!-- End of HistoryActivity -->
 
 
         <!-- *** TripAddActivity *** -->
-        <activity android:name=".TripAddActivity" />
+        <activity android:name=".TripAddActivity" >
+
+
+
+        </activity>
         <!-- End of TripAddActivity -->
 
 
@@ -74,10 +81,13 @@
             android:name=".TripDetails"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- End of TripDetails -->
-
 
         <!-- *** ReminderActivity *** -->
         <activity
@@ -96,10 +106,19 @@
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         -->
+
+
+        <!-- This is for Google place AutoComplete API-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyCMN9hs_EuL_V0qpU2T3YeJVcbOvx9cTl0" />
+        <!-- -->
+
         <!-- End of meta-data -->
 
 
