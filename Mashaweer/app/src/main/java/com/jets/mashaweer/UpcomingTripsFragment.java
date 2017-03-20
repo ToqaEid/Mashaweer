@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,8 +54,10 @@ public class UpcomingTripsFragment extends Fragment {
 
         userID = SharedPreferenceInfo.getUserId(getActivity());
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userID);
+
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

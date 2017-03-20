@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.jets.constants.SharedPreferenceInfo;
 
 /**
  * Created by michael on 3/19/17.
@@ -55,6 +56,7 @@ public class NavBar extends Fragment{
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
+                SharedPreferenceInfo.addUserDataToSharedPreference(getActivity(),  "null");
             }
         });
         return rootView;
