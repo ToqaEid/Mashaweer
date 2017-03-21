@@ -9,7 +9,9 @@ import android.support.v7.app.AlertDialog;
  */
 
 public class Alert {
+
     public static void showErrorMsg(String title, String msg, Context context) {
+
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(msg);
@@ -20,4 +22,19 @@ public class Alert {
         });
         alertDialog.show();
     }
+
+    public static void showConfimDeleteDialog(String title, String msg, Context context) {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "DELETE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        //alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "");
+        alertDialog.show();
+    }
+
 }

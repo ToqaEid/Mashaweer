@@ -18,6 +18,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,6 +33,7 @@ public class ReminderActivity extends Activity {
     @BindView(R.id.cancel_btn)
     Button cancelBtn;
 
+    private Trip trip;
     int tripId = 1;
     int count = 1;
     @Override
@@ -60,6 +64,7 @@ public class ReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
                 count++;
+                new TripServices().startTrip(ReminderActivity.this, trip);
                 Toast.makeText(ReminderActivity.this, String.valueOf(count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -127,11 +132,14 @@ public class ReminderActivity extends Activity {
     }
 
     public void notifyLater(int notificationId){
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ReminderActivity.this);
+
         builder.setSmallIcon(R.mipmap.ic_launcher);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
         PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, intent, 0);
         builder.setContentIntent(pendingIntent);
+
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
         builder.setContentTitle("Notifications Title");
         builder.setContentText("Your notification content here.");
