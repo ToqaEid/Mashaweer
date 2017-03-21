@@ -3,13 +3,9 @@ package com.jets.classes;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.PowerManager;
-import android.os.Vibrator;
-import android.util.Log;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.jets.mashaweer.ReminderActivity;
+import com.jets.activites.ReminderActivity;
 /**
  * Created by toqae on 17/03/2017.
  */

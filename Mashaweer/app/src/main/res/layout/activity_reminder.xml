@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="#00000000"
-    tools:context="com.jets.mashaweer.ReminderActivity">
+    tools:context="com.jets.activites.ReminderActivity">
 
     <TextView
         android:text="Time to start Trip One"

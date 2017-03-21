@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jets.mashaweer">
+    package="com.jets.activites">
 
     <!-- *** PERMISSIONS *** -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -25,7 +25,7 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name=".SplashScreenAvtivity" >
+        <activity android:name="com.jets.activites.SplashScreenAvtivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,26 +37,26 @@
 
 
         <!-- *** LoginActivity *** -->
-        <activity android:name=".LoginActivity" />
+        <activity android:name="com.jets.activites.LoginActivity" />
         <!-- End of LoginActivity -->
 
 
         <!-- *** SignupActivity *** -->
         <activity
-            android:name=".SignupActivity"
+            android:name="com.jets.activites.SignupActivity"
             android:label="@string/title_activity_sigup" />
         <!-- End of SignupActivity -->
 
 
         <!-- *** HomeActivity *** -->
-        <activity android:name=".HomeActivity" >
+        <activity android:name="com.jets.activites.HomeActivity" >
 
         </activity>
         <!-- End of HomeActivity -->
 
 
         <!-- *** HistoryActivity *** -->
-        <activity android:name=".HistoryActivity"
+        <activity android:name="com.jets.activites.HistoryActivity"
             android:label="@string/title_activity_history" >
 
         </activity>
@@ -64,7 +64,7 @@
 
 
         <!-- *** TripAddActivity *** -->
-        <activity android:name=".TripAddActivity" >
+        <activity android:name="com.jets.activites.TripAddActivity" >
 
 
 
@@ -73,21 +73,21 @@
 
 
         <!-- *** TripEditActivity *** -->
-        <activity android:name=".TripEditActivity" />
+        <activity android:name="com.jets.activites.TripEditActivity" />
         <!-- End of TripEditActivity -->
 
 
-        <!-- *** TripDetails *** -->
+        <!-- *** TripDetailsActivity *** -->
         <activity
-            android:name=".TripDetails"
+            android:name="com.jets.activites.TripDetailsActivity"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <!-- End of TripDetails -->
+        <!-- End of TripDetailsActivity -->
 
         <!-- *** ReminderActivity *** -->
         <activity
-            android:name=".ReminderActivity"
+            android:name="com.jets.activites.ReminderActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Holo.Dialog" />

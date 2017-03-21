@@ -1,8 +1,5 @@
-package com.jets.mashaweer;
+package com.jets.activites;
 
-import android.*;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,13 +23,10 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
 
-import org.w3c.dom.Text;
-
-public class TripDetails extends AppCompatActivity {
+public class TripDetailsActivity extends AppCompatActivity {
 
     Intent previousIntent;
 
@@ -91,18 +84,18 @@ public class TripDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetails.this, TripEditActivity.class);
+                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
                 intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
-                Toast.makeText(TripDetails.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(TripDetails.this, Alarm.class);
+                Toast.makeText(TripDetailsActivity.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(TripDetailsActivity.this, Alarm.class);
 //                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-//                        TripDetails.this.getApplicationContext(), 234324243, intent, 0);
+//                        TripDetailsActivity.this.getApplicationContext(), 234324243, intent, 0);
 //                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 //                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
 //                        + (3*1000), pendingIntent);
-//                Toast.makeText(TripDetails.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+//                Toast.makeText(TripDetailsActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -135,8 +128,8 @@ public class TripDetails extends AppCompatActivity {
 
 
 
-                if (ActivityCompat.checkSelfPermission(TripDetails.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(TripDetails.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -146,7 +139,7 @@ public class TripDetails extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
 
 
-                    ActivityCompat.requestPermissions(TripDetails.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
                     return;
                 }
@@ -189,7 +182,7 @@ public class TripDetails extends AppCompatActivity {
 
 //                /////////------////////---------//////////////////////////////////////////////
 
-                Toast.makeText(TripDetails.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
 
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -233,6 +226,7 @@ public class TripDetails extends AppCompatActivity {
         ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
         db.child(trip.getTripId()).removeValue();
+        finish();
     }
     /*==== END MENU ===*/
 }

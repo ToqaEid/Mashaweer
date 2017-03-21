@@ -1,7 +1,6 @@
-package com.jets.mashaweer;
+package com.jets.fragments;
 
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,15 +12,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jets.activites.DB_Adapter;
+import com.jets.activites.R;
 import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
-import com.jets.classes.UpcomingCustomAdapter;
+import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
 
 import java.util.ArrayList;

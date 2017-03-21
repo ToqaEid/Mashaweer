@@ -1,18 +1,15 @@
-package com.jets.mashaweer;
+package com.jets.activites;
 
-import android.app.FragmentManager;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.jets.classes.TabsAdapter;
+import com.jets.adapters.TabsAdapter;
 import com.jets.classes.Trip;
 import com.jets.interfaces.Communicator;
 
@@ -110,9 +107,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     public void sendMsg(Trip trip) {
 
-        Toast.makeText(this, "Going To TripDetails", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Going To TripDetailsActivity", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(),TripDetails.class);
+        Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
         intent.putExtra("selectedTrip", trip);
         startActivity(intent);
 

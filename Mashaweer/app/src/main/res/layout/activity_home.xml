@@ -20,7 +20,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:background="@drawable/nav_bar_shadow"/>-->
     <fragment
-        android:name="com.jets.mashaweer.NavBar"
+        android:name="com.jets.fragments.NavBarFragment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignBottom="@+id/pager"

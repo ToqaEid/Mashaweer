@@ -1,11 +1,10 @@
-package com.jets.classes;
+package com.jets.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.jets.mashaweer.PastTripsFragment;
-import com.jets.mashaweer.UpcomingTripsFragment;
+import com.jets.fragments.UpcomingTripsFragment;
 
 /**
  * Created by mohamed on 14/03/2017.

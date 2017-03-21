@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.activites;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -28,9 +27,6 @@ import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.Calendar;
-import java.util.UUID;
-
-import butterknife.BindView;
 
 
 public class TripEditActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.activites;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

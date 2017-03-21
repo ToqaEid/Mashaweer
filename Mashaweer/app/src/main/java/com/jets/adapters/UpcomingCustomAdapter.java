@@ -1,18 +1,15 @@
-package com.jets.classes;
+package com.jets.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.jets.activites.R;
+import com.jets.classes.UpcomingListViewHolder;
 import com.jets.classes.Trip;
-import com.jets.mashaweer.R;
-import com.jets.mashaweer.UpcomingListViewHolder;
 
 import java.util.ArrayList;
 

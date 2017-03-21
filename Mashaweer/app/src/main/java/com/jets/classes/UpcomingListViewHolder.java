@@ -1,7 +1,9 @@
-package com.jets.mashaweer;
+package com.jets.classes;
 
 import android.view.View;
 import android.widget.TextView;
+
+import com.jets.activites.R;
 
 /**
  * Created by mohamed on 17/03/2017.

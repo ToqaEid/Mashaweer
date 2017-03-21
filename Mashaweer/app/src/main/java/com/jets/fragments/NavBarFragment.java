@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,13 +11,18 @@ import android.widget.ImageButton;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.jets.activites.HistoryActivity;
+import com.jets.activites.HomeActivity;
+import com.jets.activites.LoginActivity;
+import com.jets.activites.R;
+import com.jets.activites.TripAddActivity;
 import com.jets.constants.SharedPreferenceInfo;
 
 /**
  * Created by michael on 3/19/17.
  */
 
-public class NavBar extends Fragment{
+public class NavBarFragment extends Fragment{
     private ImageButton homeBtn, historyBtn, addBtn, signoutBtn;
     @Nullable
     @Override
