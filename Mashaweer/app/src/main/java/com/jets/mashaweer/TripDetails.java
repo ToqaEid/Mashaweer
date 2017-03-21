@@ -224,15 +224,15 @@ public class TripDetails extends AppCompatActivity {
 
     private void doneTrip() {
 //        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
-        db.child(trip.getTripId()).removeValue();
+
 
 
     }
 
     private void deleteTrip() {
-        Toast.makeText(this, "delete trip", Toast.LENGTH_SHORT).show();
+        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+        db.child(trip.getTripId()).removeValue();
     }
     /*==== END MENU ===*/
 }
