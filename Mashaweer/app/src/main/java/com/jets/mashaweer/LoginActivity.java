@@ -259,11 +259,7 @@ public class LoginActivity extends AppCompatActivity {
      * his username & password will be added in the shared preference for quick login next time
      ***/
 
-    //TOQA
 
-
-
-    //TOQA
     public void authenticateInput() {
         //instantiate the requestQueue
         VolleySingleton volleySingleton = VolleySingleton.getInstance(this.getApplicationContext());
