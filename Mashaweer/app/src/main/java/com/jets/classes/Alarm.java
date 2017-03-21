@@ -24,7 +24,7 @@ public class Alarm extends BroadcastReceiver {
 //        editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        context.getApplicationContext().startActivity(editIntent);
         Intent editIntent = new Intent(context.getApplicationContext(), ReminderActivity.class);
-        editIntent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK |Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         context.getApplicationContext().startActivity(editIntent);
 
     }

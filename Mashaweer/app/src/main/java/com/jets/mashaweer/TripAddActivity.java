@@ -175,8 +175,12 @@ public class TripAddActivity extends AppCompatActivity {
                                                   int minute) {
 
                                 String date = tripObj.getTripDateTime();
+                                if(minute < 10){
+                                    tripObj.setTripDateTime( date + " " + hourOfDay + ":0" + minute);
+                                }else{
+                                    tripObj.setTripDateTime( date + " " + hourOfDay + ":" + minute);
+                                }
 
-                                tripObj.setTripDateTime( date + " " + hourOfDay + ":" + minute);
 
                             }
                         }, hours, minutes, false);
@@ -196,22 +200,22 @@ public class TripAddActivity extends AppCompatActivity {
 
                 tripObj.setTripTitle( tripName.getEditText().getText().toString() );
                 tripObj.setTripId(UUID.randomUUID().toString());
-
                 db.child(tripObj.getTripId()).setValue(tripObj);
 
                 Log.i("3lama","added to database");
 
-                Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
+//                startActivity(intent);
 
                 // Adding Alarm
                 Intent alarmIntent = new Intent(TripAddActivity.this, Alarm.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripAddActivity.this.getApplicationContext(), 234324243, alarmIntent, 0);
+                        TripAddActivity.this.getApplicationContext(), Integer.parseInt(tripObj.getTripId()), alarmIntent, 0);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                         + (10*1000), pendingIntent);
                 Toast.makeText(TripAddActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+
 
                 finish();
 //

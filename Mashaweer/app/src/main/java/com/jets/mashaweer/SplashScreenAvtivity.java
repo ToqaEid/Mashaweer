@@ -16,6 +16,12 @@ public class SplashScreenAvtivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen_avtivity);
         System.out.println(String.valueOf(R.string.sever_error_email_title));
         System.out.println("hhhj");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         String authorized = sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
         if (authorized == null) {

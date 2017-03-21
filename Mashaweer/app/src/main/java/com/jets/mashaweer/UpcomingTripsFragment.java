@@ -58,6 +58,7 @@ public class UpcomingTripsFragment extends Fragment {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("3lama", "onDataChange");
                 Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
                 while (trips.iterator().hasNext()){
 //                    Log.i("3lama", trips.iterator().next().getValue().toString());
@@ -151,7 +152,12 @@ public class UpcomingTripsFragment extends Fragment {
                     communicator.sendMsg(selectedTrip);
                 }
             });
-
+            upcoming_listView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
+                }
+            });
 
         }else{
 

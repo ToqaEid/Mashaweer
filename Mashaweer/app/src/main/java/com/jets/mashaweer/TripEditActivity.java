@@ -205,20 +205,23 @@ public class TripEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                trip.setTripDateTime( dateStr + " " + timeStr);
+                if(dateStr != null && timeStr != null){
+                    trip.setTripDateTime( dateStr + " " + timeStr);
+                }
+
                 trip.setTripTitle( tripName.getEditText().getText().toString() );
 
                 db.child(trip.getTripId()).setValue(trip);
 
                 Log.i("3lama","added to database");
 
-                Intent intent = new Intent(TripEditActivity.this, HomeActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(TripEditActivity.this, HomeActivity.class);
+//                startActivity(intent);
 
                 // Adding Alarm
                 Intent alarmIntent = new Intent(TripEditActivity.this, Alarm.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripEditActivity.this.getApplicationContext(), 234324243, alarmIntent, 0);
+                        TripEditActivity.this.getApplicationContext(), Integer.parseInt(trip.getTripId()), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                         + (10*1000), pendingIntent);

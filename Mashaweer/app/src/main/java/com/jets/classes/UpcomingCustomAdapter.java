@@ -1,6 +1,7 @@
 package com.jets.classes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,9 +59,28 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
 
 
         holder.getTripName_tv().setText(   trips.get(position).getTripTitle()   );
-        holder.getTripDate_tv().setText(  (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[0] +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[1]  );
-        holder.getTripTime_tv().setText(    trips.get(position).getTripDateTime().split(" ")[1]  );
-        holder.getTripType_tv().setText(  trips.get(position).getTripType() + ""   );
+        holder.getTripDate_tv().setText(  (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[0] +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[1]
+                                            +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[2]);
+        int time = (Integer.parseInt(trips.get(position).getTripDateTime().split(" ")[1].split(":")[0]));
+        if(time > 12){
+            time = time - 12;
+            holder.getTripTime_tv().setText( String.valueOf(time) + ":"+ trips.get(position).getTripDateTime().split(" ")[1].split(":")[1]+ " P.M."  );
+        }else{
+            holder.getTripTime_tv().setText( trips.get(position).getTripDateTime().split(" ")[1] + " A.M."  );
+        }
+
+        int tripType = trips.get(position).getTripType();
+        switch(tripType){
+            case 0:
+                holder.getTripType_tv().setText( "" );
+                break;
+            case 1:
+                holder.getTripType_tv().setText( "Round Trip" );
+                break;
+            default:
+                break;
+        }
+
 
         return  rowView;
     }

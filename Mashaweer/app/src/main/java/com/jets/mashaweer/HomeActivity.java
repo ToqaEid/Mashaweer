@@ -44,18 +44,18 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
 
 
-        //////////////// handling add trip buttons' click listener
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton_addTrip);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(HomeActivity.this, TripAddActivity.class);
-                startActivity(intent);
-
-                Toast.makeText(HomeActivity.this, "--- Going to tripAdd ---", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        //////////////// handling add trip buttons' click listener
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton_addTrip);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(HomeActivity.this, TripAddActivity.class);
+//                startActivity(intent);
+//
+//                Toast.makeText(HomeActivity.this, "--- Going to tripAdd ---", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
 

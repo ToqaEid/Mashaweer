@@ -7,7 +7,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
@@ -50,6 +54,10 @@ public class ReminderActivity extends Activity {
         // vibrate when the activity opens
         Vibrator vib = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         vib.vibrate(500);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), uri);
+        r.play();
+
 
         //check if phone is locked, then open the lock and turn screen light on
         Window window = getWindow();
@@ -139,6 +147,10 @@ public class ReminderActivity extends Activity {
         builder.setContentTitle("Notifications Title");
         builder.setContentText("Your notification content here.");
         builder.setSubText("Tap to view the website.");
+        builder.setLights(0xffffffff, 1000, 200);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(uri);
+        builder.setAutoCancel(false);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Will display the notification in the notification bar
