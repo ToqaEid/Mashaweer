@@ -25,8 +25,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
+import com.jets.constants.SharedPreferenceInfo;
 
 import org.w3c.dom.Text;
 
@@ -220,7 +223,12 @@ public class TripDetails extends AppCompatActivity {
     }
 
     private void doneTrip() {
-        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+        db.child(trip.getTripId()).removeValue();
+
+
     }
 
     private void deleteTrip() {
