@@ -36,10 +36,10 @@ public class DB_Adapter {
 
         contentValues.put(DB_Helper.COL_1_2, trip.getTripTitle() );
         contentValues.put(DB_Helper.COL_1_3, trip.getTripNotes());
-        contentValues.put(DB_Helper.COL_1_4, trip.getTripStartLong());
-        contentValues.put(DB_Helper.COL_1_5, trip.getTripStartLat());
-        contentValues.put(DB_Helper.COL_1_6, trip.getTripEndLong());
-        contentValues.put(DB_Helper.COL_1_7, trip.getTripEndLAt());
+        contentValues.put(DB_Helper.COL_1_4, trip.getTripStartLongLat());
+        contentValues.put(DB_Helper.COL_1_5, trip.getTripStartLocation());
+        contentValues.put(DB_Helper.COL_1_6, trip.getTripEndLongLat());
+        contentValues.put(DB_Helper.COL_1_7, trip.getTripEndLocation());
         contentValues.put(DB_Helper.COL_1_8, trip.getTripDateTime());
         contentValues.put(DB_Helper.COL_1_9, trip.getTripType());
         contentValues.put(COL_1_10, trip.getTripStatus());

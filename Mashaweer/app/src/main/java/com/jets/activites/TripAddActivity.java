@@ -37,6 +37,9 @@ public class TripAddActivity extends AppCompatActivity {
     private DB_Adapter db_adapter;
     private String userID;
     DatabaseReference db;
+
+    private Calendar calender;
+
     ////// hint:: Mohem Gdn Gdn Gdnzzzz
     /////////////// for DB and TripBean
     //////////////////// StartLongitude will hold Long&Lat for start location "Semicolon Separated"
@@ -63,6 +66,7 @@ public class TripAddActivity extends AppCompatActivity {
 
         tripObj = new Trip();
         db_adapter = new DB_Adapter(getApplicationContext());
+        calender = Calendar.getInstance();
 
         ////////////////// 1. get trip name in the ON ADD TRIP CLICK
 
@@ -85,8 +89,8 @@ public class TripAddActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                tripObj.setTripStartLong( long_lat );   /////////////////////////////// 5ally balk
-                tripObj.setTripStartLat( place.getName().toString() ); //////////////// 5ally balk
+                tripObj.setTripStartLongLat( long_lat );   /////////////////////////////// 5ally balk
+                tripObj.setTripStartLocation( place.getName().toString() ); //////////////// 5ally balk
             }
 
             @Override
@@ -113,8 +117,8 @@ public class TripAddActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                tripObj.setTripEndLong( long_lat );   /////////////////////////////// 5ally balk
-                tripObj.setTripEndLAt( place.getName().toString() ); //////////////// 5ally balk
+                tripObj.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
+                tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
 
 
             }
@@ -128,6 +132,8 @@ public class TripAddActivity extends AppCompatActivity {
 
 
         /////////////////// 4. get trip date
+
+
 
         tripDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +151,12 @@ public class TripAddActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                tripObj.setTripDateTime(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+
+                                calender.set(Calendar.MONTH, monthOfYear + 1);
+                                calender.set(Calendar.DATE, dayOfMonth);
+                                calender.set(Calendar.YEAR, year);
+
+                               // tripObj.setTripDateTime(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
                             }
                         }, year, month, day);
@@ -172,12 +183,12 @@ public class TripAddActivity extends AppCompatActivity {
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
 
-                                String date = tripObj.getTripDateTime();
-                                if(minute < 10){
-                                    tripObj.setTripDateTime( date + " " + hourOfDay + ":0" + minute);
-                                }else{
-                                    tripObj.setTripDateTime( date + " " + hourOfDay + ":" + minute);
-                                }
+                               // String date = tripObj.getTripDateTime();
+                                calender.set(Calendar.HOUR,hourOfDay);
+                                calender.set(Calendar.MINUTE,minute);
+                                calender.set(Calendar.SECOND,0);
+
+
 
 
                             }
@@ -197,8 +208,16 @@ public class TripAddActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 tripObj.setTripTitle( tripName.getEditText().getText().toString() );
+
                 tripObj.setTripId(UUID.randomUUID().toString());
+
                 db.child(tripObj.getTripId()).setValue(tripObj);
+
+
+
+                long selectedDateTime = calender.getTime().getTime();
+                tripObj.setTripDateTime(selectedDateTime);
+
 
                 Log.i("3lama","added to database");
 

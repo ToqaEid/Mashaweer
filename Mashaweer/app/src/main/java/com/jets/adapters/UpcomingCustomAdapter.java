@@ -12,6 +12,7 @@ import com.jets.classes.UpcomingListViewHolder;
 import com.jets.classes.Trip;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by mohamed on 04/03/2017.
@@ -56,15 +57,44 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
 
 
         holder.getTripName_tv().setText(   trips.get(position).getTripTitle()   );
-        holder.getTripDate_tv().setText(  (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[0] +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[1]
-                                            +"/"+ (trips.get(position).getTripDateTime().split(" ")[0]).split("/")[2]);
-        int time = (Integer.parseInt(trips.get(position).getTripDateTime().split(" ")[1].split(":")[0]));
-        if(time > 12){
-            time = time - 12;
-            holder.getTripTime_tv().setText( String.valueOf(time) + ":"+ trips.get(position).getTripDateTime().split(" ")[1].split(":")[1]+ " P.M."  );
+
+         ////------//////////// get date and time
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(  trips.get(position).getTripDateTime() );
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMinute = calendar.get(Calendar.MINUTE);
+
+
+        holder.getTripDate_tv().setText(  mDay + "/" + mMonth);
+
+        if(mHour > 12){
+            mHour = mHour - 12;
+            holder.getTripTime_tv().setText( mHour + ":"+ mMinute + " P.M."  );
         }else{
-            holder.getTripTime_tv().setText( trips.get(position).getTripDateTime().split(" ")[1] + " A.M."  );
+
+            if (mHour < 10)
+            {
+                if(mMinute <10)
+                    holder.getTripTime_tv().setText("0"+ mHour + ":0"+ mMinute + " A.M."  );
+                else
+                    holder.getTripTime_tv().setText("0"+ mHour + ":"+ mMinute + " A.M."  );
+            }
+            else{
+                if(mMinute <10)
+                    holder.getTripTime_tv().setText(mHour + ":0"+ mMinute + " A.M."  );
+                else
+                    holder.getTripTime_tv().setText(mHour + ":"+ mMinute + " A.M."  );
+            }
         }
+
+
+
+        ////------///////////////////////////////
 
         int tripType = trips.get(position).getTripType();
         switch(tripType){

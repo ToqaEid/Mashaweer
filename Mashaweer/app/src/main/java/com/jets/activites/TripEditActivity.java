@@ -40,6 +40,8 @@ public class TripEditActivity extends AppCompatActivity {
     Intent previousIntent;
     private Trip trip;
 
+    private Calendar calender;
+
     String timeStr, dateStr ;
 
     @Override
@@ -60,13 +62,26 @@ public class TripEditActivity extends AppCompatActivity {
 
         previousIntent = getIntent();
         trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+        calender = Calendar.getInstance();
 
         //fill fields with data
         tripName.getEditText().setText(trip.getTripTitle());
-        final String[] dateTime = trip.getTripDateTime().split(" ");
 
-        tripDate.setText(dateTime[0]);
-        tripTime.setText(dateTime[1]);
+
+        ///////////////// get date and time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( trip.getTripDateTime() );
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMinute = calendar.get(Calendar.MINUTE);
+
+       // final String[] dateTime = trip.getTripDateTime().split(" ");
+
+        tripDate.setText(mDay + " - " + mMonth + " - " + mYear);
+        tripTime.setText( mHour + " : " + mMinute );
 
         Toast.makeText(TripEditActivity.this, String.valueOf(trip.getTripType()), Toast.LENGTH_SHORT).show();
         if(trip.getTripType() != 0){
@@ -77,7 +92,7 @@ public class TripEditActivity extends AppCompatActivity {
         ////////////////// 2. get start location [Long&Lat + place name]
         PlaceAutocompleteFragment autocompleteFragment_FROM = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment_FROM.setHint(trip.getTripStartLat());
+        autocompleteFragment_FROM.setHint(trip.getTripStartLocation());
 
         autocompleteFragment_FROM.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -92,8 +107,8 @@ public class TripEditActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                trip.setTripStartLong( long_lat );   /////////////////////////////// 5ally balk
-                trip.setTripStartLat( place.getName().toString() ); //////////////// 5ally balk
+                trip.setTripStartLongLat( long_lat );   /////////////////////////////// 5ally balk
+                trip.setTripStartLocation( place.getName().toString() ); //////////////// 5ally balk
             }
 
             @Override
@@ -108,7 +123,7 @@ public class TripEditActivity extends AppCompatActivity {
         PlaceAutocompleteFragment autocompleteFragment_TO = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
 
-        autocompleteFragment_TO.setHint(trip.getTripEndLAt());
+        autocompleteFragment_TO.setHint(trip.getTripEndLocation());
         autocompleteFragment_TO.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -121,8 +136,8 @@ public class TripEditActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                trip.setTripEndLong( long_lat );   /////////////////////////////// 5ally balk
-                trip.setTripEndLAt( place.getName().toString() ); //////////////// 5ally balk
+                trip.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
+                trip.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
 
 
             }
@@ -151,7 +166,12 @@ public class TripEditActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                dateStr = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+
+                                calender.set(Calendar.MONTH, monthOfYear + 1);
+                                calender.set(Calendar.DATE, dayOfMonth);
+                                calender.set(Calendar.YEAR, year);
+
+                                //dateStr = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
 
                                 tripDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
@@ -180,10 +200,15 @@ public class TripEditActivity extends AppCompatActivity {
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
 
-                                String date = trip.getTripDateTime();
+                                //String date = trip.getTripDateTime();
+
+                                calender.set(Calendar.HOUR,hourOfDay);
+                                calender.set(Calendar.MINUTE,minute);
+                                calender.set(Calendar.SECOND,0);
+
 
                                 tripTime.setText(hourOfDay + ":" + minute);
-                                timeStr = hourOfDay + ":" + minute;
+                                //timeStr = hourOfDay + ":" + minute;
 
                             }
                         }, hours, minutes, false);
@@ -202,7 +227,11 @@ public class TripEditActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(dateStr != null && timeStr != null){
-                    trip.setTripDateTime( dateStr + " " + timeStr);
+                    //trip.setTripDateTime( dateStr + " " + timeStr);
+
+                    long selectedDateTime = calender.getTime().getTime();
+                    trip.setTripDateTime(selectedDateTime);
+
                 }
 
                 trip.setTripTitle( tripName.getEditText().getText().toString() );

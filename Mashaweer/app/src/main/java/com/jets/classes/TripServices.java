@@ -26,7 +26,7 @@ public class TripServices {
             //not round trip
         }
         //TODO: update the date of trip to be now date
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         context.getApplicationContext().startActivity(mapIntent);

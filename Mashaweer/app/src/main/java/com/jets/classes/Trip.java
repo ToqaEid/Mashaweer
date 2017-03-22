@@ -8,8 +8,10 @@ import java.io.Serializable;
 
 public class Trip implements Serializable {
 
+
+    private long tripDateTime;
     private int  tripType, tripStatus;
-    private String tripTitle, tripNotes, tripStartLong, tripStartLat, tripEndLong, tripEndLAt, tripDateTime, tripId;
+    private String tripTitle, tripNotes, tripStartLongLat, tripStartLocation, tripEndLongLat, tripEndLocation , tripId;
 
     public Trip() {
 
@@ -18,23 +20,23 @@ public class Trip implements Serializable {
         this.tripStatus = 0;
         this.tripTitle = "Virtual";
         this.tripNotes = "NOTES";
-        this.tripStartLong = "32.877540399999994;23.9705802";
-        this.tripStartLat = "Aswan Dam";
-        this.tripEndLong = "32.3018661;31.265289299999992";
-        this.tripEndLAt = "Port Said";
-        this.tripDateTime = "22/3/2017 6:30";
+        this.tripStartLongLat = "32.877540399999994;23.9705802";
+        this.tripStartLocation = "Aswan Dam";
+        this.tripEndLongLat = "32.3018661;31.265289299999992";
+        this.tripEndLocation = "Port Said";
+        this.tripDateTime = 7674567690L;
     }
 
-    public Trip(String tripId, int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLong, String tripStartLat, String tripEndLong, String tripEndLAt, String tripDateTime) {
+    public Trip(String tripId, int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLongLat, String tripStartLocation, String tripEndLongLat, String tripEndLocation, long tripDateTime) {
         this.tripId = tripId;
         this.tripType = tripType;
         this.tripStatus = tripStatus;
         this.tripTitle = tripTitle;
         this.tripNotes = tripNotes;
-        this.tripStartLong = tripStartLong;
-        this.tripStartLat = tripStartLat;
-        this.tripEndLong = tripEndLong;
-        this.tripEndLAt = tripEndLAt;
+        this.tripStartLongLat = tripStartLongLat;
+        this.tripStartLocation = tripStartLocation;
+        this.tripEndLongLat = tripEndLongLat;
+        this.tripEndLocation = tripEndLocation;
         this.tripDateTime = tripDateTime;
     }
 
@@ -78,50 +80,50 @@ public class Trip implements Serializable {
         this.tripNotes = tripNotes;
     }
 
-    public String getTripStartLong() {
-        return tripStartLong;
+    public String getTripStartLongLat() {
+        return tripStartLongLat;
     }
 
-    public void setTripStartLong(String tripStartLong) {
-        this.tripStartLong = tripStartLong;
+    public void setTripStartLongLat(String tripStartLongLat) {
+        this.tripStartLongLat = tripStartLongLat;
     }
 
-    public String getTripStartLat() {
-        return tripStartLat;
+    public String getTripStartLocation() {
+        return tripStartLocation;
     }
 
-    public void setTripStartLat(String tripStartLat) {
-        this.tripStartLat = tripStartLat;
+    public void setTripStartLocation(String tripStartLocation) {
+        this.tripStartLocation = tripStartLocation;
     }
 
-    public String getTripEndLong() {
-        return tripEndLong;
+    public String getTripEndLongLat() {
+        return tripEndLongLat;
     }
 
-    public void setTripEndLong(String tripEndLong) {
-        this.tripEndLong = tripEndLong;
+    public void setTripEndLongLat(String tripEndLongLat) {
+        this.tripEndLongLat = tripEndLongLat;
     }
 
-    public String getTripEndLAt() {
-        return tripEndLAt;
+    public String getTripEndLocation() {
+        return tripEndLocation;
     }
 
-    public void setTripEndLAt(String tripEndLAt) {
-        this.tripEndLAt = tripEndLAt;
+    public void setTripEndLocation(String tripEndLocation) {
+        this.tripEndLocation = tripEndLocation;
     }
 
-    public String getTripDateTime() {
+    public long getTripDateTime() {
         return tripDateTime;
     }
 
-    public void setTripDateTime(String tripDateTime) {
+    public void setTripDateTime(long tripDateTime) {
         this.tripDateTime = tripDateTime;
     }
 
     @Override
     public String toString() {
-        String str = tripId + "|" + tripTitle + "|" + tripStatus + "|" + tripType + "|" + tripStartLong + "|" + tripStartLat +
-                        "|" + tripEndLong + "|" + tripEndLAt + "|" + tripDateTime + "|" + tripNotes;
+        String str = tripId + "|" + tripTitle + "|" + tripStatus + "|" + tripType + "|" + tripStartLongLat + "|" + tripStartLocation +
+                        "|" + tripEndLongLat + "|" + tripEndLocation + "|" + tripDateTime + "|" + tripNotes;
 
         return str;
     }

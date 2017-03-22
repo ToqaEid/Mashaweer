@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
+
+import java.util.Calendar;
 
 public class TripDetailsActivity extends AppCompatActivity {
 
@@ -68,15 +69,33 @@ public class TripDetailsActivity extends AppCompatActivity {
         else
             tv_tripStatus.setText("Done Trip");
 
-        tv_tripFrom.setText( trip.getTripStartLat() );
-        tv_tripTo.setText( trip.getTripEndLAt() );
-        tv_tripDate.setText( trip.getTripDateTime().split(" ")[0] );
-        tv_tripTime_1.setText( trip.getTripDateTime().split(" ")[1] );
+        tv_tripFrom.setText( trip.getTripStartLocation() );
+        tv_tripTo.setText( trip.getTripEndLocation() );
 
-        if ( Integer.parseInt( tv_tripTime_1.getText().toString().split(":")[0]) > 12 )
-            tv_tripTime_2.setText("PM");
-        else
+
+
+        /////// get date and time from milliseconds
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( trip.getTripDateTime() );
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMinute = calendar.get(Calendar.MINUTE);
+
+        tv_tripDate.setText( mDay + " - " + mMonth );
+
+        if ( mHour >= 12 )
         {
+            tv_tripTime_1.setText( (mHour-12) + "");
+            tv_tripTime_2.setText("PM");
+
+        }else
+        {
+            tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
         //////////////// handling buttons' click listener
@@ -186,7 +205,7 @@ public class TripDetailsActivity extends AppCompatActivity {
                 Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
 
                 new TripServices().startTrip(TripDetailsActivity.this, trip);
-//                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
+//                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
 //                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 //                mapIntent.setPackage("com.google.android.apps.maps");
 //                startActivity(mapIntent);
