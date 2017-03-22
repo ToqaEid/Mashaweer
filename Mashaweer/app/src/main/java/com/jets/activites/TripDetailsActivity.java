@@ -28,6 +28,10 @@ import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.Calendar;
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class TripDetailsActivity extends AppCompatActivity {
 
     Intent previousIntent;
@@ -47,6 +51,20 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         previousIntent = getIntent();
         trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+
+
+
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(trip.getTripId().getBytes());
+            byte messageDigest[] = digest.digest();
+            int hash = ByteBuffer.wrap(messageDigest).getInt();
+            Log.i("Tag", String.valueOf(hash));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,8 +112,7 @@ public class TripDetailsActivity extends AppCompatActivity {
             tv_tripTime_2.setText("PM");
 
         }else
-        {
-            tv_tripTime_1.setText( mHour + "");
+        { tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
         //////////////// handling buttons' click listener
@@ -205,7 +222,7 @@ public class TripDetailsActivity extends AppCompatActivity {
                 Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
 
                 new TripServices().startTrip(TripDetailsActivity.this, trip);
-//                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
+//                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
 //                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 //                mapIntent.setPackage("com.google.android.apps.maps");
 //                startActivity(mapIntent);

@@ -24,8 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 
@@ -88,6 +92,17 @@ public class TripEditActivity extends AppCompatActivity {
             tripType.toggle();
         }
 
+
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(trip.getTripId().getBytes());
+            byte messageDigest[] = digest.digest();
+            int hash = ByteBuffer.wrap(messageDigest).getInt();
+            Log.i("Tag", String.valueOf(hash));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         ////////////////// 2. get start location [Long&Lat + place name]
         PlaceAutocompleteFragment autocompleteFragment_FROM = (PlaceAutocompleteFragment)
@@ -244,12 +259,9 @@ public class TripEditActivity extends AppCompatActivity {
 //                startActivity(intent);
 
                 // Adding Alarm
-                Intent alarmIntent = new Intent(TripEditActivity.this, Alarm.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripEditActivity.this.getApplicationContext(), Integer.parseInt(trip.getTripId()), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                        + (10*1000), pendingIntent);
+                TripServices.setAlarm(TripEditActivity.this, trip, System.currentTimeMillis() + (10*1000));
+
+
                 Toast.makeText(TripEditActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
 
                 finish();
