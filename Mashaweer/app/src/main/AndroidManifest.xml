@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jets.activites">
+    package="com.jets.mashaweer">
 
     <!-- *** PERMISSIONS *** -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,12 +20,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".ApplicationClass">
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name="com.jets.activites.SplashScreenAvtivity" >
+        <activity android:name="com.jets.mashaweer.SplashScreenAvtivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,26 +38,26 @@
 
 
         <!-- *** LoginActivity *** -->
-        <activity android:name="com.jets.activites.LoginActivity" />
+        <activity android:name="com.jets.mashaweer.LoginActivity" />
         <!-- End of LoginActivity -->
 
 
         <!-- *** SignupActivity *** -->
         <activity
-            android:name="com.jets.activites.SignupActivity"
+            android:name="com.jets.mashaweer.SignupActivity"
             android:label="@string/title_activity_sigup" />
         <!-- End of SignupActivity -->
 
 
         <!-- *** HomeActivity *** -->
-        <activity android:name="com.jets.activites.HomeActivity" >
+        <activity android:name="com.jets.mashaweer.HomeActivity" >
 
         </activity>
         <!-- End of HomeActivity -->
 
 
         <!-- *** HistoryActivity *** -->
-        <activity android:name="com.jets.activites.HistoryActivity"
+        <activity android:name="com.jets.mashaweer.HistoryActivity"
             android:label="@string/title_activity_history" >
 
         </activity>
@@ -64,7 +65,7 @@
 
 
         <!-- *** TripAddActivity *** -->
-        <activity android:name="com.jets.activites.TripAddActivity" >
+        <activity android:name="com.jets.mashaweer.TripAddActivity" >
 
 
 
@@ -73,13 +74,13 @@
 
 
         <!-- *** TripEditActivity *** -->
-        <activity android:name="com.jets.activites.TripEditActivity" />
+        <activity android:name="com.jets.mashaweer.TripEditActivity" />
         <!-- End of TripEditActivity -->
 
 
         <!-- *** TripDetailsActivity *** -->
         <activity
-            android:name="com.jets.activites.TripDetailsActivity"
+            android:name="com.jets.mashaweer.TripDetailsActivity"
             android:label="@string/title_activity_trip_details"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -87,7 +88,7 @@
 
         <!-- *** ReminderActivity *** -->
         <activity
-            android:name="com.jets.activites.ReminderActivity"
+            android:name="com.jets.mashaweer.ReminderActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Holo.Dialog" />

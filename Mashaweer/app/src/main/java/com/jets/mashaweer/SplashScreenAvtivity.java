@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +24,9 @@ public class SplashScreenAvtivity extends AppCompatActivity {
         super.onStart();
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         String authorized = sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
+
+        System.out.println(authorized);
+
         if (authorized == null) {
             intent = new Intent(SplashScreenAvtivity.this, LoginActivity.class);
 

@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -6,7 +6,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
+
+import java.util.Calendar;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -86,15 +87,33 @@ public class TripDetailsActivity extends AppCompatActivity {
         else
             tv_tripStatus.setText("Done Trip");
 
-        tv_tripFrom.setText( trip.getTripStartLat() );
-        tv_tripTo.setText( trip.getTripEndLAt() );
-        tv_tripDate.setText( trip.getTripDateTime().split(" ")[0] );
-        tv_tripTime_1.setText( trip.getTripDateTime().split(" ")[1] );
+        tv_tripFrom.setText( trip.getTripStartLocation() );
+        tv_tripTo.setText( trip.getTripEndLocation() );
 
-        if ( Integer.parseInt( tv_tripTime_1.getText().toString().split(":")[0]) > 12 )
-            tv_tripTime_2.setText("PM");
-        else
+
+
+        /////// get date and time from milliseconds
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( trip.getTripDateTime() );
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMinute = calendar.get(Calendar.MINUTE);
+
+        tv_tripDate.setText( mDay + " / " + mMonth );
+
+        if ( mHour >= 12 )
         {
+            tv_tripTime_1.setText( (mHour-12) + "");
+            tv_tripTime_2.setText("PM");
+
+        }else
+        {
+            tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
         //////////////// handling buttons' click listener

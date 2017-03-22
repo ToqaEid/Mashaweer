@@ -17,8 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jets.activites.DB_Adapter;
-import com.jets.activites.R;
+import com.jets.mashaweer.DB_Adapter;
+import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
 import com.jets.classes.UpcomingListFormat;
 import com.jets.constants.SharedPreferenceInfo;
@@ -57,7 +57,6 @@ public class UpcomingTripsFragment extends Fragment {
 
         userID = SharedPreferenceInfo.getUserId(getActivity());
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userID);
 

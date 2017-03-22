@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import org.junit.Test;
 

@@ -27,5 +27,12 @@ public class SharedPreferenceInfo {
         return sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
     }
 
+    static public void signOut(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(SharedPreferenceInfo.USER_ID);
+        editor.apply();
+    }
+
 }
 

@@ -8,9 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.jets.activites.ReminderActivity;
-import com.jets.activites.TripAddActivity;
 import com.jets.constants.DBConstants;
+import com.jets.classes.Trip;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -45,7 +44,7 @@ public class TripServices extends Activity{
             //not round trip
         }
         //TODO: update the date of trip to be now date
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripStartLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         getApplicationContext().startActivity(mapIntent);

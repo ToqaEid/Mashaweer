@@ -11,11 +11,11 @@ import android.widget.ImageButton;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.jets.activites.HistoryActivity;
-import com.jets.activites.HomeActivity;
-import com.jets.activites.LoginActivity;
-import com.jets.activites.R;
-import com.jets.activites.TripAddActivity;
+import com.jets.mashaweer.HistoryActivity;
+import com.jets.mashaweer.HomeActivity;
+import com.jets.mashaweer.LoginActivity;
+import com.jets.mashaweer.R;
+import com.jets.mashaweer.TripAddActivity;
 import com.jets.constants.SharedPreferenceInfo;
 
 /**
@@ -61,7 +61,10 @@ public class NavBarFragment extends Fragment{
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
-                SharedPreferenceInfo.addUserDataToSharedPreference(getActivity(),  "null");
+
+
+                SharedPreferenceInfo.signOut(getActivity().getApplicationContext());
+
             }
         });
         return rootView;

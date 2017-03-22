@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

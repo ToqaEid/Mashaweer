@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -26,25 +25,34 @@ import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
+import com.jets.mashaweer.DB_Adapter;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
+import java.util.UUID;
 
-
-public class TripEditActivity extends AppCompatActivity {
+public class TripAddActivity extends AppCompatActivity {
 
     private Button addTrip, tripDate, tripTime;
-    private ToggleButton tripType;
     private TextInputLayout tripName;
+    private Trip tripObj;
     private int hours, minutes, year, month, day;
+    private DB_Adapter db_adapter;
     private String userID;
     DatabaseReference db;
-    Intent previousIntent;
-    private Trip trip;
 
-    String timeStr, dateStr ;
+    private Calendar calender;
+
+    ////// hint:: Mohem Gdn Gdn Gdnzzzz
+    /////////////// for DB and TripBean
+    //////////////////// StartLongitude will hold Long&Lat for start location "Semicolon Separated"
+    //////////////////// StartLatitude  will hold PlaceName for start location
+    //////////////////// EndLongitude will hold Long&Lat for destination location "Semicolon Separated"
+    //////////////////// EndLatitude  will hold PlaceName for destination location
+    //////////////////// TripDateTime will hold "22/10/2019 10:45" [separated by space]
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,39 +68,18 @@ public class TripEditActivity extends AppCompatActivity {
         tripDate = (Button) findViewById(R.id.addTrip_tripDate);
         tripTime = (Button) findViewById(R.id.addTrip_tripTime);
         tripName = (TextInputLayout) findViewById(R.id.addTrip_tripName);
-        tripType = (ToggleButton) findViewById(R.id.addTrip_tripType) ;
 
-        previousIntent = getIntent();
-        trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+        tripObj = new Trip();
+        db_adapter = new DB_Adapter(getApplicationContext());
+        calender = Calendar.getInstance();
 
-        //fill fields with data
-        tripName.getEditText().setText(trip.getTripTitle());
-        final String[] dateTime = trip.getTripDateTime().split(" ");
-
-        tripDate.setText(dateTime[0]);
-        tripTime.setText(dateTime[1]);
-
-        Toast.makeText(TripEditActivity.this, String.valueOf(trip.getTripType()), Toast.LENGTH_SHORT).show();
-        if(trip.getTripType() != 0){
-            tripType.toggle();
-        }
+        ////////////////// 1. get trip name in the ON ADD TRIP CLICK
 
 
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(trip.getTripId().getBytes());
-            byte messageDigest[] = digest.digest();
-            int hash = ByteBuffer.wrap(messageDigest).getInt();
-            Log.i("Tag", String.valueOf(hash));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
 
         ////////////////// 2. get start location [Long&Lat + place name]
         PlaceAutocompleteFragment autocompleteFragment_FROM = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment_FROM.setHint(trip.getTripStartLat());
 
         autocompleteFragment_FROM.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -107,8 +94,8 @@ public class TripEditActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                trip.setTripStartLong( long_lat );   /////////////////////////////// 5ally balk
-                trip.setTripStartLat( place.getName().toString() ); //////////////// 5ally balk
+                tripObj.setTripStartLongLat( long_lat );   /////////////////////////////// 5ally balk
+                tripObj.setTripStartLocation( place.getName().toString() ); //////////////// 5ally balk
             }
 
             @Override
@@ -120,10 +107,9 @@ public class TripEditActivity extends AppCompatActivity {
 
 
         ////////////////// 3. get destination location [Long&Lat + place name]
-        PlaceAutocompleteFragment autocompleteFragment_TO = (PlaceAutocompleteFragment)
+        final PlaceAutocompleteFragment autocompleteFragment_TO = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
 
-        autocompleteFragment_TO.setHint(trip.getTripEndLAt());
         autocompleteFragment_TO.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -136,8 +122,8 @@ public class TripEditActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                trip.setTripEndLong( long_lat );   /////////////////////////////// 5ally balk
-                trip.setTripEndLAt( place.getName().toString() ); //////////////// 5ally balk
+                tripObj.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
+                tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
 
 
             }
@@ -150,6 +136,10 @@ public class TripEditActivity extends AppCompatActivity {
         });
 
 
+        /////////////////// 4. get trip date
+
+
+
         tripDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,16 +149,19 @@ public class TripEditActivity extends AppCompatActivity {
                 month = calendar.get(Calendar.MONTH);
                 day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(TripEditActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TripAddActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                dateStr = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
 
-                                tripDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calender.set(Calendar.MONTH, monthOfYear + 1);
+                                calender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                calender.set(Calendar.YEAR, year);
+
+                               // tripObj.setTripDateTime(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
                             }
                         }, year, month, day);
@@ -188,17 +181,20 @@ public class TripEditActivity extends AppCompatActivity {
                 hours = calendar.get(Calendar.HOUR);
                 minutes = calendar.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(TripEditActivity.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(TripAddActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
 
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
 
-                                String date = trip.getTripDateTime();
+                               // String date = tripObj.getTripDateTime();
+                                calender.set(Calendar.HOUR,hourOfDay);
+                                calender.set(Calendar.MINUTE,minute);
+                                calender.set(Calendar.SECOND,0);
 
-                                tripTime.setText(hourOfDay + ":" + minute);
-                                timeStr = hourOfDay + ":" + minute;
+
+
 
                             }
                         }, hours, minutes, false);
@@ -209,37 +205,42 @@ public class TripEditActivity extends AppCompatActivity {
 
 
 
-
-
         //////////////////////// Finally, Insert Into Db then go to another view
         addTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(dateStr != null && timeStr != null){
-                    trip.setTripDateTime( dateStr + " " + timeStr);
-                }
+                tripObj.setTripTitle( tripName.getEditText().getText().toString() );
 
-                trip.setTripTitle( tripName.getEditText().getText().toString() );
+                tripObj.setTripId(UUID.randomUUID().toString());
 
-                db.child(trip.getTripId()).setValue(trip);
+
+
+
+                long selectedDateTime = calender.getTime().getTime();
+
+                Log.i("MyTag","***************** "+ selectedDateTime);
+
+                tripObj.setTripDateTime(selectedDateTime);
+
+                db.child(tripObj.getTripId()).setValue(tripObj);
+
 
                 Log.i("3lama","added to database");
 
-//                Intent intent = new Intent(TripEditActivity.this, HomeActivity.class);
+//                Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
 //                startActivity(intent);
 
                 // Adding Alarm
-                TripServices.setAlarm(TripEditActivity.this, trip, System.currentTimeMillis() + (10*1000));
+                TripServices.setAlarm(TripAddActivity.this, tripObj, System.currentTimeMillis() + (10*1000));
 
-
-                Toast.makeText(TripEditActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+                Toast.makeText(TripAddActivity.this, "Alarm will fire in 10 seconds",Toast.LENGTH_LONG).show();
 
                 finish();
+
 //
 //
-//
-//                if( db_adapter.insertTripInfo(trip))
+//                if( db_adapter.insertTripInfo(tripObj))
 //                {
 //                    Log.i("MyTag", "Insertion process >>>>>>> SUCCESS " );
 
@@ -250,6 +251,7 @@ public class TripEditActivity extends AppCompatActivity {
 
             }
         });
+
 
 
 
