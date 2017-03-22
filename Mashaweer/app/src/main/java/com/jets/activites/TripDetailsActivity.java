@@ -203,7 +203,7 @@ public class TripDetailsActivity extends AppCompatActivity {
 
                 Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
 
-                new TripServices().startTrip(TripDetailsActivity.this, trip);
+                new TripServices().startTrip(trip);
 //                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
 //                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 //                mapIntent.setPackage("com.google.android.apps.maps");

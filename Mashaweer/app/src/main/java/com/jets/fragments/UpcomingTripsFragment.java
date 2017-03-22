@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.jets.activites.DB_Adapter;
 import com.jets.activites.R;
 import com.jets.classes.Trip;
+import com.jets.classes.UpcomingListFormat;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
@@ -33,11 +34,13 @@ import java.util.ArrayList;
 public class UpcomingTripsFragment extends Fragment {
 
     private ListView upcoming_listView;
+    private ListView round_listView;
     private Communicator communicator;
     private UpcomingCustomAdapter adapter;
 
     private DB_Adapter db_adapter;
     private ArrayList<Trip> upcomingTrips = new ArrayList<>();
+    private ArrayList<Trip> roundTrips = new ArrayList<>();
     private String userID;
 
 
@@ -72,6 +75,8 @@ public class UpcomingTripsFragment extends Fragment {
                     upcomingTrips.add(trip);
                     if(adapter != null){
                         adapter.notifyDataSetChanged();
+                        UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+                        UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
                     }
 
                 }
@@ -140,9 +145,18 @@ public class UpcomingTripsFragment extends Fragment {
 
             upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
 
+            round_listView = (ListView) rootView.findViewById(R.id.round_listView);
+
             adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
             adapter.notifyDataSetChanged();
+
             upcoming_listView.setAdapter(adapter);
+            round_listView.setAdapter(adapter);
+
+//            UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+//            UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
+
+
             Log.i("MyTag","Upcoming adapter is set");
             upcoming_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

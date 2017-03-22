@@ -2,6 +2,7 @@ package com.jets.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,5 +83,9 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> {
         return  rowView;
     }
 
-
+    @Override
+    public int getCount() {
+        Log.i("Tag size", String.valueOf(trips.size()));
+        return trips.size();
+    }
 }

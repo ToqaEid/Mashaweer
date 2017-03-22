@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+import com.jets.activites.ReminderActivity;
 import com.jets.activites.TripAddActivity;
 import com.jets.constants.DBConstants;
 
@@ -26,11 +27,11 @@ public class TripServices extends Activity{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Trip trip = (Trip) intent.getSerializableExtra("trip");
-        Context context = (Context) intent.getSerializableExtra("context");
-        startTrip(context, trip);
+        startTrip(trip);
+
     }
 
-    public void startTrip(Context context, Trip trip){
+    public void startTrip(Trip trip){
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
             //TODO: UPDATE DATABASE WITHT HE NEW OBJECT
         }else{
@@ -47,7 +48,7 @@ public class TripServices extends Activity{
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
-        context.getApplicationContext().startActivity(mapIntent);
+        getApplicationContext().startActivity(mapIntent);
     }
 
     public static int getTripUniqueId(String tripId){
@@ -71,6 +72,7 @@ public class TripServices extends Activity{
 
         Intent alarmIntent = new Intent(context, Alarm.class);
 
+        alarmIntent.putExtra("Trip", trip);
         int requestCode = getTripUniqueId(trip.getTripId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
