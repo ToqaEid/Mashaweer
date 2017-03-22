@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.jets.activites.ReminderActivity;
+import com.jets.mashaweer.ReminderActivity;
 /**
  * Created by toqae on 17/03/2017.
  */

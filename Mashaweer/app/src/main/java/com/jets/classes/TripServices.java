@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.jets.activites.TripAddActivity;
 import com.jets.constants.DBConstants;
 
 import java.nio.ByteBuffer;

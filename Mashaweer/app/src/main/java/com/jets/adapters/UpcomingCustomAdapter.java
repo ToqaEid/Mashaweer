@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.jets.activites.R;
+import com.jets.mashaweer.R;
 import com.jets.classes.UpcomingListViewHolder;
 import com.jets.classes.Trip;
 
