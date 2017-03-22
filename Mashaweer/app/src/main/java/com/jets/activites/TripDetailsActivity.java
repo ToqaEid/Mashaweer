@@ -104,7 +104,7 @@ public class TripDetailsActivity extends AppCompatActivity {
         int mHour = calendar.get(Calendar.HOUR);
         int mMinute = calendar.get(Calendar.MINUTE);
 
-        tv_tripDate.setText( mDay + " - " + mMonth );
+        tv_tripDate.setText( mDay + " / " + mMonth );
 
         if ( mHour >= 12 )
         {
@@ -112,7 +112,8 @@ public class TripDetailsActivity extends AppCompatActivity {
             tv_tripTime_2.setText("PM");
 
         }else
-        { tv_tripTime_1.setText( mHour + "");
+        {
+            tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
         //////////////// handling buttons' click listener

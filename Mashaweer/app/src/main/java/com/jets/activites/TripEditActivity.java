@@ -183,7 +183,7 @@ public class TripEditActivity extends AppCompatActivity {
 
 
                                 calender.set(Calendar.MONTH, monthOfYear + 1);
-                                calender.set(Calendar.DATE, dayOfMonth);
+                                calender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 calender.set(Calendar.YEAR, year);
 
                                 //dateStr = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;

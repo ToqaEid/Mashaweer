@@ -157,7 +157,7 @@ public class TripAddActivity extends AppCompatActivity {
 
 
                                 calender.set(Calendar.MONTH, monthOfYear + 1);
-                                calender.set(Calendar.DATE, dayOfMonth);
+                                calender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 calender.set(Calendar.YEAR, year);
 
                                // tripObj.setTripDateTime(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
@@ -213,12 +213,16 @@ public class TripAddActivity extends AppCompatActivity {
 
                 tripObj.setTripId(UUID.randomUUID().toString());
 
-                db.child(tripObj.getTripId()).setValue(tripObj);
 
 
 
                 long selectedDateTime = calender.getTime().getTime();
+
+                Log.i("MyTag","***************** "+ selectedDateTime);
+
                 tripObj.setTripDateTime(selectedDateTime);
+
+                db.child(tripObj.getTripId()).setValue(tripObj);
 
 
                 Log.i("3lama","added to database");
