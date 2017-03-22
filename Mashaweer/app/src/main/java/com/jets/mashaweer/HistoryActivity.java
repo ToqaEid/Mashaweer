@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;

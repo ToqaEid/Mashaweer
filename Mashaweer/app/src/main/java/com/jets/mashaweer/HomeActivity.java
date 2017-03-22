@@ -1,7 +1,6 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.jets.adapters.TabsAdapter;
 import com.jets.classes.Trip;
-import com.jets.constants.DBConstants;
 import com.jets.interfaces.Communicator;
 
 public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {

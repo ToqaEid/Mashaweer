@@ -1,4 +1,4 @@
-package com.jets.activites;
+package com.jets.mashaweer;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -261,7 +261,7 @@ public class TripDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteTrip() {
-        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
         db.child(trip.getTripId()).removeValue();
         finish();
