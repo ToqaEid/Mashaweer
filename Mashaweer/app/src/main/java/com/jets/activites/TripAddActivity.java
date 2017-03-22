@@ -23,8 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -189,8 +193,6 @@ public class TripAddActivity extends AppCompatActivity {
 
 
 
-
-
         //////////////////////// Finally, Insert Into Db then go to another view
         addTrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,17 +208,12 @@ public class TripAddActivity extends AppCompatActivity {
 //                startActivity(intent);
 
                 // Adding Alarm
-                Intent alarmIntent = new Intent(TripAddActivity.this, Alarm.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        TripAddActivity.this.getApplicationContext(), Integer.parseInt(tripObj.getTripId()), alarmIntent, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                        + (10*1000), pendingIntent);
-                Toast.makeText(TripAddActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+                TripServices.setAlarm(TripAddActivity.this, tripObj, System.currentTimeMillis() + (10*1000));
 
+                Toast.makeText(TripAddActivity.this, "Alarm will fire in 10 seconds",Toast.LENGTH_LONG).show();
 
                 finish();
-//
+
 //
 //
 //                if( db_adapter.insertTripInfo(tripObj))

@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             android:src="@drawable/trip2" />
@@ -43,7 +43,8 @@
             android:maxLines="3"
             android:gravity="right"
             android:layout_alignParentRight="true"
-            android:padding="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
             android:text="7:00 A.M."
             android:textColor="#222"
             android:textStyle="bold"
@@ -56,7 +57,8 @@
             android:layout_below="@+id/upcoming_tripTime"
             android:maxLines="3"
             android:layout_gravity="right"
-            android:padding="8dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="8dp"
             android:text="Mon 7th Sep 2016"
             android:textColor="#666"
             android:textSize="16dp"

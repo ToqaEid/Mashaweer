@@ -27,6 +27,10 @@ import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class TripDetailsActivity extends AppCompatActivity {
 
     Intent previousIntent;
@@ -46,6 +50,20 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         previousIntent = getIntent();
         trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+
+
+
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(trip.getTripId().getBytes());
+            byte messageDigest[] = digest.digest();
+            int hash = ByteBuffer.wrap(messageDigest).getInt();
+            Log.i("Tag", String.valueOf(hash));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

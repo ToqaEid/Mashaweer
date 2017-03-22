@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 
+import java.io.Serializable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -136,7 +138,10 @@ public class ReminderActivity extends Activity {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ReminderActivity.this);
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
+       // Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
+        Intent intent = new Intent(this , TripServices.class);
+        intent.putExtra("trip", trip);
+        intent.putExtra("context", (Serializable) ReminderActivity.this);
         PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, intent, 0);
         builder.setContentIntent(pendingIntent);
 
