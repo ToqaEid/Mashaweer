@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
+import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.Calendar;
@@ -116,8 +118,10 @@ public class TripDetailsActivity extends AppCompatActivity {
             tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
+
         //////////////// handling buttons' click listener
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +142,13 @@ public class TripDetailsActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
+        Log.i("invi", String.valueOf(trip.getTripStatus()));
+        if(trip.getTripStatus() == DBConstants.STATUS_DONE){
+            Log.i("Tag","invisible");
+            fab.setVisibility(View.INVISIBLE);
+            fab_play.setVisibility(View.GONE);
+
+        }
         fab_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,7 +254,8 @@ public class TripDetailsActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_delete:
-                deleteTrip();
+                ///deleteTrip();
+                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
                 return true;
             case R.id.action_done:
                 doneTrip();

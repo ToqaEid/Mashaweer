@@ -30,11 +30,11 @@ public class Alert {
         alertDialog.show();
     }
 
-    public static void showConfimDeleteDialog(String title, String msg, final Context context, final Trip trip) {
+    public static void showConfimDeleteDialog(final Context context, final Trip trip) {
 
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(msg);
+        alertDialog.setTitle("Delete Trip");
+        alertDialog.setMessage("Are you sure you want to delete "+trip.getTripTitle()+" ?");
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "DELETE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");

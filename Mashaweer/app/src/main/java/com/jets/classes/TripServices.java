@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.jets.constants.DBConstants;
@@ -22,14 +23,35 @@ import java.security.NoSuchAlgorithmException;
 public class TripServices extends Activity{
 
 
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        Log.i("Tag", "on create TripServices");
+//    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.i("Tag", "onNewIntent");
         Trip trip = (Trip) intent.getSerializableExtra("trip");
-        startTrip(trip);
+        String className = intent.getStringExtra("methodName");
+        boolean nullornot = className == null;
+        Log.i("TAG cancel", String.valueOf(nullornot));
+
+        if (className.equals("start")) {
+            startTrip(trip);
+        }else{
+            cancelTrip(trip);
+        }
+        finish();
+
 
     }
-
+    public void cancelTrip(Trip trip){
+        Log.i("TAG", "cancel Trip");
+        //TODO: set trip status to cancel
+        //TODO: update trip in db
+    }
     public void startTrip(Trip trip){
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
             //TODO: UPDATE DATABASE WITHT HE NEW OBJECT

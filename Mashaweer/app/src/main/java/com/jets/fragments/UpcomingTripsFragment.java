@@ -64,11 +64,15 @@ public class UpcomingTripsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("3lama", "onDataChange");
+
                 Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
                 while (trips.iterator().hasNext()){
+
 //                    Log.i("3lama", trips.iterator().next().getValue().toString());
                     DataSnapshot returnedData = trips.iterator().next();
+                    long stat = (long) returnedData.child("tripType").getValue();
                     Trip trip = returnedData.getValue(Trip.class);
+                    Log.i("invi", trip.getTripStatus()+"");
                     trip.setTripId(returnedData.getKey());
                     Log.i("3lama", trip.toString());
                     upcomingTrips.add(trip);

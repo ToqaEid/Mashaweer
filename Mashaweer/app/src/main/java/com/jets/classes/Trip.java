@@ -17,7 +17,7 @@ public class Trip implements Serializable {
 
         this.tripId = "0";
         this.tripType = 0;
-        this.tripStatus = 0;
+        this.tripStatus = 3;
         this.tripTitle = "Virtual";
         this.tripNotes = "NOTES";
         this.tripStartLongLat = "32.877540399999994;23.9705802";

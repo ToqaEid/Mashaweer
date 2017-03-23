@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -128,12 +129,38 @@ public class ReminderActivity extends Activity {
 
         builder.setSmallIcon(R.mipmap.ic_launcher);
        // Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
-        Intent intent = new Intent(this , TripServices.class);
-        intent.putExtra("trip", trip);
-        intent.putExtra("context", "Reminder");
-        PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, intent, 0);
-        builder.setContentIntent(pendingIntent);
 
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+             //   TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+              //  stackBuilder.addParentStack(TripServices.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+
+        Intent intent = new Intent(this , TripServices.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("trip", trip);
+        intent.putExtra("methodName", "start");
+        //stackBuilder.addNextIntent(intent);
+        //PendingIntent pendingIntent = stackBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, intent, 0);
+
+        //builder.setContentIntent(pendingIntent);
+        builder.addAction(R.color.colorAccent, "START", pendingIntent);
+
+        Intent cancelIntent = new Intent(this , TripServices.class);
+        cancelIntent.putExtra("trip", trip);
+        cancelIntent.putExtra("methodName", "cancel");
+        PendingIntent cancelPendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, cancelIntent, 0);
+
+        builder.addAction(R.color.colorAccent, "CANCEL", cancelPendingIntent);
+        //builder.addAction(R.color.colorAccent, "start", pendingIntent);
+
+        builder.setAutoCancel(true);
+
+        builder.setOngoing(true);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
         builder.setContentTitle("Notifications Title");
         builder.setContentText("Your notification content here.");
@@ -148,41 +175,3 @@ public class ReminderActivity extends Activity {
         notificationManager.notify(notificationId, builder.build());
     }
 }
-
-
-
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog));
-//        builder.setMessage("Are you sure you want to exit?");
-//                .setCancelable(
-//                false).setPositiveButton("Yes",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                }).setNegativeButton("No",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        builder.setPositiveButton("START", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-//        builder.setNegativeButton("LATER", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-//        builder.setNeutralButton("CANCEL", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-//        AlertDialog alert = builder.create();
-//        alert.show();
