@@ -125,50 +125,39 @@ public class ReminderActivity extends Activity {
 
     public void notifyLater(int notificationId){
 
+        String START_ACTION = "START_ACTION";
+        String CANCEL_ACTION = "CANCEL_ACTION";
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ReminderActivity.this);
-
         builder.setSmallIcon(R.mipmap.ic_launcher);
-       // Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.journaldev.com/"));
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-             //   TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-              //  stackBuilder.addParentStack(TripServices.class);
-        // Adds the Intent that starts the Activity to the top of the stack
 
         Intent intent = new Intent(this , TripServices.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("trip", trip);
-        intent.putExtra("methodName", "start");
-        //stackBuilder.addNextIntent(intent);
-        //PendingIntent pendingIntent = stackBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, intent, 0);
+        intent.setAction(START_ACTION);
 
-        //builder.setContentIntent(pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, intent, 0);
+        builder.setContentIntent(pendingIntent);
         builder.addAction(R.color.colorAccent, "START", pendingIntent);
 
         Intent cancelIntent = new Intent(this , TripServices.class);
+        cancelIntent.setAction(CANCEL_ACTION);
         cancelIntent.putExtra("trip", trip);
-        cancelIntent.putExtra("methodName", "cancel");
-        PendingIntent cancelPendingIntent = PendingIntent.getActivity(ReminderActivity.this, 0, cancelIntent, 0);
+        PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, cancelIntent, 0);
 
         builder.addAction(R.color.colorAccent, "CANCEL", cancelPendingIntent);
-        //builder.addAction(R.color.colorAccent, "start", pendingIntent);
-
-        builder.setAutoCancel(true);
 
         builder.setOngoing(true);
+        builder.setAutoCancel(true);
+
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
         builder.setContentTitle("Notifications Title");
         builder.setContentText("Your notification content here.");
         builder.setSubText("Tap to view the website.");
+
+        //set Light and sound of notification
         builder.setLights(0xffffffff, 1000, 200);
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(uri);
-        builder.setAutoCancel(false);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Will display the notification in the notification bar
