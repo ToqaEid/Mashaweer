@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jets.constants.DBConstants;
 import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
@@ -55,42 +56,7 @@ public class UpcomingTripsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userID = SharedPreferenceInfo.getUserId(getActivity());
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference("users/" + userID);
-
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("3lama", "onDataChange");
-
-                Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
-                while (trips.iterator().hasNext()){
-
-//                    Log.i("3lama", trips.iterator().next().getValue().toString());
-                    DataSnapshot returnedData = trips.iterator().next();
-                    long stat = (long) returnedData.child("tripType").getValue();
-                    Trip trip = returnedData.getValue(Trip.class);
-                    Log.i("invi", trip.getTripStatus()+"");
-                    trip.setTripId(returnedData.getKey());
-                    Log.i("3lama", trip.toString());
-                    upcomingTrips.add(trip);
-                    if(adapter != null){
-                        adapter.notifyDataSetChanged();
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 //        if (upcomingTrips.size() == 0){
 //           Log.i("MyTag"," > >  >  >   . . Empty DB");
@@ -194,5 +160,63 @@ public class UpcomingTripsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         communicator = (Communicator) getActivity();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // reading and updating data from database
+        userID = SharedPreferenceInfo.getUserId(getActivity());
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userID);
+
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                upcomingTrips.clear();
+                //TODO: clear all the other lists as well
+
+                Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
+
+                while (trips.iterator().hasNext()){
+                    DataSnapshot returnedData = trips.iterator().next();
+                    Trip trip = returnedData.getValue(Trip.class);
+                    trip.setTripId(returnedData.getKey());
+
+                    switch (trip.getTripStatus()){
+
+                        case DBConstants.STATUS_UPCOMING:
+                            upcomingTrips.add(trip);
+                            break;
+
+                        case DBConstants.STATUS_PENDING:
+                            //TODO: Replace the array list "upcoming trips" with the pending arraylist name
+                            upcomingTrips.add(trip);
+                            break;
+
+                        default:
+                            //TODO: Replace the array list "upcoming trips" with the done/cancelled arraylist name
+                            upcomingTrips.add(trip);
+                            break;
+                    }
+
+                    if(adapter != null){
+                        adapter.notifyDataSetChanged();
+                        UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+                        UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

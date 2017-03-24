@@ -67,8 +67,6 @@ public class TripDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle( trip.getTripTitle() );
         setSupportActionBar(toolbar);
@@ -126,7 +124,7 @@ public class TripDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
+                Intent intent = new Intent(TripDetailsActivity.this, TripAddActivity.class);
                 intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
@@ -268,13 +266,12 @@ public class TripDetailsActivity extends AppCompatActivity {
 
     private void doneTrip() {
 //        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-
-
-
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+        db.child(trip.getTripId()).child("tripStatus").setValue(DBConstants.STATUS_DONE);
+        finish();
     }
 
     private void deleteTrip() {
-        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
         db.child(trip.getTripId()).removeValue();
         finish();
