@@ -13,9 +13,6 @@ public class SplashScreenAvtivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen_avtivity);
-        System.out.println(String.valueOf(R.string.sever_error_email_title));
-        System.out.println("hhhj");
 
     }
 

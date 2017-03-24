@@ -68,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0;
     private static final int REQUEST_SIGNUP = 0;
 
     @Override
@@ -113,6 +112,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         _fbLogin.setReadPermissions("email", "public_profile");
+        _fbLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _loginButton.setEnabled(false);
+                _fbLogin.setEnabled(false);
+            }
+        });
         _fbLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -140,11 +146,15 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-
+                _loginButton.setEnabled(true);
+                _fbLogin.setEnabled(true);
             }
 
             @Override
             public void onError(FacebookException error) {
+
+                _loginButton.setEnabled(true);
+                _fbLogin.setEnabled(true);
                 Log.i("3lama", "error facebook");
             }
         });
@@ -161,8 +171,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // By default we just finish the Activity and log them in automatically
+                // Finish the sign in activity if the signup was successful
                 this.finish();
                 return;
             }
