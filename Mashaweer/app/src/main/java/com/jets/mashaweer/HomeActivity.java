@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.jets.adapters.TabsAdapter;
 import com.jets.classes.Trip;
+import com.jets.fragments.NavBarFragment;
 import com.jets.interfaces.Communicator;
 
 public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {
@@ -26,11 +27,13 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
 
+        NavBarFragment fragment = (NavBarFragment) getSupportFragmentManager().findFragmentById(R.id.navbar);
+        fragment.setBtnColor("home");
+
         viewPager = (ViewPager) findViewById(R.id.pager);
         //getting userID from intent
         userID = getIntent().getStringExtra("userID");
 
-        Log.i("MyTag", String.valueOf(viewPager == null));
         actionBar = getSupportActionBar();
         tabsAdapter = new TabsAdapter(getSupportFragmentManager());
 
@@ -38,26 +41,6 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-
-
-//        //////////////// handling add trip buttons' click listener
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton_addTrip);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent(HomeActivity.this, TripAddActivity.class);
-//                startActivity(intent);
-//
-//                Toast.makeText(HomeActivity.this, "--- Going to tripAdd ---", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
-
-
-
 
 
         ///////// add your tabs

@@ -171,7 +171,6 @@ public class TripAddActivity extends AppCompatActivity {
 
 
         //////////////////// 5. get trip time
-
         tripTime.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -228,14 +227,9 @@ public class TripAddActivity extends AppCompatActivity {
 
                 Log.i("3lama","added to database");
 
-//                Intent intent = new Intent(TripAddActivity.this, HomeActivity.class);
-//                startActivity(intent);
-
                 // Adding Alarm
-                TripServices.setAlarm(TripAddActivity.this, tripObj, System.currentTimeMillis() + (10*1000));
-
+                TripServices.setAlarm(TripAddActivity.this, tripObj, tripObj.getTripDateTime());
                 Toast.makeText(TripAddActivity.this, "Alarm will fire in 10 seconds",Toast.LENGTH_LONG).show();
-
                 finish();
 
 //

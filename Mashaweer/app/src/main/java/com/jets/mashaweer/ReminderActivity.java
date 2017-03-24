@@ -133,26 +133,28 @@ public class ReminderActivity extends Activity {
 
         Intent intent = new Intent(this , TripServices.class);
         intent.putExtra("trip", trip);
+        intent.putExtra("notificationId", notificationId);
         intent.setAction(START_ACTION);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, intent, 0);
         builder.setContentIntent(pendingIntent);
-        builder.addAction(R.color.colorAccent, "START", pendingIntent);
+        builder.addAction(R.drawable.start2, "START", pendingIntent);
 
         Intent cancelIntent = new Intent(this , TripServices.class);
         cancelIntent.setAction(CANCEL_ACTION);
         cancelIntent.putExtra("trip", trip);
-        PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, cancelIntent, 0);
+        cancelIntent.putExtra("notificationId", notificationId);
+        PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, notificationId, cancelIntent, 0);
 
-        builder.addAction(R.color.colorAccent, "CANCEL", cancelPendingIntent);
+        builder.addAction(R.drawable.cancel1, "CANCEL", cancelPendingIntent);
 
         builder.setOngoing(true);
         builder.setAutoCancel(true);
 
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-        builder.setContentTitle("Notifications Title");
-        builder.setContentText("Your notification content here.");
-        builder.setSubText("Tap to view the website.");
+        builder.setContentTitle("Mashaweer");
+        builder.setContentText(trip.getTripTitle() + " is postponed");
+        builder.setSubText("Click to Start Trip Now");
 
         //set Light and sound of notification
         builder.setLights(0xffffffff, 1000, 200);
@@ -162,5 +164,6 @@ public class ReminderActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Will display the notification in the notification bar
         notificationManager.notify(notificationId, builder.build());
+
     }
 }

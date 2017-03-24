@@ -1,5 +1,6 @@
 package com.jets.mashaweer;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,6 +9,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,62 +19,73 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
+import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
+import com.jets.classes.ListFormat;
+import com.jets.classes.Note;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.Alert;
 import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class TripDetailsActivity extends AppCompatActivity {
 
-    Intent previousIntent;
+    //UI References
+    private TextView tv_tripStatus, tv_tripFrom, tv_tripTo, tv_tripDate, tv_tripTime_1, tv_tripTime_2
+            , completeText, uncompeletedText;
+    private View completeView;
+    private ListView uncheckedList, checkedList;
 
-    private TextView tv_tripStatus, tv_tripFrom, tv_tripTo, tv_tripDate, tv_tripTime_1, tv_tripTime_2;
-
+    //Location References
     private LocationManager locationManager;
     private LocationProvider locationProvider;
     private double longitude=0, latitude=0;
 
+    //General Referances
+    private Intent previousIntent;
     private Trip trip;
-    String tripName = "TripOne";
+    private NotesAdapter uncheckedNotesAdapter;
+    private CheckedNoteAdatper checkedNotesAdapter;
+    private ArrayList<String> uncheckedNotes;
+    private ArrayList<String> checkedNotes;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_details2);
 
-        previousIntent = getIntent();
-        trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
-
-
-
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(trip.getTripId().getBytes());
-            byte messageDigest[] = digest.digest();
-            int hash = ByteBuffer.wrap(messageDigest).getInt();
-            Log.i("Tag", String.valueOf(hash));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        if(savedInstanceState == null) {
+            previousIntent = getIntent();
+            trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
+        }else {
+            trip = (Trip) savedInstanceState.getSerializable("trip");
         }
-
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle( trip.getTripTitle() );
         setSupportActionBar(toolbar);
 
+        toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onBackPressed();
+            }
+        });
         //////////////////  egt references for TextViews
 
         tv_tripStatus = (TextView) findViewById(R.id.tripDetails_tv_status);
@@ -81,6 +94,9 @@ public class TripDetailsActivity extends AppCompatActivity {
         tv_tripTo = (TextView) findViewById(R.id.tripDetails_tv_to);
         tv_tripTime_1 = (TextView) findViewById(R.id.tripDetails_tv_time1);
         tv_tripTime_2 = (TextView) findViewById(R.id.tripDetails_tv_time2);
+        completeText = (TextView) findViewById(R.id.complete_text);
+        uncompeletedText = (TextView) findViewById(R.id.uncomplete_text);
+        completeView = findViewById(R.id.complete_line);
 
         /////////////// populate data in tripVeiw
 
@@ -94,8 +110,167 @@ public class TripDetailsActivity extends AppCompatActivity {
 
 
 
-        /////// get date and time from milliseconds
+        ///Notes
+        notesPreparation();
 
+        /////// get date and time from milliseconds
+        prepareDateTime();
+
+        //////////////// handling buttons' click listener
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
+                intent.putExtra("selectedTrip", trip);
+                startActivity(intent);
+
+            }
+        });
+
+        FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
+        fab_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                gpsPermission();
+                new TripServices().startTrip(trip);
+
+            }
+        });
+
+        Log.i("invi", String.valueOf(trip.getTripStatus()));
+        if(trip.getTripStatus() == DBConstants.STATUS_DONE){
+            Log.i("Tag","invisible");
+            fab.setVisibility(View.INVISIBLE);
+            fab_play.setVisibility(View.GONE);
+
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        trip.setTripCheckedNotes(checkedNotes);
+        trip.setTripUncheckedNotes(uncheckedNotes);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //TODO: save the object in db
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("trip", trip);
+    }
+
+    /*====================== MENU ==============================*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_trip_details, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                ///deleteTrip();
+                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                return true;
+            case R.id.action_done:
+                doneTrip();
+                return true;
+//            case R.id.home:
+//                finish();
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void doneTrip() {
+//        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
+
+
+
+    }
+
+    /*==== END MENU ===*/
+
+    /*================ HELPFUL FUNCTIONS =================================*/
+    private void notesPreparation(){
+
+        //////// NOTES
+        uncheckedNotes = new ArrayList<>();
+        checkedNotes = new ArrayList<>();
+        uncheckedNotes.add("One");
+        uncheckedNotes.add("twO");
+        uncheckedNotes.add("One");
+        uncheckedNotes.add("One");
+
+        uncheckedNotesAdapter = new NotesAdapter(this, uncheckedNotes);
+        checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
+
+        uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
+        uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                checkedNotes.add(uncheckedNotes.get(position));
+                uncheckedNotes.remove(position);
+                uncheckedNotesAdapter.notifyDataSetChanged();
+                checkedNotesAdapter.notifyDataSetChanged();
+                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+                ListFormat.setListViewHeightBasedOnChildren(checkedList);
+                if(checkedNotes.size() > 0){
+                    completeText.setVisibility(View.VISIBLE);
+                    completeView.setVisibility(View.VISIBLE);
+                }
+                if(uncheckedNotes.size() ==0){
+                    uncompeletedText.setVisibility(View.GONE);
+                    completeView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        checkedList =(ListView) findViewById(R.id.completed_list);
+        checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                uncheckedNotes.add(checkedNotes.get(position));
+                checkedNotes.remove(position);
+                uncheckedNotesAdapter.notifyDataSetChanged();
+                checkedNotesAdapter.notifyDataSetChanged();
+                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+                ListFormat.setListViewHeightBasedOnChildren(checkedList);
+                if(checkedNotes.size() == 0){
+                    completeText.setVisibility(View.GONE);
+                    completeView.setVisibility(View.GONE);
+                }
+                if(uncheckedNotes.size() >0){
+                    uncompeletedText.setVisibility(View.VISIBLE);
+                    completeView.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        uncheckedList.setAdapter(uncheckedNotesAdapter);
+        checkedList.setAdapter(checkedNotesAdapter);
+
+        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+        ListFormat.setListViewHeightBasedOnChildren(checkedList);
+
+    }
+
+    private void prepareDateTime(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( trip.getTripDateTime() );
 
@@ -118,166 +293,83 @@ public class TripDetailsActivity extends AppCompatActivity {
             tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
+    }
 
-        //////////////// handling buttons' click listener
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
+    private void gpsPermission(){
+        //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
+        ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        ///////////////// B. NOT Enabled
+        ///////////////////////// Ask for a permission to turn them ON
+
+        ///////////////////////////////// Accepted? .... then get his current location "XY" and Navigate to Google Maps
+
+        ///////////////////////////////// Not Accepted? .... Do Nothing; JUST a Toast
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
+
+
+        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
+
+
+        if (ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+
+            ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            return;
+        }
+        Log.i("MyTag","Done______________");
+
+        /////////------////////----------/////// test if all permissions are ENABLED
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+
+            {
+
+                Log.i("MyTag","Done______________I'm in");
+            }
+
             @Override
-            public void onClick(View view) {
+            public void onLocationChanged(Location location) {
 
-                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
-                intent.putExtra("selectedTrip", trip);
-                startActivity(intent);
 
-                Toast.makeText(TripDetailsActivity.this, "---End of EDIT-Trip btnClick---", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(TripDetailsActivity.this, Alarm.class);
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-//                        TripDetailsActivity.this.getApplicationContext(), 234324243, intent, 0);
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-//                        + (3*1000), pendingIntent);
-//                Toast.makeText(TripDetailsActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Log.i("MyTag","Done___>>______"+longitude+" ;; " + latitude);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
             }
         });
 
-        FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
-        Log.i("invi", String.valueOf(trip.getTripStatus()));
-        if(trip.getTripStatus() == DBConstants.STATUS_DONE){
-            Log.i("Tag","invisible");
-            fab.setVisibility(View.INVISIBLE);
-            fab_play.setVisibility(View.GONE);
-
-        }
-        fab_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
-                ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
-
-                ///////////////// B. NOT Enabled
-                ///////////////////////// Ask for a permission to turn them ON
-
-                ///////////////////////////////// Accepted? .... then get his current location "XY" and Navigate to Google Maps
-
-                ///////////////////////////////// Not Accepted? .... Do Nothing; JUST a Toast
-
-                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
-
-
-                boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-                if (!enabled) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-
-
-
-                if (ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-
-
-                    ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-                    return;
-                }
-                Log.i("MyTag","Done______________");
-
-                /////////------////////----------/////// test if all permissions are ENABLED
-
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-
-                    {
-
-                        Log.i("MyTag","Done______________I'm in");
-                    }
-
-                    @Override
-                    public void onLocationChanged(Location location) {
-
-
-                        longitude = location.getLongitude();
-                        latitude = location.getLatitude();
-                        Log.i("MyTag","Done___>>______"+longitude+" ;; " + latitude);
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                });
-
-
-//                /////////------////////---------//////////////////////////////////////////////
-
-                Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
-
-                new TripServices().startTrip(trip);
-//                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
-//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//                mapIntent.setPackage("com.google.android.apps.maps");
-//                startActivity(mapIntent);
-
-            }
-        });
-    }
-    /*====================== MENU ==============================*/
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_trip_details, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                ///deleteTrip();
-                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
-                return true;
-            case R.id.action_done:
-                doneTrip();
-                return true;
-            
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void doneTrip() {
-//        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-
-
 
     }
-
-    private void deleteTrip() {
-        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
-        db.child(trip.getTripId()).removeValue();
-        finish();
-    }
-    /*==== END MENU ===*/
 }

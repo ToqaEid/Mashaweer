@@ -2,6 +2,7 @@ package com.jets.classes;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,13 +26,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TripServices extends BroadcastReceiver{
 
-
     private Trip tripObj;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         tripObj = (Trip) intent.getSerializableExtra("trip");
+        int notificationId = intent.getIntExtra("notificationId", 0 );
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
@@ -40,6 +41,8 @@ public class TripServices extends BroadcastReceiver{
         } else if(action.equals(CANCEL_ACTION)){
             cancelTrip(tripObj);
         }
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(notificationId);
     }
 
     public void cancelTrip(Trip trip){

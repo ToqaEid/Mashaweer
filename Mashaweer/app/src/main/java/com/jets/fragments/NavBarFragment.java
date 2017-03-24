@@ -1,9 +1,13 @@
 package com.jets.fragments;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,5 +72,16 @@ public class NavBarFragment extends Fragment{
             }
         });
         return rootView;
+    }
+    public void setBtnColor(String btn){
+        switch (btn){
+            case "home":
+                homeBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
+                break;
+            case "map":
+                historyBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
+                break;
+
+        }
     }
 }

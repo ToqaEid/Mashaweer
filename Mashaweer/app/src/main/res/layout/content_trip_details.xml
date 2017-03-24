@@ -8,6 +8,7 @@
     tools:context="com.jets.mashaweer.TripDetailsActivity"
     tools:showIn="@layout/activity_trip_details2">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -151,8 +152,70 @@
                 android:layout_alignParentBottom="true"/>
 
         </LinearLayout>
-    </LinearLayout>
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollojt"
+            android:fillViewport="true"
+            android:layout_marginBottom="20dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dip" >
+
+                <TextView
+                    android:text="Uncompleted Items"
+                    android:id="@+id/uncomplete_text"
+                    android:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <ListView
+                    android:id="@+id/uncompleted_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="10.0sp"
+                    android:divider="@android:color/transparent"
+
+                    />
+
+                <View
+                    android:id="@+id/complete_line"
+                    android:visibility="gone"
+                    android:layout_height="1dp"
+                    android:background="@color/cardview_shadow_start_color"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:text="Completed Items"
+                    android:id="@+id/complete_text"
+                    android:visibility="gone"
+                    android:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <ListView
+                    android:id="@+id/completed_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:dividerHeight="10.0sp"
+                    android:divider="@android:color/transparent"
+
+                    />
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 
 </android.support.v4.widget.NestedScrollView>

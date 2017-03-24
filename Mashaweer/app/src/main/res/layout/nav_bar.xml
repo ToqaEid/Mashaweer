@@ -21,35 +21,39 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="?attr/homeAsUpIndicator"
+                app:srcCompat="@drawable/home1"
                 android:id="@+id/home"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light" />
+                android:backgroundTint="@android:color/background_light"
+                android:tint="@color/cast_intro_overlay_background_color" />
 
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_menu_recent_history"
+                app:srcCompat="@drawable/map"
                 android:id="@+id/history"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light" />
+                android:backgroundTint="@android:color/background_light"
+                android:tint="@color/cast_intro_overlay_background_color" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_menu_add"
+                app:srcCompat="@drawable/add"
                 android:id="@+id/add"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light" />
+                android:backgroundTint="@android:color/background_light"
+                android:tint="@color/cast_intro_overlay_background_color" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/cast_ic_mini_controller_pause"
+                app:srcCompat="@drawable/exit"
                 android:id="@+id/signout"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light" />
+                android:backgroundTint="@android:color/background_light"
+                android:tint="@color/cast_intro_overlay_background_color" />
 
         </LinearLayout>
     </LinearLayout>

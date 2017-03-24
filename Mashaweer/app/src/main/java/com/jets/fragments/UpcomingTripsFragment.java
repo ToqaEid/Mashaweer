@@ -17,10 +17,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jets.classes.ListFormat;
 import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
-import com.jets.classes.UpcomingListFormat;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
@@ -78,8 +78,8 @@ public class UpcomingTripsFragment extends Fragment {
                     upcomingTrips.add(trip);
                     if(adapter != null){
                         adapter.notifyDataSetChanged();
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
+                        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+                        ListFormat.setListViewHeightBasedOnChildren(round_listView);
                     }
 
                 }
@@ -156,8 +156,8 @@ public class UpcomingTripsFragment extends Fragment {
             upcoming_listView.setAdapter(adapter);
             round_listView.setAdapter(adapter);
 
-//            UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-//            UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
+//            ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+//            ListFormat.setListViewHeightBasedOnChildren(round_listView);
 
 
             Log.i("MyTag","Upcoming adapter is set");
