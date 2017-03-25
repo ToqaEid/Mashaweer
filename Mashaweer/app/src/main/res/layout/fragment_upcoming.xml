@@ -22,7 +22,7 @@
             android:background="?attr/colorAccent"/>
 
         <ListView
-            android:id="@+id/upcoming_listView"
+            android:id="@+id/round_listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dividerHeight="10.0sp"
@@ -41,7 +41,7 @@
             android:background="?attr/colorAccent"/>
 
         <ListView
-            android:id="@+id/round_listView"
+            android:id="@+id/upcoming_listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:dividerHeight="10.0sp"

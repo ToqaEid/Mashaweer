@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="4"
@@ -18,5 +19,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/note_text"
-        android:layout_weight="4" />
+        android:layout_weight="3" />
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/cancel1"
+        android:id="@+id/cancel_unchecked_btn"
+        android:background="@android:color/background_light"
+        android:layout_weight="0.5" />
 </LinearLayout>

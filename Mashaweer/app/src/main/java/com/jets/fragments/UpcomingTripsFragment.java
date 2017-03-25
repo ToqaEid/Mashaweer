@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jets.adapters.round.RoundListAdapter;
 import com.jets.constants.DBConstants;
 import com.jets.classes.ListFormat;
 import com.jets.mashaweer.DB_Adapter;
@@ -38,6 +39,7 @@ public class UpcomingTripsFragment extends Fragment {
     private ListView round_listView;
     private Communicator communicator;
     private UpcomingCustomAdapter adapter;
+    private RoundListAdapter roundListAdapter;
 
     private DB_Adapter db_adapter;
     private ArrayList<Trip> upcomingTrips = new ArrayList<>();
@@ -120,10 +122,13 @@ public class UpcomingTripsFragment extends Fragment {
             round_listView = (ListView) rootView.findViewById(R.id.round_listView);
 
             adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
+            roundListAdapter = new RoundListAdapter(getContext(), roundTrips);
+
             adapter.notifyDataSetChanged();
+            roundListAdapter.notifyDataSetChanged();
 
             upcoming_listView.setAdapter(adapter);
-            round_listView.setAdapter(adapter);
+            round_listView.setAdapter(roundListAdapter);
 
 //            ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
 //            ListFormat.setListViewHeightBasedOnChildren(round_listView);
@@ -180,6 +185,7 @@ public class UpcomingTripsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 upcomingTrips.clear();
+                roundTrips.clear();
                 //TODO: clear all the other lists as well
 
                 Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
@@ -197,7 +203,7 @@ public class UpcomingTripsFragment extends Fragment {
 
                         case DBConstants.STATUS_PENDING:
                             //TODO: Replace the array list "upcoming trips" with the pending arraylist name
-                            upcomingTrips.add(trip);
+                            roundTrips.add(trip);
                             break;
 
                         default:
