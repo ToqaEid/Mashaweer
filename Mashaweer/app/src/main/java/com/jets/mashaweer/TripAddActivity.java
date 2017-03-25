@@ -137,6 +137,12 @@ public class TripAddActivity extends AppCompatActivity {
         autocompleteFragment_FROM.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("MyTag", "Place: " + place.getName());
+                Log.i("MyTag", "PlaceID: " + place.getId());
+                Log.i("MyTag", "PlaceAddress: " + place.getAddress());
+                Log.i("MyTag", "Place: " + place.getLatLng().toString());
+
 
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
@@ -170,6 +176,9 @@ public class TripAddActivity extends AppCompatActivity {
 
                 tripObj.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
                 tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
+
+
+                tripObj.setTripPlaceId( place.getId() );
 
             }
 

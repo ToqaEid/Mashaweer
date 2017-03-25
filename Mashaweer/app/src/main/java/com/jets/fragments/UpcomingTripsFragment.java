@@ -107,6 +107,9 @@ public class UpcomingTripsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Log.i("MyTag","OnCreateView");
+
+        Toast.makeText(getContext(), "Loading Images", Toast.LENGTH_SHORT).show();
+
         View rootView = null;
         if (! isEmpty)
         {
