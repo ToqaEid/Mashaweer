@@ -3,12 +3,17 @@ package com.jets.mashaweer;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -20,10 +25,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
+import com.google.android.gms.location.places.Places;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
@@ -39,18 +51,20 @@ import com.jets.constants.SharedPreferenceInfo;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TripDetailsActivity extends AppCompatActivity {
+public class TripDetailsActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
     //UI References
-    private TextView tv_tripStatus, tv_tripFrom, tv_tripTo, tv_tripDate, tv_tripTime_1, tv_tripTime_2
-            , completeText, uncompeletedText;
+    private TextView tv_tripStatus, tv_tripFrom, tv_tripTo, tv_tripDate, tv_tripTime_1, tv_tripTime_2, completeText, uncompeletedText;
     private View completeView;
     private ListView uncheckedList, checkedList;
+    private GoogleApiClient mGoogleApiClient;
+    private Bitmap bitmap = null;
+    private ImageView imageViewTrip;
 
     //Location References
     private LocationManager locationManager;
     private LocationProvider locationProvider;
-    private double longitude=0, latitude=0;
+    private double longitude = 0, latitude = 0;
 
     //General Referances
     private Intent previousIntent;
@@ -66,16 +80,16 @@ public class TripDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_details2);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             previousIntent = getIntent();
             trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
-        }else {
+        } else {
             trip = (Trip) savedInstanceState.getSerializable("trip");
         }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle( trip.getTripTitle() );
+        toolbar.setTitle(trip.getTripTitle());
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
@@ -97,17 +111,17 @@ public class TripDetailsActivity extends AppCompatActivity {
         completeText = (TextView) findViewById(R.id.complete_text);
         uncompeletedText = (TextView) findViewById(R.id.uncomplete_text);
         completeView = findViewById(R.id.complete_line);
+        imageViewTrip = (ImageView) findViewById(R.id.tripDetails_Image);
 
         /////////////// populate data in tripVeiw
 
-        if ( trip.getTripStatus() == 1)
+        if (trip.getTripStatus() == 1)
             tv_tripStatus.setText("UpComing Trip");
         else
             tv_tripStatus.setText("Done Trip");
 
-        tv_tripFrom.setText( trip.getTripStartLocation() );
-        tv_tripTo.setText( trip.getTripEndLocation() );
-
+        tv_tripFrom.setText(trip.getTripStartLocation());
+        tv_tripTo.setText(trip.getTripEndLocation());
 
 
         ///Notes
@@ -141,14 +155,52 @@ public class TripDetailsActivity extends AppCompatActivity {
         });
 
         Log.i("invi", String.valueOf(trip.getTripStatus()));
-        if(trip.getTripStatus() == DBConstants.STATUS_DONE){
-            Log.i("Tag","invisible");
+        if (trip.getTripStatus() == DBConstants.STATUS_DONE) {
+            Log.i("Tag", "invisible");
             fab.setVisibility(View.INVISIBLE);
             fab_play.setVisibility(View.GONE);
 
         }
+        ///////////// handler
+
+        final Handler messageHandler = new Handler() {
+
+            public void handleMessage(Message msg) {
+
+                super.handleMessage(msg);
+
+                Log.i("MyTag" , "Inside handler for trip# " + trip.getTripTitle());
+
+                if ( msg.what == 0 ) {
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.trip2);
+                    imageViewTrip.setImageBitmap(bitmap);
+                }
+                else {
+                    imageViewTrip.setImageBitmap(bitmap);
+                }
+            }
+        };
+
+
+        //////////////////////////// get Image
+
+        new Thread() {
+            public void run() {
+
+                Log.i("MyTag" , "Thread is running ....");
+
+                bitmap = downloadBitmap(trip.getTripPlaceId());
+
+                if (bitmap == null)
+                    messageHandler.sendEmptyMessage(0);
+                else
+                    messageHandler.sendEmptyMessage(1);
+            }
+        }.start();
 
     }
+
+
 
     @Override
     protected void onPause() {
@@ -271,6 +323,58 @@ public class TripDetailsActivity extends AppCompatActivity {
 
     }
 
+    ///////// get imageBitmap
+    private Bitmap downloadBitmap(String url) {
+
+        Log.i("MyTag" , "Downloading Image now ...  ");
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getBaseContext())
+                    // .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+
+            mGoogleApiClient.connect();
+        } else if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+        Log.i("MyTag" , "???? ");
+
+        PlacePhotoMetadataResult result = Places.GeoDataApi
+                .getPlacePhotos(mGoogleApiClient, url).await();
+
+        if (result.getStatus().isSuccess()) {
+            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+            if (photoMetadataBuffer.getCount() > 0) {
+                // Get the first bitmap and its attributions.
+
+                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
+
+                Log.i("MyTag", "#of photos : " + photoMetadataBuffer.getCount());
+
+                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
+                CharSequence attribution = photo.getAttributions();
+                // Load a scaled bitmap for this photo.
+                bitmap = photo.getScaledPhoto(mGoogleApiClient, 1000, 1000).await()
+                        .getBitmap();
+
+
+            }
+            else{
+
+                bitmap = null;
+
+            }
+            // Release the PlacePhotoMetadataBuffer.
+            photoMetadataBuffer.release();
+        }
+
+        return bitmap;
+    }
+
+
+
     private void prepareDateTime(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( trip.getTripDateTime() );
@@ -307,19 +411,6 @@ public class TripDetailsActivity extends AppCompatActivity {
 
         ///////////////////////////////// Not Accepted? .... Do Nothing; JUST a Toast
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
-
-
-        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if (!enabled) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-        }
-
-
-
         if (ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(TripDetailsActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -335,6 +426,17 @@ public class TripDetailsActivity extends AppCompatActivity {
 
             return;
         }
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
+
+
+        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
         Log.i("MyTag","Done______________");
 
         /////////------////////----------/////// test if all permissions are ENABLED
@@ -371,6 +473,32 @@ public class TripDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(getBaseContext(), "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+
+        switch (requestCode) {
+            case 1:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    new TripServices().startTrip(trip);
+                } else {
+                    // Permission Denied
+                    Toast.makeText(TripDetailsActivity.this, "Accessing GPS is Denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
 
     }
 }

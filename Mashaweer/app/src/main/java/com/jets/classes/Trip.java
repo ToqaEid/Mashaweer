@@ -12,24 +12,14 @@ public class Trip implements Serializable {
 
     private long tripDateTime;
     private int  tripType, tripStatus;
-    private String tripTitle, tripNotes, tripStartLongLat, tripStartLocation, tripEndLongLat, tripEndLocation , tripId;
+    private String  tripPlaceId,  tripTitle, tripNotes, tripStartLongLat, tripStartLocation, tripEndLongLat, tripEndLocation , tripId;
     private ArrayList<String> tripCheckedNotes, tripUncheckedNotes;
 
     public Trip() {
 
-        this.tripId = "0";
-        this.tripType = 0;
-        this.tripStatus = 3;
-        this.tripTitle = "Virtual";
-        this.tripNotes = "NOTES";
-        this.tripStartLongLat = "32.877540399999994;23.9705802";
-        this.tripStartLocation = "Aswan Dam";
-        this.tripEndLongLat = "32.3018661;31.265289299999992";
-        this.tripEndLocation = "Port Said";
-        this.tripDateTime = 7674567690L;
     }
 
-    public Trip(String tripId, int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLongLat, String tripStartLocation, String tripEndLongLat, String tripEndLocation, long tripDateTime) {
+    public Trip(String tripId,  String placeId,  int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLongLat, String tripStartLocation, String tripEndLongLat, String tripEndLocation, long tripDateTime) {
         this.tripId = tripId;
         this.tripType = tripType;
         this.tripStatus = tripStatus;
@@ -40,6 +30,8 @@ public class Trip implements Serializable {
         this.tripEndLongLat = tripEndLongLat;
         this.tripEndLocation = tripEndLocation;
         this.tripDateTime = tripDateTime;
+
+        this.tripPlaceId = placeId;
     }
 
     public String getTripId() {
@@ -48,6 +40,15 @@ public class Trip implements Serializable {
 
     public void setTripId(String tripId) {
         this.tripId = tripId;
+    }
+
+
+    public String getTripPlaceId() {
+        return tripPlaceId;
+    }
+
+    public void setTripPlaceId(String tripPlaceId) {
+        this.tripPlaceId = tripPlaceId;
     }
 
     public int getTripType() {

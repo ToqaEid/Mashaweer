@@ -25,6 +25,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle("Mashaweer");
+
         setContentView(R.layout.activity_main_home);
 
         NavBarFragment fragment = (NavBarFragment) getSupportFragmentManager().findFragmentById(R.id.navbar);
