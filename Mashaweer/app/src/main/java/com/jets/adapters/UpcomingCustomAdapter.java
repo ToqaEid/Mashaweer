@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -172,6 +173,11 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         return  rowView;
     }
 
+    @Override
+    public int getCount() {
+        Log.i("Tag size", String.valueOf(trips.size()));
+        return trips.size();
+    }
     private Bitmap downloadBitmap(String url) {
 
         Log.i("MyTag" , "Downloading Image now ...  ");

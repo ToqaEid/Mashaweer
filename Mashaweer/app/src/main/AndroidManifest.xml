@@ -26,7 +26,8 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name="com.jets.mashaweer.SplashScreenAvtivity" >
+        <activity android:name="com.jets.mashaweer.SplashScreenAvtivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -93,6 +94,12 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Holo.Dialog" />
         <!-- End of ReminderActivity -->
+        <!-- *** TripService *** -->
+        <!--<activity-->
+            <!--android:name="com.jets.classes.TripServices"-->
+            <!--android:launchMode="singleTask"-->
+             <!--/>-->
+        <!-- End of TripService -->
 
 
         <!-- *** META-DATA *** -->
@@ -114,6 +121,12 @@
 
         <!-- *** RECEIVERS *** -->
         <receiver android:name="com.jets.classes.Alarm" />
+        <receiver android:name="com.jets.classes.TripServices">
+            <intent-filter>
+                <action android:name="START_ACTION"/>
+                <action android:name="CANCEL_ACTION"/>
+            </intent-filter>
+        </receiver>
         <!-- End of Receivers -->
 
     </application>

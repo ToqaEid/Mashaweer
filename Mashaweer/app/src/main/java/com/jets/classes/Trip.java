@@ -15,19 +15,6 @@ public class Trip implements Serializable {
 
     public Trip() {
 
-        this.tripId = "0";
-        this.tripType = 0;
-        this.tripStatus = 0;
-        this.tripTitle = "Virtual";
-        this.tripNotes = "NOTES";
-        this.tripStartLongLat = "32.877540399999994;23.9705802";
-        this.tripStartLocation = "Aswan Dam";
-        this.tripEndLongLat = "32.3018661;31.265289299999992";
-        this.tripEndLocation = "Port Said";
-        this.tripDateTime = 7674567690L;
-
-        this.tripPlaceId = "ChIJdd4hrwug2EcRmSrV3Vo6llI";
-
     }
 
     public Trip(String tripId,  String placeId,  int tripType, int tripStatus, String tripTitle, String tripNotes, String tripStartLongLat, String tripStartLocation, String tripEndLongLat, String tripEndLocation, long tripDateTime) {

@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
+import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.Calendar;
@@ -83,8 +85,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle( trip.getTripTitle() );
@@ -137,13 +137,15 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             tv_tripTime_1.setText( mHour + "");
             tv_tripTime_2.setText("AM");
         }
+
         //////////////// handling buttons' click listener
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
+                Intent intent = new Intent(TripDetailsActivity.this, TripAddActivity.class);
                 intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
@@ -159,6 +161,13 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         });
 
         FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
+        Log.i("invi", String.valueOf(trip.getTripStatus()));
+        if(trip.getTripStatus() == DBConstants.STATUS_DONE){
+            Log.i("Tag","invisible");
+            fab.setVisibility(View.INVISIBLE);
+            fab_play.setVisibility(View.GONE);
+
+        }
         fab_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,16 +183,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
                 ///////////////////////////////// Not Accepted? .... Do Nothing; JUST a Toast
 
-                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
-
-
-                boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-                if (!enabled) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
 
 
 
@@ -204,7 +203,22 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                 }
                 Log.i("MyTag","Done______________");
 
-                /////////------////////----------/////// test if all permissions are ENABLED
+
+
+
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
+
+
+                boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                if (!enabled) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+
+
+    /////////------////////----------/////// test if all permissions are ENABLED
 
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
 
@@ -243,7 +257,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
                 Toast.makeText(TripDetailsActivity.this, "---End of START btnClick---", Toast.LENGTH_SHORT).show();
 
-                new TripServices().startTrip(TripDetailsActivity.this, trip);
+                new TripServices().startTrip(trip);
 //                Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLong().split(";")[1] + "," + trip.getTripEndLong().split(";")[0] +"&mode=d");
 //                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 //                mapIntent.setPackage("com.google.android.apps.maps");
@@ -364,7 +378,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             case 1:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    new TripServices().startTrip(TripDetailsActivity.this, trip);
+                    new TripServices().startTrip(trip);
                 } else {
                     // Permission Denied
                     Toast.makeText(TripDetailsActivity.this, "Accessing GPS is Denied", Toast.LENGTH_SHORT)
@@ -389,7 +403,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_delete:
-                deleteTrip();
+                ///deleteTrip();
+                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
                 return true;
             case R.id.action_done:
                 doneTrip();
@@ -402,13 +417,12 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
     private void doneTrip() {
 //        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-
-
-
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+        db.child(trip.getTripId()).child("tripStatus").setValue(DBConstants.STATUS_DONE);
+        finish();
     }
 
     private void deleteTrip() {
-        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
         db.child(trip.getTripId()).removeValue();
         finish();
