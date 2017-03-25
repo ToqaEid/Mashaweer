@@ -1,6 +1,7 @@
 package com.jets.classes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by toqae on 15/03/2017.
@@ -12,6 +13,7 @@ public class Trip implements Serializable {
     private long tripDateTime;
     private int  tripType, tripStatus;
     private String  tripPlaceId,  tripTitle, tripNotes, tripStartLongLat, tripStartLocation, tripEndLongLat, tripEndLocation , tripId;
+    private ArrayList<String> tripCheckedNotes, tripUncheckedNotes;
 
     public Trip() {
 
@@ -121,12 +123,38 @@ public class Trip implements Serializable {
         this.tripDateTime = tripDateTime;
     }
 
+    public ArrayList<String> getTripCheckedNotes() {
+        return tripCheckedNotes;
+    }
+
+    public void setTripCheckedNotes(ArrayList<String> tripCheckedNotes) {
+        this.tripCheckedNotes = tripCheckedNotes;
+    }
+
+    public ArrayList<String> getTripUncheckedNotes() {
+        return tripUncheckedNotes;
+    }
+
+    public void setTripUncheckedNotes(ArrayList<String> tripUncheckedNotes) {
+        this.tripUncheckedNotes = tripUncheckedNotes;
+    }
+
     @Override
     public String toString() {
-        String str = tripId + "|" + tripTitle + "|" + tripStatus + "|" + tripType + "|" + tripStartLongLat + "|" + tripStartLocation +
-                        "|" + tripEndLongLat + "|" + tripEndLocation + "|" + tripDateTime + "|" + tripNotes;
-
-        return str;
+        return "Trip{" +
+                "tripDateTime=" + tripDateTime +
+                ", tripType=" + tripType +
+                ", tripStatus=" + tripStatus +
+                ", tripTitle='" + tripTitle + '\'' +
+                ", tripNotes='" + tripNotes + '\'' +
+                ", tripStartLongLat='" + tripStartLongLat + '\'' +
+                ", tripStartLocation='" + tripStartLocation + '\'' +
+                ", tripEndLongLat='" + tripEndLongLat + '\'' +
+                ", tripEndLocation='" + tripEndLocation + '\'' +
+                ", tripId='" + tripId + '\'' +
+                ", tripCheckedNotes=" + tripCheckedNotes +
+                ", tripUncheckedNotes=" + tripUncheckedNotes +
+                '}';
     }
 }
 

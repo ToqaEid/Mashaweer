@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
 import com.jets.constants.SharedPreferenceInfo;
 
 import java.nio.ByteBuffer;
@@ -261,6 +262,7 @@ public class TripEditActivity extends AppCompatActivity {
                 // Adding Alarm
                 TripServices.setAlarm(TripEditActivity.this, trip, System.currentTimeMillis() + (10*1000));
 
+                Alert.showErrorMsg("sdfghj","sdfghj", TripEditActivity.this);
 
                 Toast.makeText(TripEditActivity.this, "Alarm will fire in 3 seconds",Toast.LENGTH_LONG).show();
 

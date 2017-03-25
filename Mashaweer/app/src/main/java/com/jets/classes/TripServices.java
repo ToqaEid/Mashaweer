@@ -2,6 +2,7 @@ package com.jets.classes;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,8 +11,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.jets.constants.DBConstants;
 import com.jets.classes.Trip;
+import com.jets.constants.SharedPreferenceInfo;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -25,13 +29,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TripServices extends BroadcastReceiver{
 
-
     private Trip tripObj;
+    DatabaseReference db;
+    String userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         tripObj = (Trip) intent.getSerializableExtra("trip");
+        int notificationId = intent.getIntExtra("notificationId", 0 );
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
@@ -40,28 +46,42 @@ public class TripServices extends BroadcastReceiver{
         } else if(action.equals(CANCEL_ACTION)){
             cancelTrip(tripObj);
         }
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(notificationId);
     }
 
     public void cancelTrip(Trip trip){
         Log.i("TAG", "cancel Trip");
-        //TODO: set trip status to cancel
-        //TODO: update trip in db
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        db = database.getReference("users/" + userID + "/trips");
+
+        trip.setTripStatus(DBConstants.STATUS_CANCELLED);
+
+        db.child(trip.getTripId()).setValue(trip);
     }
 
     public void startTrip(Trip trip){
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        db = database.getReference("users/" + userID + "/trips");
+
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
-            //TODO: UPDATE DATABASE WITHT HE NEW OBJECT
+
+            trip.setTripStatus(DBConstants.STATUS_DONE);
+
         }else{
             if (trip.getTripStatus() == DBConstants.STATUS_PENDING){
-                //TODO: update database with the new object
                 //status pending trip
+                trip.setTripStatus(DBConstants.STATUS_PENDING);
+
             }else{
-                //TODO: update database with the new object
                 //upcoming trip
+                trip.setTripStatus(DBConstants.STATUS_DONE);
             }
-            //not round trip
         }
-        //TODO: update the date of trip to be now date
+
+        trip.setTripDateTime(System.currentTimeMillis());
+        db.child(trip.getTripId()).setValue(trip);
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripStartLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -52,10 +52,6 @@ public class Alert {
         });
         alertDialog.show();
     }
-    private void deleteTrip(Trip trip) {
-        ///FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
-        db.child(trip.getTripId()).removeValue();
-    }
+
 
 }

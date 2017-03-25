@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,11 +21,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jets.constants.DBConstants;
+import com.jets.classes.ListFormat;
 import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.LoginActivity;
 import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
-import com.jets.classes.UpcomingListFormat;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
@@ -57,7 +59,6 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
 //        if (upcomingTrips.size() == 0){
@@ -104,6 +105,8 @@ public class UpcomingTripsFragment extends Fragment {
 //        }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,8 +130,9 @@ public class UpcomingTripsFragment extends Fragment {
             upcoming_listView.setAdapter(adapter);
             round_listView.setAdapter(adapter);
 
-//            UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-//            UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
+
+//            ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+//            ListFormat.setListViewHeightBasedOnChildren(round_listView);
 
 
             Log.i("MyTag","Upcoming adapter is set");
@@ -146,6 +150,7 @@ public class UpcomingTripsFragment extends Fragment {
             upcoming_listView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+
                     return false;
                 }
             });
@@ -173,7 +178,7 @@ public class UpcomingTripsFragment extends Fragment {
 
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
-                R.style.AppTheme);// TODO: add appTheme_Dark_Dialog theme
+                R.style.AppTheme_Dark_Dialog);// TODO: add appTheme_Dark_Dialog theme
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.show();
@@ -191,14 +196,14 @@ public class UpcomingTripsFragment extends Fragment {
                 upcomingTrips.clear();
                 //TODO: clear all the other lists as well
 
-                Iterable<DataSnapshot> trips =  dataSnapshot.child("trips").getChildren();
+                Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
-                while (trips.iterator().hasNext()){
+                while (trips.iterator().hasNext()) {
                     DataSnapshot returnedData = trips.iterator().next();
                     Trip trip = returnedData.getValue(Trip.class);
                     trip.setTripId(returnedData.getKey());
 
-                    switch (trip.getTripStatus()){
+                    switch (trip.getTripStatus()) {
 
                         case DBConstants.STATUS_UPCOMING:
                             upcomingTrips.add(trip);
@@ -215,15 +220,14 @@ public class UpcomingTripsFragment extends Fragment {
                             break;
                     }
 
-                }
-                if(adapter != null){
-                    adapter.notifyDataSetChanged();
-                    UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-                    UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
-                }
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+                        ListFormat.setListViewHeightBasedOnChildren(round_listView);
+                    }
 
+                }
                 progressDialog.dismiss();
-
             }
 
             @Override
@@ -234,4 +238,5 @@ public class UpcomingTripsFragment extends Fragment {
             }
         });
     }
+
 }

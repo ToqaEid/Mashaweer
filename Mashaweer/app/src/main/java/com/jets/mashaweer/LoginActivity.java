@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme);// TODO: add appTheme_Dark_Dialog theme
+                R.style.AppTheme_Dark_Dialog);// TODO: add appTheme_Dark_Dialog theme
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();

@@ -174,12 +174,9 @@ public class TripAddActivity extends AppCompatActivity {
                 String long_lat =  place.getLatLng().longitude +"";
                 long_lat += ";" + place.getLatLng().latitude;
 
-                tripObj.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
-                tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
-
-
+                tripObj.setTripEndLongLat( long_lat );
+                tripObj.setTripEndLocation( place.getName().toString() );
                 tripObj.setTripPlaceId( place.getId() );
-
             }
 
             @Override
@@ -209,9 +206,9 @@ public class TripAddActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
+                                calender.set(Calendar.YEAR, year);
                                 calender.set(Calendar.MONTH, monthOfYear);
                                 calender.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                calender.set(Calendar.YEAR, year);
 
                                 _day.setText(String.valueOf(dayOfMonth));
                                 _month.setText(monthsOfYear[monthOfYear]);
@@ -246,6 +243,7 @@ public class TripAddActivity extends AppCompatActivity {
                                 calender.set(Calendar.MINUTE,minute);
                                 calender.set(Calendar.SECOND,0);
 
+                                Log.i("3lama", "On Time Picker: ---- " + calender.getTimeInMillis());
 
                                 if ( hourOfDay == 0){
                                     _hour.setText(String.valueOf(12));
@@ -300,6 +298,8 @@ public class TripAddActivity extends AppCompatActivity {
                 //setting trip time
                 long selectedDateTime = calender.getTimeInMillis();
                 tripObj.setTripDateTime(selectedDateTime);
+
+                Log.i("3lama", selectedDateTime+" -------");
 
                 Log.i("3lama", tripObj.toString());
 

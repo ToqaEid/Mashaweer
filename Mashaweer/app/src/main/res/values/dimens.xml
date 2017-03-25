@@ -21,7 +21,7 @@
     <!-- *** Trip View(Details) *** -->
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="details_fab_margin">16dp</dimen>
-    <dimen name="details_edit_floating_margin_bottom">0dp</dimen>
+    <dimen name="details_edit_floating_margin_bottom">100dp</dimen>
     <dimen name="details_status_padding_left">20dp</dimen>
     <dimen name="details_status_padding_top">5dp</dimen>
     <dimen name="details_status_padding_bottom">5dp</dimen>
@@ -30,5 +30,6 @@
     <dimen name="details_from_place_text_size">16sp</dimen>
     <dimen name="details_from_place_relative_padding_height">150dp</dimen>
     <!-- End of Trip View(Details) -->
+
 
 </resources>

@@ -101,13 +101,6 @@
             android:theme="@android:style/Theme.Holo.Dialog"
             android:screenOrientation="portrait"/>
         <!-- End of ReminderActivity -->
-        <!-- *** TripService *** -->
-        <!--<activity-->
-            <!--android:name="com.jets.classes.TripServices"-->
-            <!--android:launchMode="singleTask"-->
-             <!--/>-->
-        <!-- End of TripService -->
-
 
         <!-- *** META-DATA *** -->
         <!--
