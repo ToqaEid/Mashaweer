@@ -27,7 +27,8 @@
 
         <!-- *** SplashScreenAvtivity *** -->
         <activity android:name="com.jets.mashaweer.SplashScreenAvtivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,34 +40,38 @@
 
 
         <!-- *** LoginActivity *** -->
-        <activity android:name="com.jets.mashaweer.LoginActivity" />
+        <activity android:name="com.jets.mashaweer.LoginActivity"
+            android:screenOrientation="portrait"/>
         <!-- End of LoginActivity -->
 
 
         <!-- *** SignupActivity *** -->
         <activity
             android:name="com.jets.mashaweer.SignupActivity"
-            android:label="@string/title_activity_sigup" />
+            android:label="@string/title_activity_sigup"
+            android:screenOrientation="portrait"/>
         <!-- End of SignupActivity -->
 
 
         <!-- *** HomeActivity *** -->
-        <activity android:name="com.jets.mashaweer.HomeActivity" >
-
+        <activity android:name="com.jets.mashaweer.HomeActivity"
+            android:screenOrientation="portrait">
         </activity>
         <!-- End of HomeActivity -->
 
 
         <!-- *** HistoryActivity *** -->
         <activity android:name="com.jets.mashaweer.HistoryActivity"
-            android:label="@string/title_activity_history" >
+            android:label="@string/title_activity_history"
+            android:screenOrientation="portrait">
 
         </activity>
         <!-- End of HistoryActivity -->
 
 
         <!-- *** TripAddActivity *** -->
-        <activity android:name="com.jets.mashaweer.TripAddActivity" >
+        <activity android:name="com.jets.mashaweer.TripAddActivity"
+            android:screenOrientation="portrait">
 
 
 
@@ -75,7 +80,8 @@
 
 
         <!-- *** TripEditActivity *** -->
-        <activity android:name="com.jets.mashaweer.TripEditActivity" />
+        <activity android:name="com.jets.mashaweer.TripEditActivity"
+            android:screenOrientation="portrait"/>
         <!-- End of TripEditActivity -->
 
 
@@ -83,16 +89,17 @@
         <activity
             android:name="com.jets.mashaweer.TripDetailsActivity"
             android:label="@string/title_activity_trip_details"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <!-- End of TripDetailsActivity -->
 
         <!-- *** ReminderActivity *** -->
         <activity
             android:name="com.jets.mashaweer.ReminderActivity"
-            android:screenOrientation="portrait"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Holo.Dialog" />
+            android:theme="@android:style/Theme.Holo.Dialog"
+            android:screenOrientation="portrait"/>
         <!-- End of ReminderActivity -->
         <!-- *** TripService *** -->
         <!--<activity-->

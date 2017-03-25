@@ -1,6 +1,7 @@
 package com.jets.fragments;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jets.constants.DBConstants;
 import com.jets.mashaweer.DB_Adapter;
+import com.jets.mashaweer.LoginActivity;
 import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
 import com.jets.classes.UpcomingListFormat;
@@ -169,6 +171,13 @@ public class UpcomingTripsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme);// TODO: add appTheme_Dark_Dialog theme
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Fetching Data...");
+        progressDialog.show();
+
         // reading and updating data from database
         userID = SharedPreferenceInfo.getUserId(getActivity());
 
@@ -206,8 +215,6 @@ public class UpcomingTripsFragment extends Fragment {
                             break;
                     }
 
-
-
                 }
                 if(adapter != null){
                     adapter.notifyDataSetChanged();
@@ -215,10 +222,14 @@ public class UpcomingTripsFragment extends Fragment {
                     UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
                 }
 
+                progressDialog.dismiss();
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
 
             }
         });
