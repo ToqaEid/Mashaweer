@@ -203,12 +203,13 @@ public class UpcomingTripsFragment extends Fragment {
                             break;
                     }
 
-                    if(adapter != null){
-                        adapter.notifyDataSetChanged();
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-                        UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
-                    }
 
+
+                }
+                if(adapter != null){
+                    adapter.notifyDataSetChanged();
+                    UpcomingListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+                    UpcomingListFormat.setListViewHeightBasedOnChildren(round_listView);
                 }
 
             }
