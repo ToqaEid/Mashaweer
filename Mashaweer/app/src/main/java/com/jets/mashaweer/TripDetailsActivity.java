@@ -186,6 +186,7 @@ public class TripDetailsActivity extends AppCompatActivity {
                 Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
                 return true;
             case R.id.action_done:
+                Alert.showErrorMsg("sdfg","sdfg", TripDetailsActivity.this);
                 doneTrip();
                 return true;
 //            case R.id.home:

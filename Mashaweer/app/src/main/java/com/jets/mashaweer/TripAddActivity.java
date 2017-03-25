@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.mashaweer.DB_Adapter;
 
@@ -229,6 +230,7 @@ public class TripAddActivity extends AppCompatActivity {
 
                 // Adding Alarm
                 TripServices.setAlarm(TripAddActivity.this, tripObj, tripObj.getTripDateTime());
+                Alert.showErrorMsg("vbj","vbjk", TripAddActivity.this);
                 Toast.makeText(TripAddActivity.this, "Alarm will fire in 10 seconds",Toast.LENGTH_LONG).show();
                 finish();
 
