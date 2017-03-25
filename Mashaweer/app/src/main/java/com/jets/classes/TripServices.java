@@ -46,6 +46,7 @@ public class TripServices extends Activity{
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
+        mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.getApplicationContext().startActivity(mapIntent);
     }
 

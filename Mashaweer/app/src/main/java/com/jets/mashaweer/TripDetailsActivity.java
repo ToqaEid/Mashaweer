@@ -2,12 +2,17 @@ package com.jets.mashaweer;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +22,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
+import com.google.android.gms.location.places.Places;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
@@ -32,11 +44,13 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class TripDetailsActivity extends AppCompatActivity {
+public class TripDetailsActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
     Intent previousIntent;
 
     private TextView tv_tripStatus, tv_tripFrom, tv_tripTo, tv_tripDate, tv_tripTime_1, tv_tripTime_2;
+
+    private ImageView imageViewTrip;
 
     private LocationManager locationManager;
     private LocationProvider locationProvider;
@@ -44,6 +58,11 @@ public class TripDetailsActivity extends AppCompatActivity {
 
     private Trip trip;
     String tripName = "TripOne";
+
+    private GoogleApiClient mGoogleApiClient;
+    Bitmap bitmap = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +98,8 @@ public class TripDetailsActivity extends AppCompatActivity {
         tv_tripTo = (TextView) findViewById(R.id.tripDetails_tv_to);
         tv_tripTime_1 = (TextView) findViewById(R.id.tripDetails_tv_time1);
         tv_tripTime_2 = (TextView) findViewById(R.id.tripDetails_tv_time2);
+
+        imageViewTrip = (ImageView) findViewById(R.id.tripDetails_Image);
 
         /////////////// populate data in tripVeiw
 
@@ -230,7 +251,132 @@ public class TripDetailsActivity extends AppCompatActivity {
 
             }
         });
+
+
+        //////////////////// get place image
+
+        ///////////// handler
+
+        final Handler messageHandler = new Handler() {
+
+            public void handleMessage(Message msg) {
+
+                super.handleMessage(msg);
+
+                Log.i("MyTag" , "Inside handler for trip# " + trip.getTripTitle());
+
+                if ( msg.what == 0 ) {
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.trip2);
+                    imageViewTrip.setImageBitmap(bitmap);
+                }
+                else {
+                    imageViewTrip.setImageBitmap(bitmap);
+                }
+            }
+        };
+
+
+        //////////////////////////// get Image
+
+        new Thread() {
+            public void run() {
+
+                Log.i("MyTag" , "Thread is running ....");
+
+                bitmap = downloadBitmap(trip.getTripPlaceId());
+
+                if (bitmap == null)
+                    messageHandler.sendEmptyMessage(0);
+                else
+                    messageHandler.sendEmptyMessage(1);
+            }
+        }.start();
+
+
+
     }
+
+
+    ///////// get imageBitmap
+    private Bitmap downloadBitmap(String url) {
+
+        Log.i("MyTag" , "Downloading Image now ...  ");
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getBaseContext())
+                    // .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+
+            mGoogleApiClient.connect();
+        } else if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+        Log.i("MyTag" , "???? ");
+
+        PlacePhotoMetadataResult result = Places.GeoDataApi
+                .getPlacePhotos(mGoogleApiClient, url).await();
+
+        if (result.getStatus().isSuccess()) {
+            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+            if (photoMetadataBuffer.getCount() > 0) {
+                // Get the first bitmap and its attributions.
+
+                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
+
+                Log.i("MyTag", "#of photos : " + photoMetadataBuffer.getCount());
+
+                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
+                CharSequence attribution = photo.getAttributions();
+                // Load a scaled bitmap for this photo.
+                bitmap = photo.getScaledPhoto(mGoogleApiClient, 1000, 1000).await()
+                        .getBitmap();
+
+
+            }
+            else{
+
+                bitmap = null;
+
+            }
+            // Release the PlacePhotoMetadataBuffer.
+            photoMetadataBuffer.release();
+        }
+
+        return bitmap;
+    }
+
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(getBaseContext(), "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+
+        switch (requestCode) {
+            case 1:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    new TripServices().startTrip(TripDetailsActivity.this, trip);
+                } else {
+                    // Permission Denied
+                    Toast.makeText(TripDetailsActivity.this, "Accessing GPS is Denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+    }
+
     /*====================== MENU ==============================*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

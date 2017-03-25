@@ -126,6 +126,8 @@ public class TripAddActivity extends AppCompatActivity {
                 tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
 
 
+                tripObj.setTripPlaceId( place.getId() );
+
             }
 
             @Override
@@ -144,10 +146,10 @@ public class TripAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Calendar calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
+               // final Calendar calendar = Calendar.getInstance();
+                year = calender.get(Calendar.YEAR);
+                month = calender.get(Calendar.MONTH);
+                day = calender.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(TripAddActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
@@ -177,9 +179,9 @@ public class TripAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Calendar calendar = Calendar.getInstance();
-                hours = calendar.get(Calendar.HOUR);
-                minutes = calendar.get(Calendar.MINUTE);
+              //  final Calendar calendar = Calendar.getInstance();
+                hours = calender.get(Calendar.HOUR);
+                minutes = calender.get(Calendar.MINUTE);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(TripAddActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {

@@ -1,6 +1,7 @@
 package com.jets.classes;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jets.mashaweer.R;
@@ -13,6 +14,8 @@ public class UpcomingListViewHolder {
 
     View convertedView;
     TextView tripName_tv, tripDate_tv, tripTime_tv,tripType_tv;
+
+    ImageView tripThumbnail;
 
     public UpcomingListViewHolder(View view)
     {
@@ -65,5 +68,18 @@ public class UpcomingListViewHolder {
 
     public void setTripType_tv(TextView tripType_tv) {
         this.tripType_tv = tripType_tv;
+    }
+
+
+    public ImageView getTripThumbnail() {
+
+        if (tripThumbnail == null)
+            tripThumbnail = (ImageView) convertedView.findViewById(R.id.thumbnail);
+
+        return tripThumbnail;
+    }
+
+    public void setTripThumbnail(ImageView tripThumbnail) {
+        this.tripThumbnail = tripThumbnail;
     }
 }
