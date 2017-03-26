@@ -37,6 +37,7 @@
     <string name="title_activity_trip_details">TripDetails</string>
     <string name="action_delete">Delete</string>
     <string name="action_done">Done</string>
+    <string name="notes_title">Notes</string>
     <!-- End of trip details-->
 
     <!-- Strings related to trip history -->

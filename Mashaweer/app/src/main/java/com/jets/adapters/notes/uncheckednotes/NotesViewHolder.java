@@ -15,10 +15,10 @@ import com.jets.mashaweer.R;
 
 public class NotesViewHolder {
 
-    View convertedView;
-    CheckBox noteCheck;
-    TextView noteItem;
-    ImageButton cancelBtn;
+    private View convertedView;
+    private CheckBox noteCheck;
+    private TextView noteItem;
+    private ImageButton cancelBtn;
     private String activityFlag;
 
     public NotesViewHolder(View view)

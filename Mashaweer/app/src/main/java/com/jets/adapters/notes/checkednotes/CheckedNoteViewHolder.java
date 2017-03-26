@@ -3,6 +3,7 @@ package com.jets.adapters.notes.checkednotes;
 import android.graphics.Paint;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jets.mashaweer.R;
@@ -12,9 +13,11 @@ import com.jets.mashaweer.R;
  */
 
 public class CheckedNoteViewHolder {
-    View convertedView;
-    CheckBox noteCheck;
-    TextView noteItem;
+    private View convertedView;
+    private CheckBox noteCheck;
+    private  TextView noteItem;
+    private ImageButton cancelBtn;
+    private String activityFlag;
 
     public CheckedNoteViewHolder(View view)
     {
@@ -43,6 +46,22 @@ public class CheckedNoteViewHolder {
 
     public void setNoteItem(TextView noteItem) {
         this.noteItem = noteItem;
+    }
+
+    public ImageButton getCancelBtn() {
+        if (cancelBtn == null) {
+            cancelBtn = (ImageButton) convertedView.findViewById(R.id.cancel_checked_btn);
+        }
+        return cancelBtn;
+
+    }
+
+    public void setCancelBtn(ImageButton cancelBtn) {
+        this.cancelBtn = cancelBtn;
+    }
+
+    public void setActivityFlag(String activityFlag){
+        this.activityFlag = activityFlag;
     }
 }
 

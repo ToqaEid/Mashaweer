@@ -2,12 +2,18 @@ package com.jets.mashaweer;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,6 +30,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
 import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
@@ -52,12 +59,12 @@ public class TripAddActivity extends AppCompatActivity {
     @BindView(R.id.ampm) TextView _ampm;
     @BindView(R.id.datepick) LinearLayout _datePick;
     @BindView(R.id.timepick) LinearLayout _timePick;
-    @BindView(R.id.save_trip) Button _saveTrip;
     @BindView(R.id.trip_type) Switch _tripType;
     @BindView(R.id.checked_list) ListView checkedList;
     @BindView(R.id.unchecked_list) ListView uncheckedList;
     @BindView(R.id.note_input) EditText noteInput;
     @BindView(R.id.cancel_note) ImageView cancelBtn;
+    @BindView(R.id.flag) TextView noteFlag;
 
     //Arrays of year Months
     String[] monthsOfYear = {"JAN", "FEB", "MAR", "April", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
@@ -66,7 +73,9 @@ public class TripAddActivity extends AppCompatActivity {
     //Other variables
     private Trip tripObj;
     private ArrayList<String> uncheckedNotes;
+    private ArrayList<String> checkedNotes;
     private NotesAdapter uncheckedAdapter;
+    private CheckedNoteAdatper checkedAdapter;
     private int hours, minutes, year, month, day;
     private String userID;
     private DatabaseReference db;
@@ -85,17 +94,21 @@ public class TripAddActivity extends AppCompatActivity {
         tripObj = (Trip) getIntent().getSerializableExtra("selectedTrip");
 
 
-        if (tripObj != null){
+        if (tripObj != null){   //edit activity
 
             //filling fields with data if Editing
             fillingEditData();
             activityFlag ="edit";
-            uncheckedNotes = tripObj.getTripUncheckedNotes();
+//            uncheckedNotes = tripObj.getTripUncheckedNotes();
+//            checkedNotes = tripObj.getTripCheckedNotes();
+            uncheckedNotes = new ArrayList<>();
+            checkedNotes =  new ArrayList<>();
 
         }else {
             tripObj = new Trip();
             activityFlag ="add";
             uncheckedNotes = new ArrayList<>();
+
         }
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -112,128 +125,31 @@ public class TripAddActivity extends AppCompatActivity {
         /////////////////// 3. get trip date & time
         prepareDateAndTime();
 
-        //////////////////////// Finally, Insert Into Db then go to another view
-        _saveTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Setting trip name and ID
-                if (tripObj.getTripId() == null){
-                    tripObj.setTripId(UUID.randomUUID().toString());
-                }
-
-                tripObj.setTripTitle( _tripName.getText().toString());
-
-                //Setting trip type & status
-                if (_tripType.isChecked()){
-                    tripObj.setTripType(DBConstants.TYPE_ROUND_TRIP);
-                }else{
-                    tripObj.setTripType(DBConstants.TYPE_ONE_WAY);
-                }
-                tripObj.setTripStatus(DBConstants.STATUS_UPCOMING);
-
-                //setting trip time
-                long selectedDateTime = calender.getTimeInMillis();
-                tripObj.setTripDateTime(selectedDateTime);
-                //setting uncheckedNotes into object
-                tripObj.setTripUncheckedNotes(uncheckedNotes);
-
-                Log.i("3lama", tripObj.toString());
-
-                //Validation of data
-                if (tripObj.getTripTitle().trim().isEmpty()){
-                    Alert.showErrorMsg("Trip Name", "Please enter a trip name", TripAddActivity.this);
-                    Log.i("3lama", "mafesh title");
-                    return;
-                }
-                if (tripObj.getTripEndLongLat() == null){
-                    Alert.showErrorMsg("No Destination", "Please pick a Destination", TripAddActivity.this);
-                    Log.i("3lama", "mafesh End");
-                    return;
-                }
-                if (tripObj.getTripStartLongLat() == null){
-                    Alert.showErrorMsg("No Start-point", "Please pick a Start-Point", TripAddActivity.this);
-                    Log.i("3lama", "mafesh From");
-                    return;
-                }
-
-                if (tripObj.getTripStartLongLat().equals(tripObj.getTripEndLongLat())){
-                    Alert.showErrorMsg("Same place", "You picked the same place as both destination and Start\n\nPlease pick a different location", TripAddActivity.this);
-                    Log.i("3lama", "same place");
-                    return;
-                }
-
-                Log.i("3lama", tripObj.getTripDateTime() + "");
-                Log.i("3lama", System.currentTimeMillis() + "");
-                if (tripObj.getTripDateTime() < System.currentTimeMillis()){
-                    Alert.showErrorMsg("Date / Time", "Please pick a valid date and time", TripAddActivity.this);
-                    Log.i("3lama", "mafesh Time");
-                    return;
-                }
-
-                //Adding trip object to database
-                db.child(tripObj.getTripId()).setValue(tripObj);
-
-                // Adding Alarm
-                TripServices.setAlarm(TripAddActivity.this, tripObj, tripObj.getTripDateTime());
-
-                finish();
-
-            }
-        });
-
-
     }
 
-    public void notesPreparation(){
-        Log.i("tag notes prep", "hey");
 
-        uncheckedAdapter = new NotesAdapter(TripAddActivity.this, uncheckedNotes);
-        uncheckedAdapter.setActivityFlag("add");
-        uncheckedList.setAdapter(uncheckedAdapter);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        new MenuInflater(getApplication()).inflate(R.menu.menu_add_edit_trip, menu);
 
-        if(activityFlag.equals("add")){
-            checkedList.setVisibility(View.GONE);
-        }else{  //activity is edit
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveTrip();
+                break;
 
-
+            default:
+                break;
         }
 
-        noteInput.setOnKeyListener(new View.OnKeyListener()
-        {
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                if (event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    switch (keyCode)
-                    {
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            Log.i("tag notes enter", noteInput.getText().toString());
-                            uncheckedNotes.add(noteInput.getText().toString());
-                            uncheckedAdapter.notifyDataSetChanged();
-                            ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-                            noteInput.setText("");
-                            return true;
-                        default:
-                            break;
-                    }
-                }
-                return false;
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("tag notes btn", noteInput.getText().toString());
-
-                noteInput.setText("");
-            }
-        });
-
-
+        return true;
     }
+
+    /*=========================== HELPFUL FUNCTIONS =========================*/
 
     private void fillingEditData(){
         calender.setTimeInMillis(tripObj.getTripDateTime());
@@ -423,9 +339,175 @@ public class TripAddActivity extends AppCompatActivity {
 
     }
 
+    private void saveTrip(){
+        //Setting trip name and ID
+        if (tripObj.getTripId() == null){
+            tripObj.setTripId(UUID.randomUUID().toString());
+        }
+
+        tripObj.setTripTitle( _tripName.getText().toString());
+
+        //Setting trip type & status
+        if (_tripType.isChecked()){
+            tripObj.setTripType(DBConstants.TYPE_ROUND_TRIP);
+        }else{
+            tripObj.setTripType(DBConstants.TYPE_ONE_WAY);
+        }
+        tripObj.setTripStatus(DBConstants.STATUS_UPCOMING);
+
+        //setting trip time
+        long selectedDateTime = calender.getTimeInMillis();
+        tripObj.setTripDateTime(selectedDateTime);
+        //setting uncheckedNotes into object
+        tripObj.setTripUncheckedNotes(uncheckedNotes);
+
+        Log.i("3lama", tripObj.toString());
+
+        //Validation of data
+        if (tripObj.getTripTitle().trim().isEmpty()){
+            Alert.showErrorMsg("Trip Name", "Please enter a trip name", TripAddActivity.this);
+            Log.i("3lama", "mafesh title");
+            return;
+        }
+        if (tripObj.getTripEndLongLat() == null){
+            Alert.showErrorMsg("No Destination", "Please pick a Destination", TripAddActivity.this);
+            Log.i("3lama", "mafesh End");
+            return;
+        }
+        if (tripObj.getTripStartLongLat() == null){
+            Alert.showErrorMsg("No Start-point", "Please pick a Start-Point", TripAddActivity.this);
+            Log.i("3lama", "mafesh From");
+            return;
+        }
+
+        if (tripObj.getTripStartLongLat().equals(tripObj.getTripEndLongLat())){
+            Alert.showErrorMsg("Same place", "You picked the same place as both destination and Start\n\nPlease pick a different location", TripAddActivity.this);
+            Log.i("3lama", "same place");
+            return;
+        }
+
+        Log.i("3lama", tripObj.getTripDateTime() + "");
+        Log.i("3lama", System.currentTimeMillis() + "");
+        if (tripObj.getTripDateTime() < System.currentTimeMillis()){
+            Alert.showErrorMsg("Date / Time", "Please pick a valid date and time", TripAddActivity.this);
+            Log.i("3lama", "mafesh Time");
+            return;
+        }
+
+        //Adding trip object to database
+        db.child(tripObj.getTripId()).setValue(tripObj);
+
+        // Adding Alarm
+        TripServices.setAlarm(TripAddActivity.this, tripObj, tripObj.getTripDateTime());
+
+        finish();
+
+    }
+
+    public void notesPreparation(){
+        Log.i("tag notes prep", "hey");
+
+        if(activityFlag.equals("add")){
+            checkedList.setVisibility(View.GONE);
+        }else{  //activity is edit
 
 
-    public void removeFromUncheckedList(ArrayList<String> list){
-        uncheckedNotes = list;
+            /*TESTING BLOCK*/
+            checkedNotes.add("One");
+            checkedNotes.add("two");
+
+            checkedAdapter = new CheckedNoteAdatper(TripAddActivity.this, checkedNotes);
+            checkedAdapter.setActivityFlag("edit");
+            checkedList.setAdapter(checkedAdapter);
+            ListFormat.setListViewHeightBasedOnChildren(checkedList);
+
+            checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    noteInput.setText(checkedNotes.get(position));
+                    noteFlag.setText("checked");
+                    checkedNotes.remove(position);
+                    checkedAdapter.notifyDataSetChanged();
+                    ListFormat.setListViewHeightBasedOnChildren(checkedList);
+                }
+            });
+        }
+
+        uncheckedAdapter = new NotesAdapter(TripAddActivity.this, uncheckedNotes);
+        uncheckedAdapter.setActivityFlag("add");
+        uncheckedList.setAdapter(uncheckedAdapter);
+
+        uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                noteInput.setText(uncheckedNotes.get(position));
+                noteFlag.setText("unchecked");
+                uncheckedNotes.remove(position);
+                uncheckedAdapter.notifyDataSetChanged();
+                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+            }
+        });
+
+
+        //handle enter action
+        noteInput.setOnKeyListener(new View.OnKeyListener()
+        {
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            //add to array list & update list view
+                            if(noteFlag.getText().toString().equals("checked")){
+                                checkedNotes.add(noteInput.getText().toString());
+                                checkedAdapter.notifyDataSetChanged();
+                                ListFormat.setListViewHeightBasedOnChildren(checkedList);
+                            }else{
+                                uncheckedNotes.add(noteInput.getText().toString());
+                                uncheckedAdapter.notifyDataSetChanged();
+                                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+                            }
+
+                            //clear text field
+                            noteInput.setText("");
+                            noteFlag.setText("");
+                            //hide keyboard
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("tag notes btn", noteInput.getText().toString());
+
+                noteInput.setText("");
+            }
+        });
+
+
+    }
+
+
+    /*===================== Public Instance Functions ====================*/
+    public void removeFromUncheckedList(int item){
+        if (activityFlag.equals("add")) {
+            uncheckedNotes.remove(item);
+            uncheckedAdapter.notifyDataSetChanged();
+            ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+        }else {
+            checkedNotes.remove(item);
+            checkedAdapter.notifyDataSetChanged();
+            ListFormat.setListViewHeightBasedOnChildren(checkedList);
+        }
     }
 }

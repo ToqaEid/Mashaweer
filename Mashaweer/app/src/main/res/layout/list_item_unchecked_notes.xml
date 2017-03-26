@@ -26,6 +26,6 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/cancel1"
         android:id="@+id/cancel_unchecked_btn"
-        android:background="@android:color/background_light"
+        android:background="@android:color/transparent"
         android:layout_weight="0.5" />
 </LinearLayout>
