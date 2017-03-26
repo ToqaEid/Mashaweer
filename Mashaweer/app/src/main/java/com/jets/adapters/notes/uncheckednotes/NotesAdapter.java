@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 
 import com.jets.mashaweer.R;
+import com.jets.mashaweer.TripAddActivity;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class NotesAdapter extends ArrayAdapter<String> {
     }
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View rowView = convertView;
         NotesViewHolder holder;
@@ -66,7 +67,8 @@ public class NotesAdapter extends ArrayAdapter<String> {
             holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    TripAddActivity tripAddActivity = (TripAddActivity) context;
+                    tripAddActivity.removeFromUncheckedList(position);
                 }
             });
         }

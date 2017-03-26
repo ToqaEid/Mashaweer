@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.jets.mashaweer.R;
+import com.jets.mashaweer.TripAddActivity;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class CheckedNoteAdatper extends ArrayAdapter<String> {
 
     private ArrayList<String> notes;
+    private String activityFlag;
 
     private Context context;
 
@@ -29,9 +31,13 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
         this.notes = notes;
     }
 
+    public void setActivityFlag(String flag){
+        activityFlag = flag;
+    }
+
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View rowView = convertView;
         CheckedNoteViewHolder holder;
@@ -54,8 +60,22 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
         }
 
 
-        holder.getNoteItem().setText(notes.get(position));
+        holder.setActivityFlag(activityFlag);
 
+        holder.getNoteItem().setText(   notes.get(position)   );
+
+        if (!activityFlag.equals("edit")){
+            holder.getCancelBtn().setVisibility(View.GONE);
+
+        }else{
+            holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TripAddActivity tripAddActivity = (TripAddActivity) context;
+                    tripAddActivity.removeFromUncheckedList(position);
+                }
+            });
+        }
 
         return  rowView;
     }

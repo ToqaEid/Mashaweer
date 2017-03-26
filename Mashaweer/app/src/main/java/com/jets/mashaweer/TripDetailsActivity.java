@@ -136,7 +136,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
+                Intent intent = new Intent(TripDetailsActivity.this, TripAddActivity.class);
                 intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
