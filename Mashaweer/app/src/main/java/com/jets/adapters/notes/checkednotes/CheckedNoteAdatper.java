@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.jets.classes.Note;
 import com.jets.mashaweer.R;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
     private Context context;
 
     public CheckedNoteAdatper(Context context, ArrayList<String> notes) {
-        super(context, R.layout.content_unchecked_notes, R.id.note_text, notes);
+        super(context, R.layout.list_item_unchecked_notes, R.id.note_text, notes);
         this.context = context;
 
         this.notes = notes;
@@ -42,7 +41,7 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
         {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rowView = layoutInflater.inflate(R.layout.content_checked_notes, parent, false);
+            rowView = layoutInflater.inflate(R.layout.list_item_checked_notes, parent, false);
 
             holder = new CheckedNoteViewHolder(rowView);
 

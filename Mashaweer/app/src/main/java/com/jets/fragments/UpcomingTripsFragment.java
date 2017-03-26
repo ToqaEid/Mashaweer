@@ -2,17 +2,20 @@ package com.jets.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jets.adapters.round.RoundListAdapter;
 import com.jets.constants.DBConstants;
 import com.jets.classes.ListFormat;
 import com.jets.mashaweer.DB_Adapter;
@@ -29,6 +33,7 @@ import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
+import com.jets.mashaweer.TripAddActivity;
 
 import java.util.ArrayList;
 
@@ -42,12 +47,12 @@ public class UpcomingTripsFragment extends Fragment {
     private ListView round_listView;
     private Communicator communicator;
     private UpcomingCustomAdapter adapter;
+    private RoundListAdapter roundListAdapter;
 
     private DB_Adapter db_adapter;
     private ArrayList<Trip> upcomingTrips = new ArrayList<>();
     private ArrayList<Trip> roundTrips = new ArrayList<>();
     private String userID;
-
 
     boolean isEmpty;
 
@@ -111,10 +116,6 @@ public class UpcomingTripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.i("MyTag","OnCreateView");
-
-        Toast.makeText(getContext(), "Loading Images", Toast.LENGTH_SHORT).show();
-
         View rootView = null;
         if (! isEmpty)
         {
@@ -125,14 +126,19 @@ public class UpcomingTripsFragment extends Fragment {
             round_listView = (ListView) rootView.findViewById(R.id.round_listView);
 
             adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
+            roundListAdapter = new RoundListAdapter(getContext(), roundTrips);
+
             adapter.notifyDataSetChanged();
+            roundListAdapter.notifyDataSetChanged();
 
             upcoming_listView.setAdapter(adapter);
-            round_listView.setAdapter(adapter);
+            round_listView.setAdapter(roundListAdapter);
 
 
 //            ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
 //            ListFormat.setListViewHeightBasedOnChildren(round_listView);
+
+            registerForContextMenu(upcoming_listView);
 
 
             Log.i("MyTag","Upcoming adapter is set");
@@ -194,6 +200,7 @@ public class UpcomingTripsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 upcomingTrips.clear();
+                roundTrips.clear();
                 //TODO: clear all the other lists as well
 
                 Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
@@ -210,8 +217,7 @@ public class UpcomingTripsFragment extends Fragment {
                             break;
 
                         case DBConstants.STATUS_PENDING:
-                            //TODO: Replace the array list "upcoming trips" with the pending arraylist name
-                            upcomingTrips.add(trip);
+                            roundTrips.add(trip);
                             break;
 
                         default:
@@ -234,9 +240,63 @@ public class UpcomingTripsFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
                 progressDialog.dismiss();
-
             }
         });
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(0, 1, 0, "Edit");
+        menu.add(0, 2, 1, "Done");
+        menu.add(0, 3, 2, "Delete");
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo menuinfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int selectedtrip = menuinfo.position; //position in the adapter
+
+        Log.i("3lama", selectedtrip+" ----");
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userID + "/trips");
+
+        switch (item.getItemId()){
+            case 1: //Edit
+                Intent intent = new Intent(getActivity(), TripAddActivity.class);
+                intent.putExtra("selectedTrip", upcomingTrips.get(selectedtrip));
+                startActivity(intent);
+                break;
+
+            case 2://Done
+                Trip markedDone = upcomingTrips.get(selectedtrip);
+                //TODO: add the trip to the history arraylist (Can't be found)
+                upcomingTrips.remove(selectedtrip);
+                adapter.notifyDataSetChanged();
+
+                markedDone.setTripStatus(DBConstants.STATUS_DONE);
+                markedDone.setTripDateTime(System.currentTimeMillis());
+                db.child(markedDone.getTripId()).setValue(markedDone);
+
+                Toast.makeText(getActivity(), "Trip Marked Done successfully", Toast.LENGTH_SHORT).show();
+                break;
+
+            case 3://Delete
+                Trip toDelete = upcomingTrips.get(selectedtrip);
+                db.child(toDelete.getTripId()).removeValue();
+
+                upcomingTrips.remove(selectedtrip);
+                //TODO: Notify the adapter to update the listview
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+
+        return super.onContextItemSelected(item);
+    }
 }

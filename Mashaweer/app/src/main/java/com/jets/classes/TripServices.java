@@ -113,6 +113,8 @@ public class TripServices extends BroadcastReceiver{
 
     public static void setAlarm(Context context, Trip trip, long time){
 
+        Log.i("3lama", trip.getTripTitle());
+
         Intent alarmIntent = new Intent(context, Alarm.class);
 
         alarmIntent.putExtra("Trip", trip);

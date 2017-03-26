@@ -136,7 +136,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(TripDetailsActivity.this, TripEditActivity.class);
+                Intent intent = new Intent(TripDetailsActivity.this, TripAddActivity.class);
                 intent.putExtra("selectedTrip", trip);
                 startActivity(intent);
 
@@ -270,6 +270,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         uncheckedNotes.add("One");
 
         uncheckedNotesAdapter = new NotesAdapter(this, uncheckedNotes);
+        uncheckedNotesAdapter.setActivityFlag("details");
         checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
 
         uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
