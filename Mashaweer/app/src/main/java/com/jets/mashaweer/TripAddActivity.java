@@ -31,7 +31,9 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
+import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
 import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
+import com.jets.adapters.notes.uncheckednotes.NotesViewHolder;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
@@ -423,10 +425,38 @@ public class TripAddActivity extends AppCompatActivity {
 
             checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    noteInput.setText(checkedNotes.get(position));
-                    noteFlag.setText("checked");
-                    checkedNotes.remove(position);
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                    //noteInput.setText(checkedNotes.get(position));
+                    //noteFlag.setText("checked");
+
+                    final CheckedNoteViewHolder checkedNoteViewHolder = (CheckedNoteViewHolder)view.getTag();
+                    checkedNoteViewHolder.getNoteItem().setFocusable(true);
+                    checkedNoteViewHolder.getNoteItem().setOnKeyListener(new View.OnKeyListener()
+                    {
+                        public boolean onKey(View v, int keyCode, KeyEvent event)
+                        {
+                            if (event.getAction() == KeyEvent.ACTION_DOWN)
+                            {
+                                switch (keyCode)
+                                {
+                                    case KeyEvent.KEYCODE_DPAD_CENTER:
+                                    case KeyEvent.KEYCODE_ENTER:
+                                        //add to array list & update list view
+                                        checkedNotes.set(position, checkedNoteViewHolder.getNoteItem().getText().toString());
+                                        //hide keyboard
+                                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                        imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
+                                        return true;
+                                    default:
+                                        break;
+                                }
+                            }
+                            return false;
+                        }
+                    });
+
+
+                    //checkedNotes.remove(position);
                     checkedAdapter.notifyDataSetChanged();
                     ListFormat.setListViewHeightBasedOnChildren(checkedList);
                 }
@@ -439,10 +469,36 @@ public class TripAddActivity extends AppCompatActivity {
 
         uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 noteInput.setText(uncheckedNotes.get(position));
                 noteFlag.setText("unchecked");
-                uncheckedNotes.remove(position);
+
+                final NotesViewHolder uncheckedNoteViewHolder = (NotesViewHolder)view.getTag();
+                uncheckedNoteViewHolder.getNoteItem().setFocusable(true);
+                uncheckedNoteViewHolder.getNoteItem().setOnKeyListener(new View.OnKeyListener()
+                {
+                    public boolean onKey(View v, int keyCode, KeyEvent event)
+                    {
+                        if (event.getAction() == KeyEvent.ACTION_DOWN)
+                        {
+                            switch (keyCode)
+                            {
+                                case KeyEvent.KEYCODE_DPAD_CENTER:
+                                case KeyEvent.KEYCODE_ENTER:
+                                    //add to array list & update list view
+                                    checkedNotes.set(position, uncheckedNoteViewHolder.getNoteItem().getText().toString());
+                                    //hide keyboard
+                                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
+                                    return true;
+                                default:
+                                    break;
+                            }
+                        }
+                        return false;
+                    }
+                });
+                //uncheckedNotes.remove(position);
                 uncheckedAdapter.notifyDataSetChanged();
                 ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
             }

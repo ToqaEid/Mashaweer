@@ -62,6 +62,13 @@ public class NotesAdapter extends ArrayAdapter<String> {
         holder.getNoteItem().setText(   notes.get(position)   );
         if (!activityFlag.equals("add")){
             holder.getCancelBtn().setVisibility(View.GONE);
+            holder.getNoteItem().setFocusable(false);
+            holder.getNoteItem().setFocusableInTouchMode(false); // user touches widget on phone with touch screen
+            holder.getNoteItem().setClickable(false); // user navigates with wheel and selects widget
+//            holder.getNoteItem().setEnabled(false);
+            holder.getNoteItem().setCursorVisible(false);
+
+
 
         }else{
             holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
@@ -71,6 +78,8 @@ public class NotesAdapter extends ArrayAdapter<String> {
                     tripAddActivity.removeFromUncheckedList(position);
                 }
             });
+
+
         }
 
 

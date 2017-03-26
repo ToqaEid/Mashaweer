@@ -2,6 +2,7 @@ package com.jets.adapters.notes.checkednotes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         View rowView = convertView;
-        CheckedNoteViewHolder holder;
+        final CheckedNoteViewHolder holder;
 
 
         if (rowView == null)
@@ -66,6 +67,11 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
 
         if (!activityFlag.equals("edit")){
             holder.getCancelBtn().setVisibility(View.GONE);
+            holder.getNoteItem().setKeyListener(null);
+            holder.getNoteItem().setFocusable(false);
+            holder.getNoteItem().setFocusableInTouchMode(false);
+            holder.getNoteItem().setCursorVisible(false);
+
 
         }else{
             holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
@@ -73,8 +79,10 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
                 public void onClick(View v) {
                     TripAddActivity tripAddActivity = (TripAddActivity) context;
                     tripAddActivity.removeFromUncheckedList(position);
+                    //holder.getNoteItem().setKeyListener((KeyListener) textView.getTag());
                 }
             });
+
         }
 
         return  rowView;

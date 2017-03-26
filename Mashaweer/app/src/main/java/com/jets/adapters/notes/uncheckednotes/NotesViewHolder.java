@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ public class NotesViewHolder {
 
     private View convertedView;
     private CheckBox noteCheck;
-    private TextView noteItem;
+    private EditText noteItem;
     private ImageButton cancelBtn;
     private String activityFlag;
 
@@ -41,15 +42,15 @@ public class NotesViewHolder {
         this.noteCheck = noteCheck;
     }
 
-    public TextView getNoteItem() {
+    public EditText getNoteItem() {
 
         if(noteItem == null)
-            noteItem = (TextView) convertedView.findViewById(R.id.note_text);
+            noteItem = (EditText) convertedView.findViewById(R.id.note_text);
 
         return noteItem;
     }
 
-    public void setNoteItem(TextView noteItem) {
+    public void setNoteItem(EditText noteItem) {
         this.noteItem = noteItem;
     }
 

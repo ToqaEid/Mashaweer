@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
+import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
 import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Note;
@@ -261,6 +263,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     /*================ HELPFUL FUNCTIONS =================================*/
     private void notesPreparation(){
 
+
+
         //////// NOTES
         uncheckedNotes = new ArrayList<>();
         checkedNotes = new ArrayList<>();
@@ -270,13 +274,16 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         uncheckedNotes.add("One");
 
         uncheckedNotesAdapter = new NotesAdapter(this, uncheckedNotes);
-        uncheckedNotesAdapter.setActivityFlag("details");
         checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
+
+        uncheckedNotesAdapter.setActivityFlag("details");
+        checkedNotesAdapter.setActivityFlag("details");
 
         uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
         uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 checkedNotes.add(uncheckedNotes.get(position));
                 uncheckedNotes.remove(position);
                 uncheckedNotesAdapter.notifyDataSetChanged();
@@ -298,6 +305,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 uncheckedNotes.add(checkedNotes.get(position));
                 checkedNotes.remove(position);
                 uncheckedNotesAdapter.notifyDataSetChanged();
