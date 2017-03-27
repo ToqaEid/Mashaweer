@@ -16,91 +16,92 @@
 
     <!-- End of Permissions -->
     <application
+        android:name=".ApplicationClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".ApplicationClass">
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <!-- *** SplashScreenAvtivity *** -->
-        <activity android:name="com.jets.mashaweer.SplashScreenAvtivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+        <activity
+            android:name=".SplashScreenAvtivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <!-- End of SplashScreenAvtivity -->
 
 
         <!-- *** LoginActivity *** -->
-        <activity android:name="com.jets.mashaweer.LoginActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait" />
         <!-- End of LoginActivity -->
 
 
         <!-- *** SignupActivity *** -->
         <activity
-            android:name="com.jets.mashaweer.SignupActivity"
+            android:name=".SignupActivity"
             android:label="@string/title_activity_sigup"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <!-- End of SignupActivity -->
 
 
         <!-- *** HomeActivity *** -->
-        <activity android:name="com.jets.mashaweer.HomeActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait"></activity>
         <!-- End of HomeActivity -->
 
 
         <!-- *** HistoryActivity *** -->
-        <activity android:name="com.jets.mashaweer.HistoryActivity"
+        <activity
+            android:name=".HistoryActivity"
             android:label="@string/title_activity_history"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <!-- End of HistoryActivity -->
 
 
         <!-- *** TripAddActivity *** -->
-        <activity android:name="com.jets.mashaweer.TripAddActivity"
-            android:screenOrientation="portrait">
-
-
-
-        </activity>
+        <activity
+            android:name=".TripAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
         <!-- End of TripAddActivity -->
 
 
         <!-- *** TripEditActivity *** -->
-        <activity android:name="com.jets.mashaweer.TripEditActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TripEditActivity"
+            android:screenOrientation="portrait" />
         <!-- End of TripEditActivity -->
 
 
         <!-- *** TripDetailsActivity *** -->
         <activity
-            android:name="com.jets.mashaweer.TripDetailsActivity"
+            android:name=".TripDetailsActivity"
             android:label="@string/title_activity_trip_details"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- End of TripDetailsActivity -->
+
 
         <!-- *** ReminderActivity *** -->
         <activity
-            android:name="com.jets.mashaweer.ReminderActivity"
+            android:name=".ReminderActivity"
+            android:screenOrientation="portrait"
             android:taskAffinity=""
-            android:theme="@android:style/Theme.Holo.Dialog"
-            android:screenOrientation="portrait"/>
+            android:theme="@android:style/Theme.Holo.Dialog" />
         <!-- End of ReminderActivity -->
+
 
         <!-- *** META-DATA *** -->
         <!--
@@ -112,10 +113,11 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
 
+
         <!-- This is for Google place AutoComplete API && History Map Activity -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
         <!-- End of meta-data -->
 
 
@@ -123,12 +125,13 @@
         <receiver android:name="com.jets.classes.Alarm" />
         <receiver android:name="com.jets.classes.TripServices">
             <intent-filter>
-                <action android:name="START_ACTION"/>
-                <action android:name="CANCEL_ACTION"/>
+                <action android:name="START_ACTION" />
+                <action android:name="CANCEL_ACTION" />
             </intent-filter>
         </receiver>
         <!-- End of Receivers -->
 
+        <activity android:name="com.jets.test.test_notes"></activity>
     </application>
 
 </manifest>

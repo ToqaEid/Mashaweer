@@ -75,6 +75,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private CheckedNoteAdatper checkedNotesAdapter;
     private ArrayList<String> uncheckedNotes;
     private ArrayList<String> checkedNotes;
+    private DatabaseReference db;
+    private String userID;
 
 
     @Override
@@ -88,7 +90,10 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         } else {
             trip = (Trip) savedInstanceState.getSerializable("trip");
         }
+        userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        db = database.getReference("users/" + userID + "/trips");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(trip.getTripTitle());
@@ -214,7 +219,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //TODO: save the object in db
+        db.child(trip.getTripId()).setValue(trip);
 
     }
 
@@ -266,20 +271,43 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
 
         //////// NOTES
-        uncheckedNotes = new ArrayList<>();
-        checkedNotes = new ArrayList<>();
-        uncheckedNotes.add("One");
-        uncheckedNotes.add("twO");
-        uncheckedNotes.add("One");
-        uncheckedNotes.add("One");
+
+        uncheckedNotes = trip.getTripUncheckedNotes();
+        checkedNotes = trip.getTripCheckedNotes();
+
+        if(uncheckedNotes == null){
+            uncheckedNotes = new ArrayList<>();
+        }
+        if(checkedNotes == null){
+            checkedNotes = new ArrayList<>();
+        }
+
+        checkedList =(ListView) findViewById(R.id.completed_list);
+        uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
+
+        checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
+        checkedNotesAdapter.setActivityFlag("details");
+        checkedList.setAdapter(checkedNotesAdapter);
 
         uncheckedNotesAdapter = new NotesAdapter(this, uncheckedNotes);
-        checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
-
         uncheckedNotesAdapter.setActivityFlag("details");
-        checkedNotesAdapter.setActivityFlag("details");
+        uncheckedList.setAdapter(uncheckedNotesAdapter);
 
-        uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
+        if(checkedNotes.size() > 0){    //there's checked notes
+            completeText.setVisibility(View.VISIBLE);
+            completeView.setVisibility(View.VISIBLE);
+        }
+        if(uncheckedNotes.size() == 0){
+            uncompeletedText.setVisibility(View.GONE);
+            uncompeletedText.setVisibility(View.GONE);
+        }
+
+        checkedNotesAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(checkedList);
+        uncheckedNotesAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+
+
         uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -301,7 +329,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             }
         });
 
-        checkedList =(ListView) findViewById(R.id.completed_list);
         checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -324,11 +351,11 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             }
         });
 
-        uncheckedList.setAdapter(uncheckedNotesAdapter);
-        checkedList.setAdapter(checkedNotesAdapter);
-
-        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-        ListFormat.setListViewHeightBasedOnChildren(checkedList);
+//        uncheckedList.setAdapter(uncheckedNotesAdapter);
+//        checkedList.setAdapter(checkedNotesAdapter);
+//
+//        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+//        ListFormat.setListViewHeightBasedOnChildren(checkedList);
 
     }
 
@@ -381,7 +408,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         return bitmap;
     }
-
 
 
     private void prepareDateTime(){
