@@ -3,7 +3,11 @@ package com.jets.mashaweer;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,9 +27,16 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +53,9 @@ import com.jets.constants.Alert;
 import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
@@ -50,7 +64,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TripAddActivity extends AppCompatActivity {
+public class TripAddActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
     //Binding vies to variables
     @BindView(R.id.trip_name) EditText _tripName;
@@ -84,6 +98,12 @@ public class TripAddActivity extends AppCompatActivity {
     private DatabaseReference db;
     private Calendar calender = Calendar.getInstance();
     private String activityFlag;
+
+
+    private GoogleApiClient mGoogleApiClient;
+    Bitmap bitmap = null;
+    String targetPlaceId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,8 +240,7 @@ public class TripAddActivity extends AppCompatActivity {
                 Log.i("MyTag", "Place: " + place.getLatLng().toString());
 
 
-                String long_lat =  place.getLatLng().longitude +"";
-                long_lat += ";" + place.getLatLng().latitude;
+                String long_lat =  place.getLatLng().latitude + "," + place.getLatLng().longitude ;
 
                 tripObj.setTripStartLongLat( long_lat );   /////////////////////////////// 5ally balk
                 tripObj.setTripStartLocation( place.getName().toString() ); //////////////// 5ally balk
@@ -247,14 +266,18 @@ public class TripAddActivity extends AppCompatActivity {
         autocompleteFragment_TO.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                String long_lat =  place.getLatLng().longitude +"";
-                long_lat += ";" + place.getLatLng().latitude;
+                String long_lat =  place.getLatLng().latitude +","+ place.getLatLng().longitude;
 
                 tripObj.setTripEndLongLat( long_lat );   /////////////////////////////// 5ally balk
+
+                Log.i("MyTag","______ in add"+tripObj.getTripStartLongLat()  );
+
                 tripObj.setTripEndLocation( place.getName().toString() ); //////////////// 5ally balk
 
 
                 tripObj.setTripPlaceId( place.getId() );
+
+                targetPlaceId = place.getId();
 
             }
 
@@ -415,11 +438,146 @@ public class TripAddActivity extends AppCompatActivity {
 
 
 
+
+        ///////////////////////--- download   image   from goole place api's
+
+
+        new Thread() {
+            public void run() {
+
+                Log.i("MyTag" , "Thread is running ....");
+
+                bitmap = downloadBitmap( targetPlaceId );
+
+
+                if (bitmap == null){
+
+                    Log.i("MyTag" ,"Image Not Found ");
+
+                }
+                else {
+
+                    ///////////// ---- saving photo to internal storage
+                    String path = saveToInternalStorage(bitmap);
+                    Log.i("MyTag" ,"Image is Saved in " + path);
+
+                }
+            }
+        }.start();
+
+        Intent intent = new Intent( TripAddActivity.this, HomeActivity.class );
+        startActivity(intent);
+
+
+
+
         finish();
 
     }
 
-    public void notesPreparation() {
+    /////////////// --- download and save image
+
+    ////////////////////// ---- download image
+    private Bitmap downloadBitmap(String url) {
+
+        Log.i("MyTag" , "Downloading Image now ...  ");
+
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(TripAddActivity.this)
+                    // .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+
+            mGoogleApiClient.connect();
+        }
+        else if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+
+        PlacePhotoMetadataResult result = Places.GeoDataApi
+                .getPlacePhotos(mGoogleApiClient, url).await();
+
+        if (result.getStatus().isSuccess()) {
+
+            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+
+            if (photoMetadataBuffer.getCount() > 0) {
+
+                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
+
+                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
+
+                bitmap = photo.getScaledPhoto(mGoogleApiClient, 300, 300).await().getBitmap();
+
+            }
+            else{
+                bitmap = null;
+            }
+
+            photoMetadataBuffer.release();
+        }
+
+        return bitmap;
+    }
+
+
+
+    ///////////// save image to internal storage
+    private String saveToInternalStorage(Bitmap bitmapImage){
+
+        Log.i("MyTag", "Saving into internal");
+
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+        // Create imageDir
+        File mypath=new File(directory, targetPlaceId + ".jpg");
+
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(mypath);
+
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+            Log.i("MyTag", "Saved into internal");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+        finally {
+
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.i("MyTag", "image to be returned");
+
+        return directory.getAbsolutePath();
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(TripAddActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
+    /////////////////-----
+
+    public void notesPreparation(){
+        Log.i("tag notes prep", "hey");
 
             uncheckedList.setItemsCanFocus(true);
             uncheckedNotes = tripObj.getTripUncheckedNotes();
