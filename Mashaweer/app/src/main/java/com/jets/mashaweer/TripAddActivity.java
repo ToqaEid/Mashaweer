@@ -1,8 +1,10 @@
 package com.jets.mashaweer;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -303,9 +305,11 @@ public class TripAddActivity extends AppCompatActivity {
                                                   int minute) {
 
                                 // String date = tripObj.getTripDateTime();
-                                calender.set(Calendar.HOUR,hourOfDay);
+                                calender.set(Calendar.HOUR_OF_DAY,hourOfDay);
                                 calender.set(Calendar.MINUTE,minute);
                                 calender.set(Calendar.SECOND,0);
+
+                                Log.i("3lama", "Hour of day: "+hourOfDay  + " calendar date " + calender.getTimeInMillis());
 
                                 Log.i("3lama", calender.getTimeInMillis()+" ---- TIMEpicker time in milliseconds");
 
@@ -332,7 +336,6 @@ public class TripAddActivity extends AppCompatActivity {
                             }
                         }, hours, minutes, false);
 
-                //TODO: find a way that if the user picked today ... limit the time to after the current time
                 timePickerDialog.show();
             }
         });
@@ -395,10 +398,15 @@ public class TripAddActivity extends AppCompatActivity {
         }
 
         //Adding trip object to database
+        Log.i("3lama", "Trip object before adding to database --- " + tripObj.toString());
         db.child(tripObj.getTripId()).setValue(tripObj);
 
         // Adding Alarm
-        TripServices.setAlarm(TripAddActivity.this, tripObj, tripObj.getTripDateTime());
+        TripServices.setAlarm(TripAddActivity.this, tripObj);
+
+        Intent intent = new Intent();
+        intent.putExtra("newTrip", tripObj);
+        setResult(Activity.RESULT_OK, intent);
 
         finish();
 

@@ -70,7 +70,7 @@ public class TripServices extends BroadcastReceiver{
             trip.setTripStatus(DBConstants.STATUS_DONE);
 
         }else{
-            if (trip.getTripStatus() == DBConstants.STATUS_PENDING){
+            if (trip.getTripStatus() == DBConstants.STATUS_UPCOMING){
                 //status pending trip
                 trip.setTripStatus(DBConstants.STATUS_PENDING);
 
@@ -111,7 +111,7 @@ public class TripServices extends BroadcastReceiver{
         return hash;
     }
 
-    public static void setAlarm(Context context, Trip trip, long time){
+    public static void setAlarm(Context context, Trip trip){
 
         Log.i("3lama", trip.getTripTitle());
 
@@ -121,11 +121,39 @@ public class TripServices extends BroadcastReceiver{
         int requestCode = getTripUniqueId(trip.getTripId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context.getApplicationContext(), requestCode, alarmIntent, 0);
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, trip.getTripDateTime(), pendingIntent);
     }
 
+    public static void updateAlarm(Context context, Trip trip){
 
+        Log.i("3lama", trip.getTripTitle());
+
+        Intent alarmIntent = new Intent(context, Alarm.class);
+
+        alarmIntent.putExtra("Trip", trip);
+        int requestCode = getTripUniqueId(trip.getTripId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, trip.getTripDateTime(), pendingIntent);
+    }
+
+    public static void deleteAlarm(Context context, Trip trip){
+
+        Log.i("3lama", trip.getTripTitle() + " Cancellingggggggg");
+
+        Intent alarmIntent = new Intent(context, Alarm.class);
+
+        alarmIntent.putExtra("Trip", trip);
+        int requestCode = getTripUniqueId(trip.getTripId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
 
 }

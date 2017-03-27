@@ -12,17 +12,18 @@ import static android.content.Context.MODE_PRIVATE;
 public class SharedPreferenceInfo {
     public static final String PREFS_NAME = "MyPrefsFile";
     public static final String USER_ID = "userID";
+    public static final String ALARMS_SET = "alarmSet";
 
     static public void addUserDataToSharedPreference(Context context, String userID) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SharedPreferenceInfo.USER_ID, userID);
+        editor.putBoolean(SharedPreferenceInfo.ALARMS_SET, true);
         editor.commit();
 
     }
 
     static public String getUserId(Context context){
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         return sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
     }
@@ -31,8 +32,10 @@ public class SharedPreferenceInfo {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(SharedPreferenceInfo.USER_ID);
+        editor.remove(ALARMS_SET);
         editor.apply();
     }
+
 
 }
 

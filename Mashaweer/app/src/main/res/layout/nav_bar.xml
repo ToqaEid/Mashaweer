@@ -18,42 +18,111 @@
             android:background="@android:color/background_light"
             android:backgroundTint="@android:color/background_light">
 
-            <ImageButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/homeLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/home1"
-                android:id="@+id/home"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light"
-                android:tint="@color/cast_intro_overlay_background_color" />
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:srcCompat="@drawable/home1"
+                    android:id="@+id/home"
+                    android:backgroundTint="@android:color/background_light"
+                    android:tint="@color/cast_intro_overlay_background_color"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Home"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/texthome"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
 
 
-            <ImageButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/historyLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/map"
-                android:id="@+id/history"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light"
-                android:tint="@color/cast_intro_overlay_background_color" />
+                android:weightSum="2">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/add"
-                android:id="@+id/add"
-                android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light"
-                android:tint="@color/cast_intro_overlay_background_color" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:srcCompat="@drawable/map"
+                    android:id="@+id/history"
+                    android:layout_weight="1"
+                    android:backgroundTint="@android:color/background_light"
+                    android:tint="@color/cast_intro_overlay_background_color" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
+                <TextView
+                    android:text="History"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/texthistory"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/exit"
-                android:id="@+id/signout"
                 android:layout_weight="1"
-                android:backgroundTint="@android:color/background_light"
-                android:tint="@color/cast_intro_overlay_background_color" />
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:srcCompat="@drawable/add"
+                    android:id="@+id/add"
+                    android:backgroundTint="@android:color/background_light"
+                    android:tint="@color/cast_intro_overlay_background_color"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Add Trip"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/textView5"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/logoutLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:srcCompat="@drawable/exit"
+                    android:id="@+id/signout"
+                    android:backgroundTint="@android:color/background_light"
+                    android:tint="@color/cast_intro_overlay_background_color"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Sign Out"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/textView6"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

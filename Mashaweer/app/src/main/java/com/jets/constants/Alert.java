@@ -1,6 +1,7 @@
 package com.jets.constants;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -8,6 +9,8 @@ import android.support.v7.app.AlertDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
+import com.jets.mashaweer.HomeActivity;
+import com.jets.mashaweer.TripDetailsActivity;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -37,11 +40,15 @@ public class Alert {
         alertDialog.setMessage("Are you sure you want to delete "+trip.getTripTitle()+" ?");
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "DELETE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
+                //Deleting alarm
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
                 db.child(trip.getTripId()).removeValue();
                 if(context instanceof Activity) {
-                    ((Activity) context).finish();
+                    if (context instanceof TripDetailsActivity)
+                        ((Activity) context).finish();
                 }
+
 
             }
         });

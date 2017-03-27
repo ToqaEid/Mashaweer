@@ -210,14 +210,11 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
                 PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
                 CharSequence attribution = photo.getAttributions();
                 // Load a scaled bitmap for this photo.
-                bitmap = photo.getScaledPhoto(mGoogleApiClient, 1000, 1000).await()
+                bitmap = photo.getScaledPhoto(mGoogleApiClient, 500, 500).await()
                         .getBitmap();
-
             }
             else{
-
                 bitmap = null;
-
             }
             // Release the PlacePhotoMetadataBuffer.
             photoMetadataBuffer.release();
@@ -225,7 +222,6 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
 
         return bitmap;
     }
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

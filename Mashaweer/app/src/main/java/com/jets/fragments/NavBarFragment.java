@@ -12,9 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.jets.classes.ListFormat;
+import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
+import com.jets.constants.DBConstants;
 import com.jets.mashaweer.HistoryActivity;
 import com.jets.mashaweer.HomeActivity;
 import com.jets.mashaweer.LoginActivity;
@@ -27,45 +39,99 @@ import com.jets.constants.SharedPreferenceInfo;
  */
 
 public class NavBarFragment extends Fragment{
-    private ImageButton homeBtn, historyBtn, addBtn, signoutBtn;
+    private ImageView homeBtn, historyBtn, addBtn, signoutBtn;
+    private TextView homeText, historyText;
+    private LinearLayout home, history, add, logout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.nav_bar, container, false);
+        home = (LinearLayout) rootView.findViewById(R.id.homeLayout);
+        history = (LinearLayout) rootView.findViewById(R.id.historyLayout);
+        add = (LinearLayout) rootView.findViewById(R.id.addLayout);
+        logout = (LinearLayout) rootView.findViewById(R.id.logoutLayout);
 
-        homeBtn = (ImageButton) rootView.findViewById(R.id.home);
-        homeBtn.setOnClickListener(new View.OnClickListener() {
+        homeText = (TextView) rootView.findViewById(R.id.texthome);
+        historyText = (TextView) rootView.findViewById(R.id.texthistory);
+
+        homeBtn = (ImageView) rootView.findViewById(R.id.home);
+        home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), HomeActivity.class));
+                if(!(getActivity() instanceof HomeActivity)) {
 
-            }
-        });
-        historyBtn = (ImageButton) rootView.findViewById(R.id.history);
-        historyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), HistoryActivity.class));
-
-            }
-        });
-        addBtn = (ImageButton) rootView.findViewById(R.id.add);
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), TripAddActivity.class));
+                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    getActivity().finish();
+                }
 
             }
         });
-        signoutBtn = (ImageButton) rootView.findViewById(R.id.signout);
-        signoutBtn.setOnClickListener(new View.OnClickListener() {
+        historyBtn = (ImageView) rootView.findViewById(R.id.history);
+        history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!(getActivity() instanceof HistoryActivity)) {
+                    getActivity().finish();
+
+                    startActivity(new Intent(getActivity(), HistoryActivity.class));
+                    getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
+                }
+
+            }
+        });
+        addBtn = (ImageView) rootView.findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(getActivity() instanceof TripAddActivity)) {
+                    startActivity(new Intent(getActivity(), TripAddActivity.class));
+
+                }
+
+            }
+        });
+        signoutBtn = (ImageView) rootView.findViewById(R.id.signout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
 
+                String userID = SharedPreferenceInfo.getUserId(getActivity());
+
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference db = database.getReference("users/" + userID);
+
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                        Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
+
+                        while (trips.iterator().hasNext()) {
+
+                            DataSnapshot returnedData = trips.iterator().next();
+                            Trip trip = returnedData.getValue(Trip.class);
+
+                            if (trip.getTripStatus() == DBConstants.STATUS_UPCOMING){
+                                TripServices.deleteAlarm(getContext(), trip);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 SharedPreferenceInfo.signOut(getActivity().getApplicationContext());
 
@@ -77,9 +143,12 @@ public class NavBarFragment extends Fragment{
         switch (btn){
             case "home":
                 homeBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
+                homeText.setTextColor(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
+
                 break;
             case "map":
                 historyBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
+                historyText.setTextColor(ContextCompat.getColor(getContext(),R.color.com_facebook_messenger_blue));
                 break;
 
         }

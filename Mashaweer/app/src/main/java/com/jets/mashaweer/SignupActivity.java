@@ -85,7 +85,7 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog); //TODO: apply the Dialgoue theme to the view
+                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
@@ -119,6 +119,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+
         SharedPreferenceInfo.addUserDataToSharedPreference(SignupActivity.this, auth.getCurrentUser().getUid());
         startActivity(new Intent(SignupActivity.this, HomeActivity.class));
         finish();

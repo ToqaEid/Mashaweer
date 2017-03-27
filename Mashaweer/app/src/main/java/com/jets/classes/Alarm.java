@@ -21,6 +21,5 @@ public class Alarm extends BroadcastReceiver {
         editIntent.putExtra("Trip", trip);
         editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         context.getApplicationContext().startActivity(editIntent);
-
     }
 }
