@@ -1,6 +1,7 @@
 package com.jets.adapters;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -26,8 +27,13 @@ import com.jets.mashaweer.R;
 import com.jets.classes.UpcomingListViewHolder;
 import com.jets.classes.Trip;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by mohamed on 04/03/2017.
@@ -130,103 +136,63 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         }
 
 
-        ///////////// handler
+        Bitmap img = loadImageFromStorage( context.getFilesDir().getAbsolutePath() , trips.get(position).getTripPlaceId());
 
-         final Handler messageHandler = new Handler() {
+        Log.i("MyTag","Back from internal storage");
 
-            public void handleMessage(Message msg) {
+        if (img != null)
+            holder.getTripThumbnail().setImageBitmap( img );
+        else {
+            img = BitmapFactory.decodeResource(context.getResources(), R.drawable.trip2);   ///// default image
+            holder.getTripThumbnail().setImageBitmap(img);
+        }
 
-                super.handleMessage(msg);
-
-                Log.i("MyTag" , "Inside handler for trip# " + position);
-
-                if ( msg.what == 0 ) {
-                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.trip2);   ///// default image
-                    holder.getTripThumbnail().setImageBitmap(bitmap);
-                }
-                else {
-                    holder.getTripThumbnail().setImageBitmap(bitmap);
-                }
-            }
-        };
-
-        //////////////////////////// get Image
-
-        new Thread() {
-            public void run() {
-
-                Log.i("MyTag" , "Thread is running ....");
-
-                //bitmap = downloadBitmap("ChIJdd4hrwug2EcRmSrV3Vo6llI");
-                Log.i("MyTag" , "Pos# " + position + " ..... placeId = " + trips.get(position).getTripPlaceId());
-                bitmap = downloadBitmap(trips.get(position).getTripPlaceId());
-
-                if (bitmap == null)
-                    messageHandler.sendEmptyMessage(0);
-                else
-                    messageHandler.sendEmptyMessage(1);
-            }
-        }.start();
-
-        ///////////////////////////////////////
+//
 
         return  rowView;
     }
+
+
+    ////////////// load image from internal storage
+    private Bitmap loadImageFromStorage(String path, String placeId)
+    {
+        Bitmap b = null;
+
+        Log.i("MyTag","Loading image from internal storage ... ");
+
+        try {
+
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+            // Create imageDir
+            File f=new File(directory.getAbsolutePath(), placeId + ".jpg");
+
+
+            //File f=new File(path+"/", placeId+".jpg");
+            Log.i("MyTag","Image Path .. " + directory.getAbsolutePath() + "/" +  placeId+".jpg");
+            b = BitmapFactory.decodeStream(new FileInputStream(f));
+            Log.i("MyTag","Image successfully found");
+            return  b;
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        Log.i("MyTag","Image not found");
+        return b;
+    }
+
+
+
 
     @Override
     public int getCount() {
         Log.i("Tag size", String.valueOf(trips.size()));
         return trips.size();
     }
-    private Bitmap downloadBitmap(String url) {
-
-        Log.i("MyTag" , "Downloading Image now ...  ");
-
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context)
-                   // .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Places.GEO_DATA_API)
-                    .build();
-
-            mGoogleApiClient.connect();
-        } else if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
-        Log.i("MyTag" , "???? ");
-
-        PlacePhotoMetadataResult result = Places.GeoDataApi
-                .getPlacePhotos(mGoogleApiClient, url).await();
-
-        if (result.getStatus().isSuccess()) {
-            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
-            if (photoMetadataBuffer.getCount() > 0) {
-                // Get the first bitmap and its attributions.
-
-                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
-
-                Log.i("MyTag", "#of photos : " + photoMetadataBuffer.getCount());
-
-                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
-                CharSequence attribution = photo.getAttributions();
-                // Load a scaled bitmap for this photo.
-                bitmap = photo.getScaledPhoto(mGoogleApiClient, 1000, 1000).await()
-                        .getBitmap();
-
-            }
-            else{
-
-                bitmap = null;
-
-            }
-            // Release the PlacePhotoMetadataBuffer.
-            photoMetadataBuffer.release();
-        }
-
-        return bitmap;
-    }
-
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(context, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
