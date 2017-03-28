@@ -65,49 +65,6 @@ public class UpcomingTripsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-//        if (upcomingTrips.size() == 0){
-//           Log.i("MyTag"," > >  >  >   . . Empty DB");
-//            isEmpty = true;
-//        }else {
-//            isEmpty = false;
-//        }
-
-
-
-//
-//        db_adapter = new DB_Adapter(getContext());
-//        upcomingTrips = new ArrayList<>();
-//
-////        for (int i=0; i<3; i++)
-////        {
-////            Trip trip = new Trip();
-////            db_adapter.insertTripInfo(trip);
-////            Log.i("MyTag","Inserted #" + i);
-////        }
-//
-//        Log.i("MyTag","----------------------------------");
-//        Cursor cursor = db_adapter.getAllTrips();
-//        if (cursor.getCount() == 0){
-//           Log.i("MyTag"," > >  >  >   . . Empty DB");
-//            isEmpty = true;
-//        }
-//
-//       else{
-//
-//            isEmpty = false;
-//            while (cursor.moveToNext()){
-//
-//                Trip trip = new Trip(0,cursor.getInt(8), cursor.getInt(9), cursor.getString(1),
-//                                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
-//                                    cursor.getString(5),cursor.getString(6), cursor.getString(7));
-//
-//                Log.i("MyTag","-=-= Obj # " +trip);
-//                upcomingTrips.add(trip);
-//            }
-//
-//            Log.i("MyTag"," > >  >  >  Size of tripsArray " + upcomingTrips.size());
-//        }
     }
 
 

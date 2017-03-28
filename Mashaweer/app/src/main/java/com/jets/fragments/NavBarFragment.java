@@ -50,6 +50,7 @@ public class NavBarFragment extends Fragment{
         historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent(getActivity(), HistoryActivity.class));
 
             }
