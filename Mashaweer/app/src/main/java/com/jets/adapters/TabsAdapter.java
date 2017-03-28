@@ -29,7 +29,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
                 return new UpcomingTripsFragment();
 
             case 1:
-                return new PastTripsFragment();
+//                return new PastTripsFragment();
+            return new UpcomingTripsFragment();
 //                return new PastTripsFragment();
         }
 

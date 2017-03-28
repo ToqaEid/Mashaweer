@@ -2,11 +2,13 @@ package com.jets.adapters.notes.checkednotes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
@@ -40,7 +42,7 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         View rowView = convertView;
-        CheckedNoteViewHolder holder;
+        final CheckedNoteViewHolder holder;
 
 
         if (rowView == null)
@@ -66,15 +68,41 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
 
         if (!activityFlag.equals("edit")){
             holder.getCancelBtn().setVisibility(View.GONE);
+//            holder.getNoteItem().setKeyListener(null);
+//            holder.getNoteItem().setFocusable(false);
+//            holder.getNoteItem().setFocusableInTouchMode(false);
+//            holder.getNoteItem().setCursorVisible(false);
+
 
         }else{
+            holder.getNoteItem().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    /*
+                     * When focus is lost save the entered value for
+                     * later use
+                     */
+                    if (!hasFocus) {
+                        int itemIndex = v.getId();
+                        EditText editText = (EditText) v;
+                        editText.setFocusable(true);
+                        String enteredText = editText.getText()
+                                .toString();
+
+
+                        notes.set(position, enteredText);
+                    }
+                }
+            });
             holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TripAddActivity tripAddActivity = (TripAddActivity) context;
                     tripAddActivity.removeFromUncheckedList(position);
+                    //holder.getNoteItem().setKeyListener((KeyListener) textView.getTag());
                 }
             });
+
         }
 
         return  rowView;

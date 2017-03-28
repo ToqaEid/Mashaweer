@@ -211,7 +211,9 @@ public class LoginActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             // there was an error
+
                             onLoginFailed();
+                            Log.i("3lama", task.getException().getMessage());
                             progressDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "Sign In failed", Toast.LENGTH_LONG).show();
                         } else {

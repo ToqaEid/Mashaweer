@@ -16,12 +16,15 @@
         android:checked="true"
         />
 
-    <TextView
-        android:text="TextView"
+    <EditText
+        android:text="EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/note_text"
+        android:background="@null"
+        android:enabled="true"
         android:layout_weight="3" />
+    <!--android:background="@android:color/transparent"-->
 
     <ImageButton
         android:layout_width="0dp"

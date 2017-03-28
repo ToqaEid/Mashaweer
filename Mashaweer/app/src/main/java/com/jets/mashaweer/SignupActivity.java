@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,10 +104,13 @@ public class SignupActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+//                            Log.i("3lama", task.getException().getMessage());
+                            Log.i("3lama", task.getException().getLocalizedMessage());
                             onSignupFailed();
                             progressDialog.dismiss();
                             Toast.makeText(SignupActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
                         } else {
+
                             progressDialog.dismiss();
                             onSignupSuccess();
                         }

@@ -15,13 +15,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "923038524060-l7ts6ll8taptaj2k1g5sbdf5dke7rh1b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jets.mashaweer",
+            "certificate_hash": "12543ab99800e599e5bde1701579191f9dd5607e"
+          }
+        },
+        {
           "client_id": "923038524060-9fd883uoth46plf9mljk9o2t8v563qgu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDpnYKdn62InMbZl9TrpiQXgCuXBWbJRlE"
+          "current_key": "AIzaSyBxVUJ-3xOwxbHRC4PwVWPwcFcILTufa7c"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923038524060-9fd883uoth46plf9mljk9o2t8v563qgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

@@ -82,7 +82,7 @@ public class TripServices extends BroadcastReceiver{
 
         trip.setTripDateTime(System.currentTimeMillis());
         db.child(trip.getTripId()).setValue(trip);
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripStartLongLat().split(";")[1] + "," + trip.getTripEndLongLat().split(";")[0] +"&mode=d");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat() +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mapIntent.setPackage("com.google.android.apps.maps");

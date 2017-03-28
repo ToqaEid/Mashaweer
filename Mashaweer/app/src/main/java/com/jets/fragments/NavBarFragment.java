@@ -1,7 +1,10 @@
 package com.jets.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -86,10 +90,22 @@ public class NavBarFragment extends Fragment{
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(getActivity() instanceof TripAddActivity)) {
-                    startActivity(new Intent(getActivity(), TripAddActivity.class));
 
+                int [] networks = {ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_WIFI};
+
+                if (isNetworkAvailable( getContext() ,networks) && !(getActivity() instanceof TripAddActivity))
+                {
+                    Toast.makeText(getContext(), "Good Internet Connection", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), TripAddActivity.class));
                 }
+                else{
+
+                    Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
+//                if(!(getActivity() instanceof TripAddActivity)) {
+//                    startActivity(new Intent(getActivity(), TripAddActivity.class));
+//
+//                }
 
             }
         });
@@ -152,5 +168,21 @@ public class NavBarFragment extends Fragment{
                 break;
 
         }
+    }
+
+
+    public static boolean isNetworkAvailable(Context context, int[] networkTypes) {
+        try {
+            ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            for (int networkType : networkTypes) {
+                NetworkInfo netInfo = cm.getNetworkInfo(networkType);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 }
