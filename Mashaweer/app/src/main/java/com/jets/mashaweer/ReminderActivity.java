@@ -43,8 +43,6 @@ public class ReminderActivity extends Activity {
     private Trip trip;
     private int tripIdInt;
 
-
-    int count = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +72,8 @@ public class ReminderActivity extends Activity {
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count++;
+
                 new TripServices().startTrip(trip);
-                Toast.makeText(ReminderActivity.this, String.valueOf(count), Toast.LENGTH_SHORT).show();
             }
         });
         laterBtn.setOnClickListener(new View.OnClickListener() {

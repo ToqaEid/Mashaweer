@@ -312,7 +312,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:paddingTop="10dp">
     <View
         android:layout_width="fill_parent"
@@ -329,52 +328,21 @@
         android:paddingLeft="20dp"
         android:textSize="17dp"
         android:paddingBottom="10dp"
-        android:textColor="#212121"/>
+        android:textColor="#212121"/><![CDATA[
     />
 
-
+    ]]>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="beforeDescendants"
-        android:layout_marginLeft="20dp"
         android:id="@+id/unchecked_list"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:weightSum="4">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_input_add"
-            android:id="@+id/imageView3"
-            android:tint="#616161"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"/>
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/note_input"
-            android:hint="List Item"
-            android:background="@null"
-            android:layout_weight="2.5" />
-
-
-    </LinearLayout>
     <View
         android:id="@+id/complete_line"
         android:layout_height="1dp"
         android:background="@color/cardview_shadow_start_color"
         android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"/>
@@ -385,15 +353,11 @@
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        />
+        android:layout_marginTop="5dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="afterDescendants"
-        android:layout_marginLeft="20dp"
         android:id="@+id/checked_list"/>
 
     <!--Notes goes here-->

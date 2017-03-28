@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/scrollojt"
         android:fillViewport="true" >
@@ -11,15 +12,33 @@
         android:orientation="vertical"
         android:padding="10dip" >
 
-        <TextView
-            android:text="Round Trips"
-            android:textColor="#fff"
-            android:layout_height="50dp"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:layout_marginBottom="20dp"
-            android:background="?attr/colorAccent"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/upcoming_header"
+            android:weightSum="10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_expand_more_black_18dp"
+                android:layout_weight="2" />
+
+            <TextView
+                android:text="Pending round trips"
+                android:textColor="@color/wallet_dim_foreground_inverse_disabled_holo_dark"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@null"
+                android:layout_weight="8"
+                android:includeFontPadding="false"/>
+        </LinearLayout>
+
+
 
         <ListView
             android:id="@+id/round_listView"
@@ -29,16 +48,31 @@
             android:divider="@android:color/transparent"
 
             />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="10">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_expand_more_black_18dp"
+            android:layout_weight="2" />
+
         <TextView
-            android:text="One Way Trips"
-            android:textColor="#fff"
-            android:layout_height="50dp"
+            android:text="Upcoming Trips"
+            android:textColor="@color/wallet_dim_foreground_inverse_disabled_holo_dark"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="?attr/colorAccent"/>
+            android:layout_marginBottom="20dp"
+            android:background="@null"
+            android:layout_weight="8"
+            android:includeFontPadding="false"/>
+        </LinearLayout>
 
         <ListView
             android:id="@+id/upcoming_listView"
@@ -51,4 +85,6 @@
 
 
     </LinearLayout>
+
+
 </ScrollView>

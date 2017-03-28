@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.jets.mashaweer.R;
@@ -31,9 +32,11 @@ public class NotesAdapter extends ArrayAdapter<String> {
 
         this.notes = notes;
     }
+
     public void setActivityFlag(String flag){
         activityFlag = flag;
     }
+
     @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -62,15 +65,36 @@ public class NotesAdapter extends ArrayAdapter<String> {
         holder.getNoteItem().setText(   notes.get(position)   );
         if (!activityFlag.equals("add")){
             holder.getCancelBtn().setVisibility(View.GONE);
-            holder.getNoteItem().setFocusable(false);
-            holder.getNoteItem().setFocusableInTouchMode(false); // user touches widget on phone with touch screen
-            holder.getNoteItem().setClickable(false); // user navigates with wheel and selects widget
+//            holder.getNoteItem().setFocusable(false);
+//            holder.getNoteItem().setFocusableInTouchMode(false); // user touches widget on phone with touch screen
+//            holder.getNoteItem().setClickable(false); // user navigates with wheel and selects widget
 //            holder.getNoteItem().setEnabled(false);
-            holder.getNoteItem().setCursorVisible(false);
+//            holder.getNoteItem().setCursorVisible(false);
 
 
 
         }else{
+//            holder.getNoteItem().setCursorVisible(true);
+//            holder.getNoteItem().setFocusable(true);
+
+            holder.getNoteItem().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    /*
+                     * When focus is lost save the entered value for
+                     * later use
+                     */
+                        if (!hasFocus) {
+                            int itemIndex = v.getId();
+                            EditText editText = (EditText) v;
+                            editText.setFocusable(true);
+                            String enteredText = editText.getText().toString();
+
+                            notes.set(position, enteredText);
+                        }
+                    }
+                });
+
             holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -86,10 +110,6 @@ public class NotesAdapter extends ArrayAdapter<String> {
         return  rowView;
     }
 
-    @Override
-    public int getCount() {
-        Log.i("Tag size", String.valueOf(notes.size()));
-        return notes.size();
-    }
+
 }
 

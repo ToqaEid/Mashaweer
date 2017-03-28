@@ -3,6 +3,7 @@ package com.jets.mashaweer;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +71,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private GoogleApiClient mGoogleApiClient;
     private Bitmap bitmap = null;
     private ImageView imageViewTrip;
+    Toolbar toolbar;
 
     //Location References
     private LocationManager locationManager;
@@ -82,7 +85,13 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private CheckedNoteAdatper checkedNotesAdapter;
     private ArrayList<String> uncheckedNotes;
     private ArrayList<String> checkedNotes;
+    private DatabaseReference db;
+    private String userID;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +104,20 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         } else {
             trip = (Trip) savedInstanceState.getSerializable("trip");
         }
+        userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        db = database.getReference("users/" + userID + "/trips");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(trip.getTripTitle());
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+
+        toolbarLayout.setTitle(trip.getTripTitle());
+
+        Log.i("3lama", toolbarLayout.getTitle().toString());
+
+//        toolbar.setTitle(trip.getTripTitle());
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material);
@@ -137,7 +156,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         notesPreparation();
 
         /////// get date and time from milliseconds
-        prepareDateTime();
+        prepareDateTime(trip);
 
         //////////////// handling buttons' click listener
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
@@ -147,7 +166,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
                 Intent intent = new Intent(TripDetailsActivity.this, TripAddActivity.class);
                 intent.putExtra("selectedTrip", trip);
-                startActivity(intent);
+                startActivityForResult(intent, 33);
 
             }
         });
@@ -171,36 +190,41 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         }
 
+        Log.i("3lama", "plac id details "+trip.getTripPlaceId());
         Bitmap img = loadImageFromStorage( getFilesDir().getAbsolutePath() , trip.getTripPlaceId());
 
         Log.i("MyTag","Back from internal storage");
 
         if (img != null)
           imageViewTrip.setImageBitmap( img );
-        else {
-            img = BitmapFactory.decodeResource(getResources(), R.drawable.trip2);   ///// default image
-            imageViewTrip.setImageBitmap(img);
-        }
-
-
-
-
-
-    }
+//        else {
+//            img = BitmapFactory.decodeResource(getResources(), R.drawable.trip2);   ///// default image
+//            imageViewTrip.setImageBitmap(img);
+//        }
+   }
 
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        trip.setTripCheckedNotes(checkedNotes);
-        trip.setTripUncheckedNotes(uncheckedNotes);
+        if (trip != null){
+            trip.setTripCheckedNotes(checkedNotes);
+            trip.setTripUncheckedNotes(uncheckedNotes);
+
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //TODO: save the object in db
+        String userId = SharedPreferenceInfo.getUserId(TripDetailsActivity.this);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userId + "/trips");
+
+        if (trip != null)
+            db.child(trip.getTripId()).setValue(trip);
 
     }
 
@@ -224,9 +248,9 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             case R.id.action_delete:
                 ///deleteTrip();
                 Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                trip=null;
                 return true;
             case R.id.action_done:
-                Alert.showErrorMsg("sdfg","sdfg", TripDetailsActivity.this);
                 doneTrip();
                 return true;
 //            case R.id.home:
@@ -244,6 +268,45 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 33){
+            if (resultCode == Activity.RESULT_OK){
+                Trip newTrip = (Trip) data.getSerializableExtra("newTrip");
+
+                trip = newTrip;
+
+                Log.i("3lama", trip.toString());
+
+                //TODO: change the title of the toolbar
+
+                toolbar.setTitle(newTrip.getTripTitle());
+
+                Log.i("3lama", "new title      " + newTrip.getTripTitle());
+
+                tv_tripStatus.setText("Done Trip");
+
+                tv_tripFrom.setText(newTrip.getTripStartLocation());
+                tv_tripTo.setText(newTrip.getTripEndLocation());
+
+                prepareDateTime(newTrip);
+                notesPreparation();
+
+                Log.i("3lama","hbhjb"+String.valueOf(trip == null) + "gvghv");
+                Log.i("3lama",trip.toString());
+                Bitmap img = loadImageFromStorage( getFilesDir().getAbsolutePath() , trip.getTripPlaceId());
+
+                Log.i("MyTag","Back from internal storage");
+
+                if (img != null)
+                    imageViewTrip.setImageBitmap( img );
+                //TODO: change the notes view
+
+            }
+        }
+    }
+
     /*==== END MENU ===*/
 
     /*================ HELPFUL FUNCTIONS =================================*/
@@ -252,20 +315,43 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
 
         //////// NOTES
-        uncheckedNotes = new ArrayList<>();
-        checkedNotes = new ArrayList<>();
-        uncheckedNotes.add("One");
-        uncheckedNotes.add("twO");
-        uncheckedNotes.add("One");
-        uncheckedNotes.add("One");
+
+        uncheckedNotes = trip.getTripUncheckedNotes();
+        checkedNotes = trip.getTripCheckedNotes();
+
+        if(uncheckedNotes == null){
+            uncheckedNotes = new ArrayList<>();
+        }
+        if(checkedNotes == null){
+            checkedNotes = new ArrayList<>();
+        }
+
+        checkedList =(ListView) findViewById(R.id.completed_list);
+        uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
+
+        checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
+        checkedNotesAdapter.setActivityFlag("details");
+        checkedList.setAdapter(checkedNotesAdapter);
 
         uncheckedNotesAdapter = new NotesAdapter(this, uncheckedNotes);
-        checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
-
         uncheckedNotesAdapter.setActivityFlag("details");
-        checkedNotesAdapter.setActivityFlag("details");
+        uncheckedList.setAdapter(uncheckedNotesAdapter);
 
-        uncheckedList = (ListView) findViewById(R.id.uncompleted_list);
+        if(checkedNotes.size() > 0){    //there's checked notes
+            completeText.setVisibility(View.VISIBLE);
+            completeView.setVisibility(View.VISIBLE);
+        }
+        if(uncheckedNotes.size() == 0){
+            uncompeletedText.setVisibility(View.GONE);
+            uncompeletedText.setVisibility(View.GONE);
+        }
+
+        checkedNotesAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(checkedList);
+        uncheckedNotesAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+
+
         uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -287,7 +373,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             }
         });
 
-        checkedList =(ListView) findViewById(R.id.completed_list);
         checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -310,11 +395,11 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             }
         });
 
-        uncheckedList.setAdapter(uncheckedNotesAdapter);
-        checkedList.setAdapter(checkedNotesAdapter);
-
-        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-        ListFormat.setListViewHeightBasedOnChildren(checkedList);
+//        uncheckedList.setAdapter(uncheckedNotesAdapter);
+//        checkedList.setAdapter(checkedNotesAdapter);
+//
+//        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+//        ListFormat.setListViewHeightBasedOnChildren(checkedList);
 
     }
 
@@ -355,13 +440,12 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
 
 
-
-    private void prepareDateTime(){
+    private void prepareDateTime(Trip trip){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( trip.getTripDateTime() );
 
         int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
+        int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         int mHour = calendar.get(Calendar.HOUR);
@@ -371,12 +455,12 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         if ( mHour >= 12 )
         {
-            tv_tripTime_1.setText( (mHour-12) + "");
+            tv_tripTime_1.setText( (mHour-12) + ":" + mMinute);
             tv_tripTime_2.setText("PM");
 
         }else
         {
-            tv_tripTime_1.setText( mHour + "");
+            tv_tripTime_1.setText( mHour + ":" + mMinute);
             tv_tripTime_2.setText("AM");
         }
     }

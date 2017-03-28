@@ -142,10 +142,10 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
 
         if (img != null)
             holder.getTripThumbnail().setImageBitmap( img );
-        else {
-            img = BitmapFactory.decodeResource(context.getResources(), R.drawable.trip2);   ///// default image
-            holder.getTripThumbnail().setImageBitmap(img);
-        }
+//        else {
+//            img = BitmapFactory.decodeResource(context.getResources(), R.drawable.trip2);   ///// default image
+//            holder.getTripThumbnail().setImageBitmap(img);
+//        }
 
 //
 

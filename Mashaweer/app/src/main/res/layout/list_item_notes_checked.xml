@@ -2,35 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="4"
-    android:descendantFocusability="blocksDescendants">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="3">
 
     <CheckBox
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/note_check"
-        android:layout_weight="0.5"
-        android:clickable = "false"
-        android:checked="true"
-        />
+        android:id="@+id/checkBox2"
+        android:clickable="false"
+        android:layout_weight="0.5" />
 
-    <EditText
-        android:text="EditText"
-        android:layout_width="0dp"
+    <EditText android:id="@+id/note_edit_text"
         android:layout_height="wrap_content"
-        android:id="@+id/note_text"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_marginLeft="2dip"
         android:background="@null"
-        android:enabled="true"
-        android:layout_weight="3" />
-    <!--android:background="@android:color/transparent"-->
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+    </EditText>
 
     <ImageButton
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/cancel1"
-        android:id="@+id/cancel_checked_btn"
+        android:id="@+id/cancel_checked_btn1"
         android:background="@android:color/transparent"
         android:layout_weight="0.5" />
+
 </LinearLayout>
