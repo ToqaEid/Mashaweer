@@ -268,42 +268,42 @@ public class LoginActivity extends AppCompatActivity {
      ***/
 
 
-    public void authenticateInput() {
-        //instantiate the requestQueue
-        VolleySingleton volleySingleton = VolleySingleton.getInstance(this.getApplicationContext());
-        //request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                URLs.LOGIN_URL, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String check = (String) response.get("check");
-                    switch (check) {
-                        case "wrong email":
-                            Alert.showErrorMsg(ERROR_EMAIL_TITLE, ERROR_EMAIL_MSG, LoginActivity.this);
-                            break;
-                        case "wrong password":
-                            Alert.showErrorMsg(ERROR_PASSWORD_TITLE, ERROR_PASSWORD_MSG, LoginActivity.this);
-                            break;
-                        case "success": //auhtorized user
-                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, SHAREDPREFERNCE_AUTHORIZED_DATA);
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Alert.showErrorMsg(ERROR_LOGIN_DIALOG_TITLE, ERROR_LOGIN_DIALOG_MSG, LoginActivity.this);
-            }
-
-        });
-        jsonObjectRequest.setTag("stop");
-        volleySingleton.addToRequestQueue(jsonObjectRequest);
-    }
+//    public void authenticateInput() {
+//        //instantiate the requestQueue
+//        VolleySingleton volleySingleton = VolleySingleton.getInstance(this.getApplicationContext());
+//        //request
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+//                URLs.LOGIN_URL, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                try {
+//                    String check = (String) response.get("check");
+//                    switch (check) {
+//                        case "wrong email":
+//                            Alert.showErrorMsg(ERROR_EMAIL_TITLE, ERROR_EMAIL_MSG, LoginActivity.this);
+//                            break;
+//                        case "wrong password":
+//                            Alert.showErrorMsg(ERROR_PASSWORD_TITLE, ERROR_PASSWORD_MSG, LoginActivity.this);
+//                            break;
+//                        case "success": //auhtorized user
+//                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, SHAREDPREFERNCE_AUTHORIZED_DATA);
+//                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                            startActivity(intent);
+//                            break;
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Alert.showErrorMsg(ERROR_LOGIN_DIALOG_TITLE, ERROR_LOGIN_DIALOG_MSG, LoginActivity.this);
+//            }
+//
+//        });
+//        jsonObjectRequest.setTag("stop");
+//        volleySingleton.addToRequestQueue(jsonObjectRequest);
+//    }
 }
 

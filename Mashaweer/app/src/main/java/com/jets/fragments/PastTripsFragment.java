@@ -1,13 +1,38 @@
 package com.jets.fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.jets.adapters.UpcomingCustomAdapter;
+import com.jets.adapters.round.RoundListAdapter;
+import com.jets.classes.ListFormat;
+import com.jets.classes.Trip;
+import com.jets.constants.DBConstants;
+import com.jets.constants.SharedPreferenceInfo;
+import com.jets.interfaces.Communicator;
+import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.R;
+import com.jets.mashaweer.TripAddActivity;
+
+import java.util.ArrayList;
 
 
 /**
@@ -15,17 +40,166 @@ import com.jets.mashaweer.R;
  */
 public class PastTripsFragment extends Fragment {
 
+    private ListView past_listView;
+    private Communicator communicator;
+    private UpcomingCustomAdapter adapter;
+
+    private DB_Adapter db_adapter;
+    private ArrayList<Trip> pastTrips = new ArrayList<>();
+    private String userID;
+
+    boolean isEmpty;
 
     public PastTripsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_past, container, false);
+
+        View rootView = null;
+        if (! isEmpty)
+        {
+            rootView = inflater.inflate(R.layout.fragment_past, container, false);
+
+            past_listView = (ListView)  rootView.findViewById(R.id.past_listView);
+
+            adapter = new UpcomingCustomAdapter(getContext(),pastTrips );
+
+            adapter.notifyDataSetChanged();
+
+            past_listView.setAdapter(adapter);
+            registerForContextMenu(past_listView);
+
+
+            Log.i("MyTag","Upcoming adapter is set");
+            past_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Toast.makeText(getActivity(),  "Position = " + position, Toast.LENGTH_SHORT).show();
+
+                    Trip selectedTrip = pastTrips.get(position);
+
+                    communicator.sendMsg(selectedTrip);
+                }
+            });
+            past_listView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    return false;
+                }
+            });
+
+        }else{
+
+            rootView = inflater.inflate(R.layout.empty_listview, container, false);
+
+        }
+
+        return rootView;
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        communicator = (Communicator) getActivity();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme_Dark_Dialog);// TODO: add appTheme_Dark_Dialog theme
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Fetching Data...");
+        progressDialog.show();
+
+        // reading and updating data from database
+        userID = SharedPreferenceInfo.getUserId(getActivity());
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userID);
+
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                pastTrips.clear();
+                //TODO: clear all the other lists as well
+
+                Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
+
+                while (trips.iterator().hasNext()) {
+                    DataSnapshot returnedData = trips.iterator().next();
+                    Trip trip = returnedData.getValue(Trip.class);
+                    trip.setTripId(returnedData.getKey());
+
+                    switch (trip.getTripStatus()) {
+
+                        case DBConstants.STATUS_DONE:
+                        case DBConstants.STATUS_CANCELLED:
+                            pastTrips.add(trip);
+                            break;
+
+                    }
+
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                        ListFormat.setListViewHeightBasedOnChildren(past_listView);
+                    }
+
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.add(0, 1, 0, "Delete");
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo menuinfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int selectedtrip = menuinfo.position; //position in the adapter
+
+        Log.i("3lama", selectedtrip+" ----");
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference db = database.getReference("users/" + userID + "/trips");
+
+        switch (item.getItemId()){
+
+            case 1://Delete
+                Trip toDelete = pastTrips.get(selectedtrip);
+                db.child(toDelete.getTripId()).removeValue();
+
+                pastTrips.remove(selectedtrip);
+                //TODO: Notify the adapter to update the listview
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+
+        return super.onContextItemSelected(item);
+    }
 }

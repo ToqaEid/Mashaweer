@@ -12,6 +12,7 @@
         android:padding="10dip" >
 
         <TextView
+            android:id="@+id/round_title"
             android:text="Round Trips"
             android:textColor="#fff"
             android:layout_height="50dp"

@@ -131,7 +131,6 @@
         </receiver>
         <!-- End of Receivers -->
 
-        <activity android:name="com.jets.test.test_notes"></activity>
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ public class SplashScreenAvtivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferenceInfo.addUserDataToSharedPreference(getApplicationContext(), "9zSBz74aX4NmnTQsoJvuslfpsIu2");
         String authorized = sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
 
         System.out.println(authorized);

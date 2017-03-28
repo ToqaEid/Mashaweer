@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +49,7 @@ public class UpcomingTripsFragment extends Fragment {
     private Communicator communicator;
     private UpcomingCustomAdapter adapter;
     private RoundListAdapter roundListAdapter;
+    private TextView roundTitle;
 
     private DB_Adapter db_adapter;
     private ArrayList<Trip> upcomingTrips = new ArrayList<>();
@@ -120,6 +122,8 @@ public class UpcomingTripsFragment extends Fragment {
         if (! isEmpty)
         {
              rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
+
+            roundTitle = (TextView) rootView.findViewById(R.id.round_title);
 
             upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
 
@@ -228,13 +232,16 @@ public class UpcomingTripsFragment extends Fragment {
 
                     if (adapter != null) {
                         adapter.notifyDataSetChanged();
+                        roundListAdapter.notifyDataSetChanged();
                         ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
                         ListFormat.setListViewHeightBasedOnChildren(round_listView);
                     }
 
                 }
+
                 progressDialog.dismiss();
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -242,6 +249,15 @@ public class UpcomingTripsFragment extends Fragment {
                 progressDialog.dismiss();
             }
         });
+        if(roundTrips.size() == 0){
+            round_listView.setVisibility(View.GONE);
+            roundTitle.setVisibility(View.GONE);
+
+        }else {
+            round_listView.setVisibility(View.VISIBLE);
+            roundTitle.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override
