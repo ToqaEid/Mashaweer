@@ -79,6 +79,9 @@ public class ReminderActivity extends Activity {
         laterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.i("MyTag", "onLaterClick >> tripType >> " + trip.getTripType());
+                Log.i("MyTag", "onLaterClick >> tripStatus >> " + trip.getTripStatus());
                 notifyLater(tripIdInt);
                 finish();
             }
@@ -161,6 +164,10 @@ public class ReminderActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Will display the notification in the notification bar
         notificationManager.notify(notificationId, builder.build());
+
+        Log.i("MyTag", "onNotify >> tripType >> " + trip.getTripType());
+        Log.i("MyTag", "onNotify >> tripStatus >> " + trip.getTripStatus());
+
 
     }
 }

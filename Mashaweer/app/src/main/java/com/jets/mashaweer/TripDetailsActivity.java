@@ -1,5 +1,7 @@
 package com.jets.mashaweer;
 
+import android.*;
+import android.Manifest;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -170,6 +172,10 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         fab_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+              //  ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
 
                 gpsPermission();
                 new TripServices().startTrip(trip);
@@ -461,7 +467,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         int mHour = calendar.get(Calendar.HOUR);
         int mMinute = calendar.get(Calendar.MINUTE);
 
-        tv_tripDate.setText( mDay + " / " + mMonth );
+        tv_tripDate.setText( mDay + ", " + TripServices.getMonthName(mMonth) +" "+ mYear );
 
         if ( mHour >= 12 )
         {
@@ -499,8 +505,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
             ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-            return;
         }
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
 

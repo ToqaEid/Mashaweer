@@ -37,11 +37,22 @@ public class TripServices extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         tripObj = (Trip) intent.getSerializableExtra("trip");
+
+
+        Log.i("MyTag", "onReceive >> tripType >> " + tripObj.getTripType());
+        Log.i("MyTag", "onReceive >> tripStatus >> " + tripObj.getTripStatus());
+
+
         int notificationId = intent.getIntExtra("notificationId", 0 );
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
         if(action.equals(START_ACTION)) {
+
+
+            Log.i("MyTag", "onReceive StartBTN >> tripType >> " + tripObj.getTripType());
+            Log.i("MyTag", "onReceive StartBTN >> tripStatus >> " + tripObj.getTripStatus());
+
             startTrip(tripObj);
         } else if(action.equals(CANCEL_ACTION)){
             cancelTrip(tripObj);
@@ -66,20 +77,26 @@ public class TripServices extends BroadcastReceiver{
         db = database.getReference("users/" + userID + "/trips");
         String endLongLat;
 
+        Log.i("MyTag","TripServices  _  startTripFunc:: TripType >> " + trip.getTripType());
+
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
             endLongLat = trip.getTripEndLongLat();
             trip.setTripStatus(DBConstants.STATUS_DONE);
+
+            Log.i("MyTag","1TripServices  _  startTripFunc:: TripStatus >> " + trip.getTripStatus());
 
         }else{
             if (trip.getTripStatus() == DBConstants.STATUS_UPCOMING){
                 //status pending trip
                 endLongLat = trip.getTripEndLongLat();
                 trip.setTripStatus(DBConstants.STATUS_PENDING);
+                Log.i("MyTag","2TripServices  _  startTripFunc:: TripStatus >> " + trip.getTripStatus());
 
             }else{
                 //upcoming trip
                 endLongLat = trip.getTripStartLocation();
                 trip.setTripStatus(DBConstants.STATUS_DONE);
+                Log.i("MyTag","3TripServices  _  startTripFunc:: TripStatus >> " + trip.getTripStatus());
             }
         }
 
@@ -121,6 +138,10 @@ public class TripServices extends BroadcastReceiver{
         Intent alarmIntent = new Intent(context, Alarm.class);
 
         alarmIntent.putExtra("Trip", trip);
+
+        Log.i("MyTag","TripServices :: _ setAlarmFunc TripType >> " + trip.getTripType());
+        Log.i("MyTag","TripServices :: _ setAlarmFunc TripStatus >> " + trip.getTripStatus());
+
         int requestCode = getTripUniqueId(trip.getTripId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
@@ -158,5 +179,59 @@ public class TripServices extends BroadcastReceiver{
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
+
+
+
+    //////// get month name from month number
+    public static String getMonthName (int monthNumber)
+    {
+        //TODO: Converting month number to its name to be good for UI in trip info.
+
+        switch (monthNumber)
+        {
+            case 1 :
+                return "January";
+
+            case 2 :
+                return "February";
+
+            case 3 :
+                return "March";
+
+            case 4 :
+                return "April";
+
+            case 5 :
+                return "May";
+
+            case 6 :
+                return "June";
+
+            case 7 :
+                return "July";
+
+            case 8 :
+                return "August";
+
+            case 9 :
+                return "September";
+
+            case 10 :
+                return "November";
+
+            case 11 :
+                return "December";
+
+            case 12 :
+                return "January";
+
+            default:
+                return "Invalid Month Number!";
+
+        }
+
+    }
+
+
 
 }
