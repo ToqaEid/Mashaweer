@@ -1,5 +1,7 @@
 package com.jets.mashaweer;
 
+import android.*;
+import android.Manifest;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -171,8 +173,10 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             @Override
             public void onClick(View view) {
 
-                gpsPermission();
-                new TripServices().startTrip(trip);
+                ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+//                gpsPermission();
+  //              new TripServices().startTrip(trip);
 
             }
         });
@@ -281,7 +285,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
 
     private void doneTrip() {
-//        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
+
+       Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
 
 
 
@@ -479,7 +484,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         int mHour = calendar.get(Calendar.HOUR_OF_DAY);
         int mMinute = calendar.get(Calendar.MINUTE);
 
-        tv_tripDate.setText( mDay + " / " + mMonth );
+        tv_tripDate.setText( mDay + ", " + TripServices.getMonthName(mMonth) +" "+ mYear );
 
         if ( mHour >= 12 )
         {
@@ -493,7 +498,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         }
     }
 
-    private void gpsPermission(){
+    private void getUsersLocation(){
         //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
         ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
 
@@ -517,8 +522,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
             ActivityCompat.requestPermissions(TripDetailsActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-            return;
         }
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
 
@@ -580,13 +585,17 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         switch (requestCode) {
             case 1:
+
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
+
+                    getUsersLocation();
+
                     new TripServices().startTrip(trip);
+
                 } else {
                     // Permission Denied
-                    Toast.makeText(TripDetailsActivity.this, "Accessing GPS is Denied", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(TripDetailsActivity.this, "Sorry, GPS is required to start your trip." , Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:

@@ -47,7 +47,7 @@ public class PastTripsFragment extends Fragment {
     private UpcomingCustomAdapter adapter;
 
     private DB_Adapter db_adapter;
-    private ArrayList<Trip> pastTrips = new ArrayList<>();
+    public static ArrayList<Trip> pastTrips = new ArrayList<>();
     private String userID;
 
     boolean isEmpty;

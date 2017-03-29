@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.jets.classes.Trip;
 import com.jets.classes.VolleySingleton;
 import com.jets.fragments.NavBarFragment;
+import com.jets.fragments.PastTripsFragment;
 
 import org.json.JSONObject;
 
@@ -64,28 +65,28 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
         rootParser = new RootParser();
 
 
-        trips = new ArrayList<>();
+        trips = PastTripsFragment.pastTrips;
 
-        Trip trip1 = new Trip();
-        trip1.setTripStartLongLat("30.026509,31.046681");
-        trip1.setTripEndLongLat("30.027787,31.322885");
-
-
-
-        Trip trip2 = new Trip();
-        trip2.setTripStartLongLat("31.202765,29.878381");
-        trip2.setTripEndLongLat("31.191830,29.949958");
-
-        Trip trip3 = new Trip();
-        trip3.setTripStartLongLat("30.202765,28.878381");
-        trip3.setTripEndLongLat("27.191830,26.949958");
-
-
-
-        trips.add(trip1);
-        trips.add(trip2);
-        trips.add(trip3);
-        mapFragment.onCreate(savedInstanceState);
+//        Trip trip1 = new Trip();
+//        trip1.setTripStartLongLat("30.026509,31.046681");
+//        trip1.setTripEndLongLat("30.027787,31.322885");
+//
+//
+//
+//        Trip trip2 = new Trip();
+//        trip2.setTripStartLongLat("31.202765,29.878381");
+//        trip2.setTripEndLongLat("31.191830,29.949958");
+//
+//        Trip trip3 = new Trip();
+//        trip3.setTripStartLongLat("30.202765,28.878381");
+//        trip3.setTripEndLongLat("27.191830,26.949958");
+//
+//
+//
+//        trips.add(trip1);
+//        trips.add(trip2);
+//        trips.add(trip3);
+//        mapFragment.onCreate(savedInstanceState);
 
         mapFragment.getMapAsync(this);
 

@@ -21,6 +21,7 @@
             android:paddingLeft="@dimen/details_status_padding_left"
             android:paddingTop="@dimen/details_status_padding_top"
             android:paddingBottom="@dimen/details_status_padding_bottom"
+            android:textSize="16sp"
             android:text="UpComming"
             android:textColor="@color/card_section_title_color"
             android:backgroundTint="@color/card_activated"
@@ -103,7 +104,7 @@
                     <TextView
                         android:id="@+id/tripDetails_tv_date"
                         android:text="Monday 7th Sep 2016"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -163,13 +164,14 @@
 
                 <TextView
                     android:text="@string/notes_title"
+                    android:textSize="16sp"
                     android:layout_height="30dp"
                     android:layout_width="match_parent"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"
                     android:background="@color/cast_expanded_controller_ad_label_background_color"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
 
                 <TextView
                     android:text="Uncompleted Items"

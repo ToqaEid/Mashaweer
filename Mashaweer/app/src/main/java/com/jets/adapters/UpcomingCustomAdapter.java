@@ -93,7 +93,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         calendar.setTimeInMillis(  trips.get(position).getTripDateTime() );
 
         int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
+        int mMonth = calendar.get(Calendar.MONTH) + 1 ; //// added ONE to the month
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
         int mHour = calendar.get(Calendar.HOUR_OF_DAY);
         int mMinute = calendar.get(Calendar.MINUTE);
