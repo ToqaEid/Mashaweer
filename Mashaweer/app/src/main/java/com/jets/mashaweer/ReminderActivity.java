@@ -78,6 +78,12 @@ public class ReminderActivity extends Activity {
         //get Trip object from intent
         Intent intent = getIntent();
         trip = (Trip) intent.getSerializableExtra("Trip");
+
+        if (trip != null)
+            Log.i("3lama2", trip.toString());
+        else
+            Log.i("3lama2", "Null trip object ya kbeer");
+
         tripIdInt = TripServices.getTripUniqueId(trip.getTripId());
 
 

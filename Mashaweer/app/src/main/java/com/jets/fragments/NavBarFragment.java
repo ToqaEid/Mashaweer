@@ -99,6 +99,7 @@ public class NavBarFragment extends Fragment{
                 {
                     Toast.makeText(getContext(), "Good Internet Connection", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), TripAddActivity.class));
+//                    getActivity().finish();
                     getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
                 else{

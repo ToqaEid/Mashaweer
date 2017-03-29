@@ -49,8 +49,8 @@
         app:fabSize="mini"
         app:layout_anchor="@+id/app_bar"
         app:srcCompat="@android:drawable/ic_media_play"
-        android:layout_width="48dp"
-        android:layout_height="250dp"
+        android:layout_width="60dp"
+        android:layout_height="64dp"
         android:layout_margin="@dimen/details_fab_margin"
         app:backgroundTint="@android:color/holo_blue_dark"
         app:rippleColor="?attr/actionModeSplitBackground"
@@ -62,8 +62,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/edit_floating_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="52dp"
+        android:layout_height="48dp"
         android:layout_margin="@dimen/details_fab_margin"
         android:layout_marginBottom="@dimen/details_edit_floating_margin_bottom"
         app:layout_anchor="@+id/include"
