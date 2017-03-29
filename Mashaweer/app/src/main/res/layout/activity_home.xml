@@ -14,7 +14,7 @@
     <fragment
         android:name="com.jets.fragments.NavBarFragment"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignBottom="@+id/pager"
         android:layout_alignParentBottom="true"
         android:id="@+id/navbar" />

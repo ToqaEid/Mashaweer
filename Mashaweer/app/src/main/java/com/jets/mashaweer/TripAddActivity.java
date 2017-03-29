@@ -412,10 +412,14 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
 
         //Setting trip type & status
         if (_tripType.isChecked()){
+            Log.i("Tag switch", "round");
             tripObj.setTripType(DBConstants.TYPE_ROUND_TRIP);
         }else{
+            Log.i("Tag switch", "one way" + "");
             tripObj.setTripType(DBConstants.TYPE_ONE_WAY);
         }
+        Log.i("Tag type", tripObj.getTripType() +"");
+
         tripObj.setTripStatus(DBConstants.STATUS_UPCOMING);
 
         //setting trip time

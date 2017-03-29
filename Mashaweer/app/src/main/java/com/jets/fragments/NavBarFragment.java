@@ -64,10 +64,12 @@ public class NavBarFragment extends Fragment{
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(!(getActivity() instanceof HomeActivity)) {
 
                     startActivity(new Intent(getActivity(), HomeActivity.class));
                     getActivity().finish();
+                    getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
 
             }
@@ -77,11 +79,9 @@ public class NavBarFragment extends Fragment{
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getActivity(), HistoryActivity.class));
                 if(!(getActivity() instanceof HistoryActivity)) {
-                    getActivity().finish();
-
                     startActivity(new Intent(getActivity(), HistoryActivity.class));
+                    getActivity().finish();
                     getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
                 }
@@ -99,6 +99,8 @@ public class NavBarFragment extends Fragment{
                 {
                     Toast.makeText(getContext(), "Good Internet Connection", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), TripAddActivity.class));
+                    getActivity().finish();
+                    getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
                 else{
 
@@ -115,8 +117,10 @@ public class NavBarFragment extends Fragment{
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
 

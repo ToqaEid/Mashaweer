@@ -224,7 +224,7 @@ public class UpcomingTripsFragment extends Fragment {
 
                         default:
                             //TODO: Replace the array list "upcoming trips" with the done/cancelled arraylist name
-                            upcomingTrips.add(trip);
+                            //upcomingTrips.add(trip);
                             break;
                     }
 

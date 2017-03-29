@@ -102,6 +102,13 @@
             android:theme="@android:style/Theme.Holo.Dialog" />
         <!-- End of ReminderActivity -->
 
+        <!-- *** ReminderNotesActivity *** -->
+        <activity
+            android:name=".ReminderNotesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Dialog" />
+        <!-- End of ReminderNotesActivity -->
+
 
         <!-- *** META-DATA *** -->
         <!--
