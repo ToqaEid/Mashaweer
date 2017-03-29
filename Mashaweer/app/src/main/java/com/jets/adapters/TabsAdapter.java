@@ -14,10 +14,15 @@ import com.jets.fragments.UpcomingTripsFragment;
 public class TabsAdapter extends FragmentPagerAdapter {
 
     public static String [] tabNames = {"Upcoming Trips","Past Trips"};
+    UpcomingTripsFragment upcomingTripsFragment;
+    PastTripsFragment pastTripsFragment;
 
 
     public TabsAdapter(FragmentManager fm) {
         super(fm);
+        upcomingTripsFragment = new UpcomingTripsFragment();
+        pastTripsFragment = new PastTripsFragment();
+
     }
 
     @Override
@@ -26,15 +31,23 @@ public class TabsAdapter extends FragmentPagerAdapter {
         switch (position){
 
             case 0:
-                return new UpcomingTripsFragment();
+                return upcomingTripsFragment;
 
             case 1:
-                return new PastTripsFragment();
+                return pastTripsFragment;
 //            return new UpcomingTripsFragment();
 //                return new PastTripsFragment();
         }
 
         return null;
+    }
+
+
+    public PastTripsFragment getPastTripsFragment(){
+        return pastTripsFragment;
+    }
+    public UpcomingTripsFragment getUpcomingTripsFragment(){
+        return upcomingTripsFragment;
     }
 
     @Override

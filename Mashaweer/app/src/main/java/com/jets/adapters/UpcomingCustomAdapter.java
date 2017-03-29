@@ -22,6 +22,7 @@ import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
+import com.jets.classes.ListFormat;
 import com.jets.fragments.UpcomingTripsFragment;
 import com.jets.mashaweer.R;
 import com.jets.classes.UpcomingListViewHolder;
@@ -198,5 +199,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         Toast.makeText(context, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
+
+
 
 }

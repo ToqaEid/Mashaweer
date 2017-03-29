@@ -59,29 +59,24 @@ public class PastTripsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = null;
-        if (! isEmpty)
-        {
+      //  if (! isEmpty)
+      //  {
             rootView = inflater.inflate(R.layout.fragment_past, container, false);
 
             past_listView = (ListView)  rootView.findViewById(R.id.past_listView);
 
-            adapter = new UpcomingCustomAdapter(getContext(),pastTrips );
+            adapter = new UpcomingCustomAdapter(getActivity(),pastTrips );
 
             adapter.notifyDataSetChanged();
 
             past_listView.setAdapter(adapter);
             registerForContextMenu(past_listView);
 
-
-            Log.i("MyTag","Upcoming adapter is set");
             past_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Toast.makeText(getActivity(),  "Position = " + position, Toast.LENGTH_SHORT).show();
-
                     Trip selectedTrip = pastTrips.get(position);
-
                     communicator.sendMsg(selectedTrip);
                 }
             });
@@ -93,11 +88,11 @@ public class PastTripsFragment extends Fragment {
                 }
             });
 
-        }else{
-
-            rootView = inflater.inflate(R.layout.empty_listview, container, false);
-
-        }
+//        }else{
+//
+//            rootView = inflater.inflate(R.layout.empty_listview, container, false);
+//
+//        }
 
         return rootView;
     }
@@ -110,62 +105,6 @@ public class PastTripsFragment extends Fragment {
         communicator = (Communicator) getActivity();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
-                R.style.AppTheme_Dark_Dialog);// TODO: add appTheme_Dark_Dialog theme
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Fetching Data...");
-        progressDialog.show();
-
-        // reading and updating data from database
-        userID = SharedPreferenceInfo.getUserId(getActivity());
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference("users/" + userID);
-
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                pastTrips.clear();
-                //TODO: clear all the other lists as well
-
-                Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
-
-                while (trips.iterator().hasNext()) {
-                    DataSnapshot returnedData = trips.iterator().next();
-                    Trip trip = returnedData.getValue(Trip.class);
-                    trip.setTripId(returnedData.getKey());
-
-                    switch (trip.getTripStatus()) {
-
-                        case DBConstants.STATUS_DONE:
-                        case DBConstants.STATUS_CANCELLED:
-                            pastTrips.add(trip);
-                            break;
-
-                    }
-
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                        ListFormat.setListViewHeightBasedOnChildren(past_listView);
-                    }
-
-                }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
-            }
-        });
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -201,5 +140,16 @@ public class PastTripsFragment extends Fragment {
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    public void refreshData(ArrayList<Trip> tripsData){
+        //if (!isEmpty) {
+            pastTrips.clear();
+            pastTrips.addAll(tripsData);
+
+            adapter.notifyDataSetChanged();
+            ListFormat.setListViewHeightBasedOnChildren(past_listView);
+        //}
+
     }
 }

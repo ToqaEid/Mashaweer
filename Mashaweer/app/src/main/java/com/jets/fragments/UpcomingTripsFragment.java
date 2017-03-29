@@ -155,121 +155,121 @@ public class UpcomingTripsFragment extends Fragment {
 
         communicator = (Communicator) getActivity();
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Fetching Data...");
-        progressDialog.show();
-
-        // reading and updating data from database
-        userID = SharedPreferenceInfo.getUserId(getActivity());
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference("users/" + userID);
-
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                upcomingTrips.clear();
-                roundTrips.clear();
-                //TODO: clear all the other lists as well
-
-                Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
-
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
-                boolean alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
-
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                while (trips.iterator().hasNext()) {
-
-                    DataSnapshot returnedData = trips.iterator().next();
-                    Trip trip = returnedData.getValue(Trip.class);
-                    trip.setTripId(returnedData.getKey());
-
-                    //changing notes to empty array if null
-                    if (trip.getTripCheckedNotes() == null){
-                        trip.setTripCheckedNotes(new ArrayList<String>());
-                    }
-
-                    if (trip.getTripUncheckedNotes() == null){
-                        trip.setTripUncheckedNotes(new ArrayList<String>());
-                    }
-
-
-                    switch (trip.getTripStatus()) {
-
-                        case DBConstants.STATUS_UPCOMING:
-                            upcomingTrips.add(trip);
-                            Log.i("3lama", "Alaram Flag " + alarmflag);
-                            if (alarmflag){
-                                if (trip.getTripDateTime() > System.currentTimeMillis())
-                                TripServices.setAlarm(getActivity(), trip);
-
-                            }
-                            break;
-
-                        case DBConstants.STATUS_PENDING:
-                            roundTrips.add(trip);
-                            Log.i("3lama + round trips", " " + trip.toString());
-
-                            break;
-
-                        default:
-                            //TODO: Replace the array list "upcoming trips" with the done/cancelled arraylist name
-                            //upcomingTrips.add(trip);
-                            break;
-                    }
-
-
-
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                        roundListAdapter.notifyDataSetChanged();
-                        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-                        ListFormat.setListViewHeightBasedOnChildren(round_listView);
-                    }
-
-                }
-                if(roundTrips.size() == 0){
-                    round_listView.setVisibility(View.GONE);
-                    upcomingHeader.setVisibility(View.GONE);
-
-                }else {
-                    round_listView.setVisibility(View.VISIBLE);
-                    upcomingHeader.setVisibility(View.VISIBLE);
-
-                }
-                editor.putBoolean(SharedPreferenceInfo.ALARMS_SET, false);
-                editor.commit();
-                alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
-
-                Log.i("3lama", "changing flag to false Flag " + alarmflag );
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                progressDialog.dismiss();
-            }
-        });
-
-//        Log.i("3lama", roundTrips.size() +" ----- arraylist size");
-//        if (roundTrips.size() < 1){
-//            Log.i("3lama", roundTrips.size() +" ----- arraylist size");
 //
-//            round_listView.setVisibility(View.GONE);
-//            upcomingHeader.setVisibility(View.GONE);
-//        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//
+//        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Fetching Data...");
+//        progressDialog.show();
+//
+//        // reading and updating data from database
+//        userID = SharedPreferenceInfo.getUserId(getActivity());
+//
+//        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference db = database.getReference("users/" + userID);
+//
+//        db.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                upcomingTrips.clear();
+//                roundTrips.clear();
+//                //TODO: clear all the other lists as well
+//
+//                Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
+//
+//                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
+//                boolean alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+//
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//                while (trips.iterator().hasNext()) {
+//
+//                    DataSnapshot returnedData = trips.iterator().next();
+//                    Trip trip = returnedData.getValue(Trip.class);
+//                    trip.setTripId(returnedData.getKey());
+//
+//                    //changing notes to empty array if null
+//                    if (trip.getTripCheckedNotes() == null){
+//                        trip.setTripCheckedNotes(new ArrayList<String>());
+//                    }
+//
+//                    if (trip.getTripUncheckedNotes() == null){
+//                        trip.setTripUncheckedNotes(new ArrayList<String>());
+//                    }
+//
+//
+//                    switch (trip.getTripStatus()) {
+//
+//                        case DBConstants.STATUS_UPCOMING:
+//                            upcomingTrips.add(trip);
+//                            Log.i("3lama", "Alaram Flag " + alarmflag);
+//                            if (alarmflag){
+//                                if (trip.getTripDateTime() > System.currentTimeMillis())
+//                                TripServices.setAlarm(getActivity(), trip);
+//
+//                            }
+//                            break;
+//
+//                        case DBConstants.STATUS_PENDING:
+//                            roundTrips.add(trip);
+//                            Log.i("3lama + round trips", " " + trip.toString());
+//
+//                            break;
+//
+//                        default:
+//                            //TODO: Replace the array list "upcoming trips" with the done/cancelled arraylist name
+//                            //upcomingTrips.add(trip);
+//                            break;
+//                    }
+//
+//
+//
+//                    if (adapter != null) {
+//                        adapter.notifyDataSetChanged();
+//                        roundListAdapter.notifyDataSetChanged();
+//                        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+//                        ListFormat.setListViewHeightBasedOnChildren(round_listView);
+//                    }
+//
+//                }
+//                if(roundTrips.size() == 0){
+//                    round_listView.setVisibility(View.GONE);
+//                    upcomingHeader.setVisibility(View.GONE);
+//
+//                }else {
+//                    round_listView.setVisibility(View.VISIBLE);
+//                    upcomingHeader.setVisibility(View.VISIBLE);
+//
+//                }
+////                editor.putBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+////                editor.commit();
+////                alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+////
+////                Log.i("3lama", "changing flag to false Flag " + alarmflag );
+////                progressDialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//                progressDialog.dismiss();
+//            }
+//        });
+//
+////        Log.i("3lama", roundTrips.size() +" ----- arraylist size");
+////        if (roundTrips.size() < 1){
+////            Log.i("3lama", roundTrips.size() +" ----- arraylist size");
+////
+////            round_listView.setVisibility(View.GONE);
+////            upcomingHeader.setVisibility(View.GONE);
+////        }
+//    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -361,5 +361,30 @@ public class UpcomingTripsFragment extends Fragment {
             }
         });
         alertDialog.show();
+    }
+
+    public void refreshData(ArrayList<Trip> upcomingTripsData, ArrayList<Trip> roundTripsData){
+        //if (!isEmpty) {
+        upcomingTrips.clear();
+        roundTrips.clear();
+        upcomingTrips.addAll(upcomingTripsData);
+        roundTrips.addAll(roundTripsData);
+
+        adapter.notifyDataSetChanged();
+        roundListAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+        ListFormat.setListViewHeightBasedOnChildren(round_listView);
+
+        if(roundTrips.size() == 0){
+        round_listView.setVisibility(View.GONE);
+        upcomingHeader.setVisibility(View.GONE);
+
+        }else {
+        round_listView.setVisibility(View.VISIBLE);
+        upcomingHeader.setVisibility(View.VISIBLE);
+
+        }
+        //}
+
     }
 }

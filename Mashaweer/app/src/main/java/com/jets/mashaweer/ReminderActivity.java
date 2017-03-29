@@ -16,7 +16,9 @@ import android.os.Parcelable;
 import android.os.Vibrator;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +29,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
@@ -64,6 +65,7 @@ public class ReminderActivity extends Activity {
             this.setActionBar(toolbar);
         }
 
+//        this.setSupportActionBar(toolbar);
         //check if phone is locked, then open the lock and turn screen light on
         Window window = getWindow();
         if(!window.isActive()) {
