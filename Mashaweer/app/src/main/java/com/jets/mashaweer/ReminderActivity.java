@@ -156,7 +156,7 @@ public class ReminderActivity extends Activity {
         intent.setAction(START_ACTION);
         intent.putExtra("trip", trip);
         intent.putExtra("notificationId", notificationId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, notificationId, intent, 0);
         builder.setContentIntent(pendingIntent);
         builder.addAction(R.drawable.start2, "START", pendingIntent);
 
