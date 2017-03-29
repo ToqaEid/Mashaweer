@@ -22,6 +22,7 @@ import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
+import com.jets.classes.ListFormat;
 import com.jets.fragments.UpcomingTripsFragment;
 import com.jets.mashaweer.R;
 import com.jets.classes.UpcomingListViewHolder;
@@ -93,7 +94,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH) + 1 ; //// added ONE to the month
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int mHour = calendar.get(Calendar.HOUR);
+        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
         int mMinute = calendar.get(Calendar.MINUTE);
 
 
@@ -198,5 +199,7 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         Toast.makeText(context, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
+
+
 
 }

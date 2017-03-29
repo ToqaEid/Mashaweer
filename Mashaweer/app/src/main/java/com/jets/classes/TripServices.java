@@ -137,7 +137,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
     public static void setAlarm(Context context, Trip trip){
 
-        Log.i("3lama", trip.getTripTitle());
+        Log.i("3lama2", trip.getTripTitle());
 
         Intent alarmIntent = new Intent(context, Alarm.class);
 

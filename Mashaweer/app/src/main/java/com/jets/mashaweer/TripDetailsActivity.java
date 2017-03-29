@@ -463,7 +463,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         int mMonth = calendar.get(Calendar.MONTH) + 1;
         int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-        int mHour = calendar.get(Calendar.HOUR);
+        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
         int mMinute = calendar.get(Calendar.MINUTE);
 
         tv_tripDate.setText( mDay + ", " + TripServices.getMonthName(mMonth) +" "+ mYear );

@@ -46,10 +46,10 @@
                     android:id="@+id/tripDetails_tv_from"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
                     android:text="Information Technology Institute, SmartVillage, Cairo, Egypt."
                     android:textSize="@dimen/details_from_place_text_size"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -67,8 +67,8 @@
                     android:layout_height="match_parent"
                     android:text="7th district, Obour City"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <ImageView

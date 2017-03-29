@@ -211,11 +211,28 @@ public class LoginActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             // there was an error
-
                             onLoginFailed();
-                            Log.i("3lama", task.getException().getMessage());
+
+                            String err = task.getException().getMessage();
                             progressDialog.dismiss();
-                            Toast.makeText(LoginActivity.this, "Sign In failed", Toast.LENGTH_LONG).show();
+                            if (err.equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred.")){
+
+                                Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_LONG).show();
+
+                            }else if (err.equals("There is no user record corresponding to this identifier. The user may have been deleted.")){
+
+                                Toast.makeText(LoginActivity.this, "No user found with this Email", Toast.LENGTH_LONG).show();
+
+                            }else if (err.equals("The password is invalid or the user does not have a password.")){
+
+                                Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_LONG).show();
+
+                            }else {
+
+                                Toast.makeText(LoginActivity.this, "Sign In Failed", Toast.LENGTH_LONG).show();
+
+                            }
+
                         } else {
                             progressDialog.dismiss();
                             SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());

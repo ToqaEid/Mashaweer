@@ -613,7 +613,6 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
 
         }
 
-
             //handle enter action
             noteInput.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -622,12 +621,13 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
                             case KeyEvent.KEYCODE_DPAD_CENTER:
                             case KeyEvent.KEYCODE_ENTER:
                                 //add to array list & update list view
-                                uncheckedNotes.add(noteInput.getText().toString());
-                                notesAdap.notifyDataSetChanged();
-                                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+                                if(noteInput.getText().toString().trim().length() != 0) {
+                                    uncheckedNotes.add(noteInput.getText().toString());
+                                    notesAdap.notifyDataSetChanged();
+                                    ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
 
+                                }
                                 noteInput.setText("");
-
                                 //hide keyboard
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
