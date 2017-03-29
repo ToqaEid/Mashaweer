@@ -1,25 +1,33 @@
 package com.jets.mashaweer;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
@@ -37,6 +45,8 @@ public class ReminderActivity extends Activity {
     Button laterBtn;
     @BindView(R.id.cancel_btn)
     Button cancelBtn;
+    @BindView(R.id.reminder_tool)
+    Toolbar toolbar;
 
     private TextView msg;
 
@@ -49,6 +59,10 @@ public class ReminderActivity extends Activity {
         setContentView(R.layout.activity_reminder);
         this.setFinishOnTouchOutside(false);
         ButterKnife.bind(this);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            this.setActionBar(toolbar);
+        }
 
         //check if phone is locked, then open the lock and turn screen light on
         Window window = getWindow();
@@ -108,6 +122,14 @@ public class ReminderActivity extends Activity {
 
     }
 
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        notifyLater(tripIdInt);
+//        finish();
+//    }
+
+    /*======================== HELPFUL FUNCTIONS ======================================*/
     private void setActivitySoundAndVibration(){
         // vibrate when the activity opens
         Vibrator vib = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -124,15 +146,16 @@ public class ReminderActivity extends Activity {
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
+        String DETAIL_ACTION = "DETAIL_ACTION";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ReminderActivity.this);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
+        builder.setSmallIcon(R.drawable.logo);
 
         Intent intent = new Intent(this , TripServices.class);
+        intent.setAction(START_ACTION);
         intent.putExtra("trip", trip);
         intent.putExtra("notificationId", notificationId);
-        intent.setAction(START_ACTION);
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, 0, intent, 0);
         builder.setContentIntent(pendingIntent);
         builder.addAction(R.drawable.start2, "START", pendingIntent);
@@ -142,7 +165,6 @@ public class ReminderActivity extends Activity {
         cancelIntent.putExtra("trip", trip);
         cancelIntent.putExtra("notificationId", notificationId);
         PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(ReminderActivity.this, notificationId, cancelIntent, 0);
-
         builder.addAction(R.drawable.cancel1, "CANCEL", cancelPendingIntent);
 
         builder.setOngoing(true);
@@ -162,5 +184,30 @@ public class ReminderActivity extends Activity {
         // Will display the notification in the notification bar
         notificationManager.notify(notificationId, builder.build());
 
+    }
+
+    /*=============================== MENU =====================================*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        new MenuInflater(getApplication()).inflate(R.menu.menu_reminder, menu);
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_view_notes:
+                Intent intent = new Intent(ReminderActivity.this, ReminderNotesActivity.class);
+                intent.putExtra("trip", trip);
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                break;
+
+            default:
+                break;
+        }
+
+        return true;
     }
 }

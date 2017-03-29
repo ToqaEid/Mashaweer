@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.constants.DBConstants;
 import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
+import com.jets.mashaweer.TripDetailsActivity;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -27,7 +28,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by toqae on 3/21/2017.
  */
 
-public class TripServices extends BroadcastReceiver{
+    public class TripServices extends BroadcastReceiver{
 
     private Trip tripObj;
     private DatabaseReference db;
@@ -41,11 +42,14 @@ public class TripServices extends BroadcastReceiver{
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
+
         if(action.equals(START_ACTION)) {
             startTrip(tripObj);
         } else if(action.equals(CANCEL_ACTION)){
             cancelTrip(tripObj);
         }
+        Log.i("Tag act", action);
+        Log.i("Tag not", notificationId +"");
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
     }
@@ -66,8 +70,11 @@ public class TripServices extends BroadcastReceiver{
         db = database.getReference("users/" + userID + "/trips");
         String endLongLat;
 
+        Log.i("Tag start", "type "+ trip.getTripType());
+
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
             endLongLat = trip.getTripEndLongLat();
+            Log.i("Tag start", "here "+ endLongLat);
             trip.setTripStatus(DBConstants.STATUS_DONE);
 
         }else{
@@ -90,6 +97,7 @@ public class TripServices extends BroadcastReceiver{
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mapIntent.setPackage("com.google.android.apps.maps");
         getApplicationContext().startActivity(mapIntent);
+        deleteAlarm(getApplicationContext(), trip);
     }
 
     /***

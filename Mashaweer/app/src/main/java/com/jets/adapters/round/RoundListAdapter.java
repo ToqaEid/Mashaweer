@@ -1,6 +1,9 @@
 package com.jets.adapters.round;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +16,12 @@ import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.mashaweer.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by toqae on 3/25/2017.
@@ -77,6 +85,12 @@ public class RoundListAdapter extends ArrayAdapter<Trip> {
             }
         });
 
+        Bitmap img = loadImageFromStorage( context.getFilesDir().getAbsolutePath() , trips.get(position).getTripPlaceId());
+
+        Log.i("MyTag","Back from internal storage");
+
+        if (img != null)
+            holder.getImageView().setImageBitmap( img );
 
         return  rowView;
     }
@@ -85,6 +99,38 @@ public class RoundListAdapter extends ArrayAdapter<Trip> {
     public int getCount() {
         Log.i("Tag size", String.valueOf(trips.size()));
         return trips.size();
+    }
+
+    ////////////// load image from internal storage
+    private Bitmap loadImageFromStorage(String path, String placeId)
+    {
+        Bitmap b = null;
+
+        Log.i("MyTag","Loading image from internal storage ... ");
+
+        try {
+
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+            // Create imageDir
+            File f=new File(directory.getAbsolutePath(), placeId + ".jpg");
+
+
+            //File f=new File(path+"/", placeId+".jpg");
+            Log.i("MyTag","Image Path .. " + directory.getAbsolutePath() + "/" +  placeId+".jpg");
+            b = BitmapFactory.decodeStream(new FileInputStream(f));
+            Log.i("MyTag","Image successfully found");
+            return  b;
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        Log.i("MyTag","Image not found");
+        return b;
     }
 }
 
