@@ -183,8 +183,13 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             tripStatus = "Done";
             fab.setVisibility(View.INVISIBLE);
             fab_play.setVisibility(View.GONE);
+        }else if(trip.getTripStatus() == DBConstants.STATUS_CANCELLED){
+            tripStatus = "Canceled";
+            fab.setVisibility(View.INVISIBLE);
+            fab_play.setVisibility(View.GONE);
+
         }else if(trip.getTripStatus() == DBConstants.STATUS_PENDING){
-            tripStatus = "Departure";
+            tripStatus = "Pending";
         }else {
             tripStatus = "Upcoming";
         }
@@ -239,7 +244,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (trip.getTripStatus() == DBConstants.STATUS_DONE){
+        if (trip.getTripStatus() == DBConstants.STATUS_DONE || (trip.getTripStatus() == DBConstants.STATUS_CANCELLED)){
             inflater.inflate(R.menu.menu_trip_details_past, menu);
         }else {
             inflater.inflate(R.menu.menu_trip_details, menu);
@@ -248,7 +253,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (trip.getTripStatus() == DBConstants.STATUS_DONE){
+        if ((trip.getTripStatus() == DBConstants.STATUS_DONE) || (trip.getTripStatus() == DBConstants.STATUS_CANCELLED)){
             // Handle item selection
             switch (item.getItemId()) {
                 case R.id.action_delete_past:
