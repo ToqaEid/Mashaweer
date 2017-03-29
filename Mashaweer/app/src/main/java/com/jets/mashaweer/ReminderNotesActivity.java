@@ -3,6 +3,7 @@ package com.jets.mashaweer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -89,13 +90,22 @@ public class ReminderNotesActivity extends Activity {
         uncheckedNotes = trip.getTripUncheckedNotes();
         checkedNotes = trip.getTripCheckedNotes();
 
-        if(uncheckedNotes == null){
+
+
+        if(uncheckedNotes == null ){
             uncheckedNotes = new ArrayList<>();
         }
         if(checkedNotes == null){
             checkedNotes = new ArrayList<>();
         }
 
+        if(uncheckedNotes.size() == 0 && checkedNotes.size() == 0){
+            uncompeletedText.setText("No Notes For This Trip");
+            Log.i("notes", "before");
+            return;
+
+        }
+        Log.i("notes", "after");
         checkedNotesAdapter = new CheckedNoteAdatper(this, checkedNotes);
         checkedNotesAdapter.setActivityFlag("details");
         checkedList.setAdapter(checkedNotesAdapter);
