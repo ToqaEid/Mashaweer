@@ -3,6 +3,7 @@ package com.jets.adapters.round;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jets.mashaweer.R;
@@ -17,16 +18,31 @@ public class RoundListViewHolder {
     TextView roundName;
     TextView roundDestination;
     ImageView imageView;
+    LinearLayout startTrip;
 
     public RoundListViewHolder(View view)
     {
         convertedView = view ;
     }
 
+    public LinearLayout getStartTrip() {
+        if(startTrip == null)
+            startTrip = (LinearLayout) convertedView.findViewById(R.id.round_start);
+
+        return startTrip;
+    }
+
+    public void setStartTrip(LinearLayout startTrip) {
+        this.startTrip = startTrip;
+    }
+
     public TextView getRoundName() {
 
-        if(roundName == null)
+        if(roundName == null) {
             roundName = (TextView) convertedView.findViewById(R.id.round_tripName);
+
+        }
+
 
         return roundName;
     }

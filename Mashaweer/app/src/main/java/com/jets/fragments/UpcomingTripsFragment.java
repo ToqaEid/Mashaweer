@@ -1,11 +1,16 @@
 package com.jets.fragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -14,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jets.adapters.round.RoundListAdapter;
+import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
 import com.jets.constants.DBConstants;
 import com.jets.classes.ListFormat;
 import com.jets.mashaweer.DB_Adapter;
@@ -35,8 +43,12 @@ import com.jets.constants.SharedPreferenceInfo;
 import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
 import com.jets.mashaweer.TripAddActivity;
+import com.jets.mashaweer.TripDetailsActivity;
 
 import java.util.ArrayList;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
@@ -49,6 +61,7 @@ public class UpcomingTripsFragment extends Fragment {
     private Communicator communicator;
     private UpcomingCustomAdapter adapter;
     private RoundListAdapter roundListAdapter;
+    private LinearLayout upcomingHeader;
     private TextView roundTitle;
 
     private DB_Adapter db_adapter;
@@ -66,50 +79,6 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-//        if (upcomingTrips.size() == 0){
-//           Log.i("MyTag"," > >  >  >   . . Empty DB");
-//            isEmpty = true;
-//        }else {
-//            isEmpty = false;
-//        }
-
-
-
-//
-//        db_adapter = new DB_Adapter(getContext());
-//        upcomingTrips = new ArrayList<>();
-//
-////        for (int i=0; i<3; i++)
-////        {
-////            Trip trip = new Trip();
-////            db_adapter.insertTripInfo(trip);
-////            Log.i("MyTag","Inserted #" + i);
-////        }
-//
-//        Log.i("MyTag","----------------------------------");
-//        Cursor cursor = db_adapter.getAllTrips();
-//        if (cursor.getCount() == 0){
-//           Log.i("MyTag"," > >  >  >   . . Empty DB");
-//            isEmpty = true;
-//        }
-//
-//       else{
-//
-//            isEmpty = false;
-//            while (cursor.moveToNext()){
-//
-//                Trip trip = new Trip(0,cursor.getInt(8), cursor.getInt(9), cursor.getString(1),
-//                                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
-//                                    cursor.getString(5),cursor.getString(6), cursor.getString(7));
-//
-//                Log.i("MyTag","-=-= Obj # " +trip);
-//                upcomingTrips.add(trip);
-//            }
-//
-//            Log.i("MyTag"," > >  >  >  Size of tripsArray " + upcomingTrips.size());
-//        }
     }
 
 
@@ -123,11 +92,11 @@ public class UpcomingTripsFragment extends Fragment {
         {
              rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
 
-            roundTitle = (TextView) rootView.findViewById(R.id.round_title);
-
             upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
 
             round_listView = (ListView) rootView.findViewById(R.id.round_listView);
+
+            upcomingHeader = (LinearLayout) rootView.findViewById(R.id.round_title);
 
             adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
             roundListAdapter = new RoundListAdapter(getContext(), roundTrips);
@@ -150,8 +119,6 @@ public class UpcomingTripsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Toast.makeText(getActivity(),  "Position = " + position, Toast.LENGTH_SHORT).show();
-
                     Trip selectedTrip = upcomingTrips.get(position);
 
                     communicator.sendMsg(selectedTrip);
@@ -162,6 +129,13 @@ public class UpcomingTripsFragment extends Fragment {
                 public boolean onLongClick(View v) {
 
                     return false;
+                }
+            });
+            round_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    communicator.sendMsg(roundTrips.get(position));
                 }
             });
 
@@ -188,7 +162,7 @@ public class UpcomingTripsFragment extends Fragment {
 
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
-                R.style.AppTheme_Dark_Dialog);// TODO: add appTheme_Dark_Dialog theme
+                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.show();
@@ -209,19 +183,43 @@ public class UpcomingTripsFragment extends Fragment {
 
                 Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
+                boolean alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
                 while (trips.iterator().hasNext()) {
+
                     DataSnapshot returnedData = trips.iterator().next();
                     Trip trip = returnedData.getValue(Trip.class);
                     trip.setTripId(returnedData.getKey());
+
+                    //changing notes to empty array if null
+                    if (trip.getTripCheckedNotes() == null){
+                        trip.setTripCheckedNotes(new ArrayList<String>());
+                    }
+
+                    if (trip.getTripUncheckedNotes() == null){
+                        trip.setTripUncheckedNotes(new ArrayList<String>());
+                    }
+
 
                     switch (trip.getTripStatus()) {
 
                         case DBConstants.STATUS_UPCOMING:
                             upcomingTrips.add(trip);
+                            Log.i("3lama", "Alaram Flag " + alarmflag);
+                            if (alarmflag){
+                                if (trip.getTripDateTime() > System.currentTimeMillis())
+                                TripServices.setAlarm(getActivity(), trip);
+
+                            }
                             break;
 
                         case DBConstants.STATUS_PENDING:
                             roundTrips.add(trip);
+                            Log.i("3lama + round trips", " " + trip.toString());
+
                             break;
 
                         default:
@@ -229,6 +227,8 @@ public class UpcomingTripsFragment extends Fragment {
                             upcomingTrips.add(trip);
                             break;
                     }
+
+
 
                     if (adapter != null) {
                         adapter.notifyDataSetChanged();
@@ -238,10 +238,22 @@ public class UpcomingTripsFragment extends Fragment {
                     }
 
                 }
+                if(roundTrips.size() == 0){
+                    round_listView.setVisibility(View.GONE);
+                    upcomingHeader.setVisibility(View.GONE);
 
+                }else {
+                    round_listView.setVisibility(View.VISIBLE);
+                    upcomingHeader.setVisibility(View.VISIBLE);
+
+                }
+                editor.putBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+                editor.commit();
+                alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
+
+                Log.i("3lama", "changing flag to false Flag " + alarmflag );
                 progressDialog.dismiss();
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -249,15 +261,14 @@ public class UpcomingTripsFragment extends Fragment {
                 progressDialog.dismiss();
             }
         });
-        if(roundTrips.size() == 0){
-            round_listView.setVisibility(View.GONE);
-            roundTitle.setVisibility(View.GONE);
 
-        }else {
-            round_listView.setVisibility(View.VISIBLE);
-            roundTitle.setVisibility(View.VISIBLE);
-
-        }
+//        Log.i("3lama", roundTrips.size() +" ----- arraylist size");
+//        if (roundTrips.size() < 1){
+//            Log.i("3lama", roundTrips.size() +" ----- arraylist size");
+//
+//            round_listView.setVisibility(View.GONE);
+//            upcomingHeader.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -303,16 +314,52 @@ public class UpcomingTripsFragment extends Fragment {
 
             case 3://Delete
                 Trip toDelete = upcomingTrips.get(selectedtrip);
-                db.child(toDelete.getTripId()).removeValue();
-
-                upcomingTrips.remove(selectedtrip);
-                //TODO: Notify the adapter to update the listview
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
+                confimDeleteDialog(toDelete, upcomingTrips);
+                //Alert.showConfimDeleteDialog(getActivity(), toDelete);
+//                db.child(toDelete.getTripId()).removeValue();
+//
+//                upcomingTrips.remove(selectedtrip);
+//                adapter.notifyDataSetChanged();
+//                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
                 break;
 
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        adapter.notifyDataSetChanged();
+        roundListAdapter.notifyDataSetChanged();
+        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+        ListFormat.setListViewHeightBasedOnChildren(round_listView);
+    }
+
+    public void confimDeleteDialog(final Trip trip, final ArrayList<Trip> trips) {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle("Delete Trip");
+        alertDialog.setMessage("Are you sure you want to delete "+trip.getTripTitle()+" ?");
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "DELETE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Deleting alarm
+                TripServices.deleteAlarm(getActivity(), trip);
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+                db.child(trip.getTripId()).removeValue();
+                trips.remove(trip);
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 }

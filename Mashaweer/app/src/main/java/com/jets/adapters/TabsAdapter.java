@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.jets.fragments.PastTripsFragment;
 import com.jets.fragments.UpcomingTripsFragment;
 
 /**
@@ -28,7 +29,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
                 return new UpcomingTripsFragment();
 
             case 1:
-                return new UpcomingTripsFragment();
+                return new PastTripsFragment();
+//            return new UpcomingTripsFragment();
 //                return new PastTripsFragment();
         }
 

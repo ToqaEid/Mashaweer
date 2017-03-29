@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 
 import com.jets.adapters.notes.uncheckednotes.NotesViewHolder;
 import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
 import com.jets.mashaweer.R;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 public class RoundListAdapter extends ArrayAdapter<Trip> {
 
     private ArrayList<Trip> trips;
-
+    private TripServices tripServices;
     private Context context;
 
     public RoundListAdapter(Context context, ArrayList<Trip> trips) {
@@ -29,11 +30,13 @@ public class RoundListAdapter extends ArrayAdapter<Trip> {
         this.context = context;
 
         this.trips = trips;
+
+        tripServices = new TripServices();
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View rowView = convertView;
         RoundListViewHolder holder;
@@ -56,8 +59,23 @@ public class RoundListAdapter extends ArrayAdapter<Trip> {
         }
 
 
-        holder.getRoundName().setText(   trips.get(position).getTripTitle()   );
-        holder.getRoundDestination().setText(   trips.get(position).getTripStartLocation()   );
+        if(trips.get(position).getTripTitle().length() > 20){
+            holder.getRoundName().setText(   trips.get(position).getTripTitle().subSequence(0, 19)+ "..."   );
+        }else{
+            holder.getRoundName().setText(   trips.get(position).getTripTitle()   );
+        }
+        if(trips.get(position).getTripTitle().length() > 20){
+            holder.getRoundDestination().setText(   trips.get(position).getTripStartLocation() .subSequence(0, 19)+ "..."   );
+        }else{
+            holder.getRoundDestination().setText(   trips.get(position).getTripStartLocation()   );
+        }
+
+        holder.getStartTrip().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tripServices.startTrip(trips.get(position));
+            }
+        });
 
 
         return  rowView;

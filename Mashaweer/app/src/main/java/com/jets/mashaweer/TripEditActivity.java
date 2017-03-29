@@ -260,7 +260,7 @@ public class TripEditActivity extends AppCompatActivity {
 //                startActivity(intent);
 
                 // Adding Alarm
-                TripServices.setAlarm(TripEditActivity.this, trip, System.currentTimeMillis() + (10*1000));
+                TripServices.setAlarm(TripEditActivity.this, trip);
 
                 Alert.showErrorMsg("sdfghj","sdfghj", TripEditActivity.this);
 

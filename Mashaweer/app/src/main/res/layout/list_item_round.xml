@@ -22,10 +22,12 @@
             android:id="@+id/round_image"
             android:layout_weight="1.5" />
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
+            android:weightSum="3"
             android:layout_marginLeft="10dp">
 
 
@@ -33,42 +35,45 @@
             <TextView
                 android:id="@+id/round_tripName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.75"
                 android:maxLines="3"
-                android:padding="8dp"
-                android:text="Trip One"
+                android:paddingTop="8dp"
+                android:text="Trip One hjjljbll..."
                 android:textStyle="bold"
-                android:textSize="25dp" />
+                android:textSize="18dp" />
 
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:maxLines="3"
                 android:layout_gravity="left|center_vertical"
-                android:paddingBottom="10dp"
                 android:paddingRight="8dp"
-                android:text="Smart Village"
+                android:text="Smart Villagjbkjbkjk..."
                 android:textColor="#666"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:id="@+id/round_destination"
                 android:layout_alignParentBottom="true"
                 android:layout_alignEnd="@+id/round_tripName" />
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_weight="1.5"
+            android:id="@+id/round_start"
             android:layout_height="match_parent">
 
-            <Button
+            <ImageView
                 android:text="START"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/round_start"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_media_play"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>

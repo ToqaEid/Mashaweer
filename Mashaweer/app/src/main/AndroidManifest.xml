@@ -18,7 +18,7 @@
     <application
         android:name=".ApplicationClass"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -117,7 +117,7 @@
         <!-- This is for Google place AutoComplete API && History Map Activity -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyCTJY-IKKDKRNA_YSOemPS5EqkbTX7NM_g"/>
         <!-- End of meta-data -->
 
 

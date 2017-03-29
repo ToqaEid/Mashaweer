@@ -30,8 +30,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class TripServices extends BroadcastReceiver{
 
     private Trip tripObj;
-    DatabaseReference db;
-    String userID = SharedPreferenceInfo.getUserId(getApplicationContext());
+    private DatabaseReference db;
+    private String userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -64,25 +64,28 @@ public class TripServices extends BroadcastReceiver{
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         db = database.getReference("users/" + userID + "/trips");
+        String endLongLat;
 
         if(trip.getTripType() == DBConstants.TYPE_ONE_WAY){
-
+            endLongLat = trip.getTripEndLongLat();
             trip.setTripStatus(DBConstants.STATUS_DONE);
 
         }else{
-            if (trip.getTripStatus() == DBConstants.STATUS_PENDING){
+            if (trip.getTripStatus() == DBConstants.STATUS_UPCOMING){
                 //status pending trip
+                endLongLat = trip.getTripEndLongLat();
                 trip.setTripStatus(DBConstants.STATUS_PENDING);
 
             }else{
                 //upcoming trip
+                endLongLat = trip.getTripStartLocation();
                 trip.setTripStatus(DBConstants.STATUS_DONE);
             }
         }
 
         trip.setTripDateTime(System.currentTimeMillis());
         db.child(trip.getTripId()).setValue(trip);
-        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ trip.getTripEndLongLat() +"&mode=d");
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+ endLongLat +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mapIntent.setPackage("com.google.android.apps.maps");
@@ -111,7 +114,7 @@ public class TripServices extends BroadcastReceiver{
         return hash;
     }
 
-    public static void setAlarm(Context context, Trip trip, long time){
+    public static void setAlarm(Context context, Trip trip){
 
         Log.i("3lama", trip.getTripTitle());
 
@@ -121,11 +124,39 @@ public class TripServices extends BroadcastReceiver{
         int requestCode = getTripUniqueId(trip.getTripId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context.getApplicationContext(), requestCode, alarmIntent, 0);
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, trip.getTripDateTime(), pendingIntent);
     }
 
+    public static void updateAlarm(Context context, Trip trip){
 
+        Log.i("3lama", trip.getTripTitle());
+
+        Intent alarmIntent = new Intent(context, Alarm.class);
+
+        alarmIntent.putExtra("Trip", trip);
+        int requestCode = getTripUniqueId(trip.getTripId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, trip.getTripDateTime(), pendingIntent);
+    }
+
+    public static void deleteAlarm(Context context, Trip trip){
+
+        Log.i("3lama", trip.getTripTitle() + " Cancellingggggggg");
+
+        Intent alarmIntent = new Intent(context, Alarm.class);
+
+        alarmIntent.putExtra("Trip", trip);
+        int requestCode = getTripUniqueId(trip.getTripId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(), requestCode, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
 
 }

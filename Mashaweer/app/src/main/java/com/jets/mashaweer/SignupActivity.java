@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -85,7 +86,7 @@ public class SignupActivity extends AppCompatActivity {
         _signupButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog); //TODO: apply the Dialgoue theme to the view
+                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
@@ -103,10 +104,13 @@ public class SignupActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+//                            Log.i("3lama", task.getException().getMessage());
+                            Log.i("3lama", task.getException().getLocalizedMessage());
                             onSignupFailed();
                             progressDialog.dismiss();
                             Toast.makeText(SignupActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
                         } else {
+
                             progressDialog.dismiss();
                             onSignupSuccess();
                         }
@@ -119,6 +123,7 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+
         SharedPreferenceInfo.addUserDataToSharedPreference(SignupActivity.this, auth.getCurrentUser().getUid());
         startActivity(new Intent(SignupActivity.this, HomeActivity.class));
         finish();
