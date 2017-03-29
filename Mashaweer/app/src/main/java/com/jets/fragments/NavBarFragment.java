@@ -38,6 +38,8 @@ import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
 import com.jets.constants.SharedPreferenceInfo;
 
+import java.util.ArrayList;
+
 /**
  * Created by michael on 3/19/17.
  */
@@ -80,9 +82,22 @@ public class NavBarFragment extends Fragment{
             public void onClick(View v) {
 
                 if(!(getActivity() instanceof HistoryActivity)) {
-                    startActivity(new Intent(getActivity(), HistoryActivity.class));
-                    getActivity().finish();
-                    getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
+
+                    ArrayList<Trip> pastTrips = PastTripsFragment.pastTrips;
+
+                    if ( pastTrips.size() == 0 ) {
+
+                        Toast.makeText(getContext() , "You History is Empty!", Toast.LENGTH_SHORT).show();
+
+                    }else{
+
+                        startActivity(new Intent(getActivity(), HistoryActivity.class));
+                        getActivity().finish();
+                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+
+                    }
+
 
                 }
 
