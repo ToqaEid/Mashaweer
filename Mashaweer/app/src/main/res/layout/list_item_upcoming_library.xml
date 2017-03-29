@@ -64,15 +64,30 @@
             android:textSize="16dp"
             android:id="@+id/upcoming_tripDate"/>
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:id="@+id/upcoming_tripType"
-            android:layout_alignBaseline="@+id/upcoming_tripDate"
-            android:layout_alignBottom="@+id/upcoming_tripDate"
+            android:layout_width="wrap_content"
+            android:layout_height="20sp"
+            android:layout_alignBaseline="@+id/upcoming_tripTime"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="12dp" />
+            android:layout_marginStart="12dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.35"
+                android:src="@drawable/round"/>
+            <TextView
+                android:text="Round"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

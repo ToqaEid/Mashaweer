@@ -23,6 +23,7 @@ import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.jets.classes.ListFormat;
+import com.jets.constants.DBConstants;
 import com.jets.fragments.UpcomingTripsFragment;
 import com.jets.mashaweer.R;
 import com.jets.classes.UpcomingListViewHolder;
@@ -126,11 +127,11 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
 
         int tripType = trips.get(position).getTripType();
         switch(tripType){
-            case 0:
-                holder.getTripType_tv().setText( "" );
+            case DBConstants.TYPE_ONE_WAY:
+                holder.getTripType_tv().setVisibility(View.GONE);
                 break;
-            case 1:
-                holder.getTripType_tv().setText( "Round Trip" );
+            case DBConstants.TYPE_ROUND_TRIP:
+                holder.getTripType_tv().setVisibility(View.VISIBLE);
                 break;
             default:
                 break;

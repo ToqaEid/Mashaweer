@@ -239,26 +239,39 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_trip_details, menu);
+        if (trip.getTripStatus() == DBConstants.STATUS_DONE){
+            inflater.inflate(R.menu.menu_trip_details_past, menu);
+        }else {
+            inflater.inflate(R.menu.menu_trip_details, menu);
+        }
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                ///deleteTrip();
-                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
-                trip=null;
-                return true;
-            case R.id.action_done:
-                doneTrip();
-                return true;
-//            case R.id.home:
-//                finish();
-//                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (trip.getTripStatus() == DBConstants.STATUS_DONE){
+            // Handle item selection
+            switch (item.getItemId()) {
+                case R.id.action_delete_past:
+                    ///deleteTrip();
+                    Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                    trip = null;
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }else{
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        ///deleteTrip();
+                        Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                        trip = null;
+                        return true;
+                    case R.id.action_done:
+                        doneTrip();
+                        return true;
+                    default:
+                        return super.onOptionsItemSelected(item);
+            }
         }
     }
 
