@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
@@ -106,8 +107,21 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         if (trip != null) {
             CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-
+            ImageView roundImage = (ImageView) findViewById(R.id.tripDetails_roundImage);
             toolbarLayout.setTitle(trip.getTripTitle());
+
+            int tripType = trip.getTripType();
+            switch(tripType){
+                case DBConstants.TYPE_ONE_WAY:
+                    roundImage.setVisibility(View.GONE);
+                    break;
+                case DBConstants.TYPE_ROUND_TRIP:
+                    roundImage.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
@@ -136,6 +150,20 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         toolbarLayout.setTitle(trip.getTripTitle());
 
         Log.i("3lama", toolbarLayout.getTitle().toString());
+
+        ImageView roundImage = (ImageView) findViewById(R.id.tripDetails_roundImage);
+        int tripType = trip.getTripType();
+        switch(tripType){
+            case DBConstants.TYPE_ONE_WAY:
+                roundImage.setVisibility(View.GONE);
+                break;
+            case DBConstants.TYPE_ROUND_TRIP:
+                roundImage.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+        }
+
 
 //        toolbar.setTitle(trip.getTripTitle());
         setSupportActionBar(toolbar);

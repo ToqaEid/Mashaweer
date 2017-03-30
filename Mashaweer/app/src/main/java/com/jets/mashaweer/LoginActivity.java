@@ -225,6 +225,7 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
         String password = _passwordText.getText().toString();
 
 
+
         //authenticate user
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -259,7 +260,10 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                         } else {
 
-                            Log.i("MyTag1","Login Success");
+                            Log.i("MyTag","Login Success");
+
+                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());
+
 
                             // TODO: Get user image from google place api and save it in internal storage
 
@@ -299,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                                    Log.i("MyTag1","Login Success 2");
+                                    Log.i("MyTag","Login Success 2");
 
                                     Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
@@ -360,7 +364,6 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    Log.i("MyTag1", "onCancelled");
                                     progressDialog.dismiss();
                                 }
                             });
