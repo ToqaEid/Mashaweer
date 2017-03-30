@@ -64,7 +64,7 @@ public class AddEditNoteAdapter extends ArrayAdapter<String> {
 
         holder.setActivityFlag(activityFlag);
 
-       holder.getNoteItem().setText(   notes.get(position)   );
+        holder.getNoteItem().setText(   notes.get(position)   );
 
         holder.getNoteItem().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -75,17 +75,21 @@ public class AddEditNoteAdapter extends ArrayAdapter<String> {
                 }
             }
         });
-            holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TripAddActivity tripAddActivity = (TripAddActivity) context;
+        holder.getCancelBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TripAddActivity tripAddActivity = (TripAddActivity) context;
+                if(activityFlag.equals("add")) {
                     tripAddActivity.removeFromUncheckedList(position);
-                    //holder.getNoteItem().setKeyListener((KeyListener) textView.getTag());
+                }else{
+                    tripAddActivity.removeFromcheckedList(position);
                 }
-            });
+            }
+        });
 
-
-
+        if(activityFlag.equals("edit")) {
+            holder.getNoteCheck().setChecked(true);
+        }
         return  rowView;
     }
 

@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
 import com.jets.mashaweer.HomeActivity;
 import com.jets.mashaweer.TripDetailsActivity;
 
@@ -42,6 +43,7 @@ public class Alert {
             public void onClick(DialogInterface dialog, int which) {
 
                 //Deleting alarm
+                TripServices.deleteAlarm(context, trip);
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
                 db.child(trip.getTripId()).removeValue();
                 if(context instanceof Activity) {
@@ -59,6 +61,8 @@ public class Alert {
         });
         alertDialog.show();
     }
+
+
 
 
 }

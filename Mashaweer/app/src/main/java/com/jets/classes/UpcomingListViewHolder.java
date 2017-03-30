@@ -2,6 +2,7 @@ package com.jets.classes;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jets.mashaweer.R;
@@ -13,7 +14,8 @@ import com.jets.mashaweer.R;
 public class UpcomingListViewHolder {
 
     View convertedView;
-    TextView tripName_tv, tripDate_tv, tripTime_tv,tripType_tv;
+    TextView tripName_tv, tripDate_tv, tripTime_tv;
+    LinearLayout tripType_tv;
 
     ImageView tripThumbnail;
 
@@ -58,15 +60,15 @@ public class UpcomingListViewHolder {
         this.tripTime_tv = tripTime_tv;
     }
 
-    public TextView getTripType_tv() {
+    public LinearLayout getTripType_tv() {
 
         if(tripType_tv == null)
-            tripType_tv = (TextView) convertedView.findViewById(R.id.upcoming_tripType);
+            tripType_tv = (LinearLayout) convertedView.findViewById(R.id.upcoming_tripType);
 
         return tripType_tv;
     }
 
-    public void setTripType_tv(TextView tripType_tv) {
+    public void setTripType_tv(LinearLayout tripType_tv) {
         this.tripType_tv = tripType_tv;
     }
 

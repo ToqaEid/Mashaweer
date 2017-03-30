@@ -25,12 +25,14 @@ import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.adapters.round.RoundListAdapter;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
+import com.jets.constants.Alert;
 import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
 import com.jets.interfaces.Communicator;
 import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
+import com.jets.mashaweer.TripDetailsActivity;
 
 import java.util.ArrayList;
 
@@ -70,7 +72,7 @@ public class PastTripsFragment extends Fragment {
             adapter.notifyDataSetChanged();
 
             past_listView.setAdapter(adapter);
-            registerForContextMenu(past_listView);
+//            registerForContextMenu(past_listView);
 
             past_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -106,41 +108,41 @@ public class PastTripsFragment extends Fragment {
     }
 
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//
+//        menu.add(0, 1, 0, "Delete");
+//
+//    }
 
-        menu.add(0, 1, 0, "Delete");
-
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-
-        AdapterView.AdapterContextMenuInfo menuinfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        int selectedtrip = menuinfo.position; //position in the adapter
-
-        Log.i("3lama", selectedtrip+" ----");
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference("users/" + userID + "/trips");
-
-        switch (item.getItemId()){
-
-            case 1://Delete
-                Trip toDelete = pastTrips.get(selectedtrip);
-                db.child(toDelete.getTripId()).removeValue();
-
-                pastTrips.remove(selectedtrip);
-                //TODO: Notify the adapter to update the listview
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
-                break;
-
-        }
-
-        return super.onContextItemSelected(item);
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//
+//        AdapterView.AdapterContextMenuInfo menuinfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+//        int selectedtrip = menuinfo.position; //position in the adapter
+//
+//        Log.i("3lama", selectedtrip+" ----");
+//
+//        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference db = database.getReference("users/" + userID + "/trips");
+//
+//        switch (item.getItemId()){
+//
+//            case 1://Delete
+//                Trip toDelete = pastTrips.get(selectedtrip);
+//                db.child(toDelete.getTripId()).removeValue();
+//
+//                pastTrips.remove(selectedtrip);
+//                //TODO: Notify the adapter to update the listview
+//                adapter.notifyDataSetChanged();
+//                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
+//                break;
+//
+//        }
+//
+//        return super.onContextItemSelected(item);
+//    }
 
     public void refreshData(ArrayList<Trip> tripsData){
         //if (!isEmpty) {
@@ -152,4 +154,5 @@ public class PastTripsFragment extends Fragment {
         //}
 
     }
+
 }

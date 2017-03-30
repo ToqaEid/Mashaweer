@@ -78,60 +78,18 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         NavBarFragment fragment = (NavBarFragment) getSupportFragmentManager().findFragmentById(R.id.navbar);
         fragment.setBtnColor("home");
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        //getting userID from intent
-        userID = getIntent().getStringExtra("userID");
-
-        actionBar = getSupportActionBar();
-        tabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        upcomingTrips = new ArrayList<>();
-        roundTrips = new ArrayList<>();
-        pastTrips = new ArrayList<>();
-
-        pastTripsFragment = tabsAdapter.getPastTripsFragment();
-        upcomingTripsFragment = tabsAdapter.getUpcomingTripsFragment();
-
-        viewPager.setAdapter(tabsAdapter);
-
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-
-        ///////// add your tabs
-        for(int i=0; i<TabsAdapter.tabNames.length; i++)
-        {
-            ActionBar.Tab tab = actionBar.newTab().setText( TabsAdapter.tabNames[i].toString() ).setTabListener(this);
-            actionBar.addTab(tab);
-        }
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                actionBar.setSelectedNavigationItem(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        prepareViewPager();
 
 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
+        Log.i("trip", "onResume here");
 
-        final ProgressDialog progressDialog = new ProgressDialog(this,
-                R.style.AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.show();
@@ -142,14 +100,14 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userID);
 
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
+        db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("trip", "onResume onDataChange");
 
                 upcomingTrips.clear();
                 roundTrips.clear();
                 pastTrips.clear();
-                //TODO: clear all the other lists as well
 
                 Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
@@ -159,13 +117,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-//                int countOfTrips =0;
-//                while (trips.iterator().hasNext())
-//                { countOfTrips++; }
-
                 while (trips.iterator().hasNext()) {
-
-                    imagesCount++;
 
                     DataSnapshot returnedData = trips.iterator().next();
                     final Trip trip = returnedData.getValue(Trip.class);
@@ -261,9 +213,6 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                 alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
 
                 Log.i("3lama", "changing flag to false Flag " + alarmflag );
-
-
-
                 progressDialog.dismiss();
             }
 
@@ -298,10 +247,58 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     public void sendMsg(Trip trip) {
 
         Toast.makeText(this, "Going To TripDetailsActivity", Toast.LENGTH_SHORT).show();
+        Log.i("trip", "sendMsg: "+ trip.toString());
 
         Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
         intent.putExtra("selectedTrip", trip);
         startActivity(intent);
+
+    }
+
+    private void prepareViewPager(){
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        //getting userID from intent
+        userID = getIntent().getStringExtra("userID");
+
+        actionBar = getSupportActionBar();
+        tabsAdapter = new TabsAdapter(getSupportFragmentManager());
+        upcomingTrips = new ArrayList<>();
+        roundTrips = new ArrayList<>();
+        pastTrips = new ArrayList<>();
+
+        pastTripsFragment = tabsAdapter.getPastTripsFragment();
+        upcomingTripsFragment = tabsAdapter.getUpcomingTripsFragment();
+
+        viewPager.setAdapter(tabsAdapter);
+
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
+        ///////// add your tabs
+        for(int i=0; i<TabsAdapter.tabNames.length; i++)
+        {
+            ActionBar.Tab tab = actionBar.newTab().setText( TabsAdapter.tabNames[i].toString() ).setTabListener(this);
+            actionBar.addTab(tab);
+        }
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                actionBar.setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 

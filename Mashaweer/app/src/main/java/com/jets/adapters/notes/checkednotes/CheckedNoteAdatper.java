@@ -68,11 +68,6 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
 
         if (!activityFlag.equals("edit")){
             holder.getCancelBtn().setVisibility(View.GONE);
-//            holder.getNoteItem().setKeyListener(null);
-//            holder.getNoteItem().setFocusable(false);
-//            holder.getNoteItem().setFocusableInTouchMode(false);
-//            holder.getNoteItem().setCursorVisible(false);
-
 
         }else{
             holder.getNoteItem().setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -99,7 +94,6 @@ public class CheckedNoteAdatper extends ArrayAdapter<String> {
                 public void onClick(View v) {
                     TripAddActivity tripAddActivity = (TripAddActivity) context;
                     tripAddActivity.removeFromUncheckedList(position);
-                    //holder.getNoteItem().setKeyListener((KeyListener) textView.getTag());
                 }
             });
 

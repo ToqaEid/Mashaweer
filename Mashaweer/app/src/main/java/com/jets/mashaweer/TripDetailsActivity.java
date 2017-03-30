@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -48,6 +50,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
 import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
 import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
+import com.jets.classes.Alarm;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Note;
 import com.jets.classes.Trip;
@@ -74,6 +77,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private Bitmap bitmap = null;
     private ImageView imageViewTrip;
     Toolbar toolbar;
+    private FloatingActionButton fab, fab_play;
 
     //Location References
     private LocationManager locationManager;
@@ -118,6 +122,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         } else {
             trip = (Trip) savedInstanceState.getSerializable("trip");
         }
+        Log.i("trip", trip.toString());
+
         userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -168,7 +174,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         prepareDateTime(trip);
 
         //////////////// handling buttons' click listener
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
+        fab = (FloatingActionButton) findViewById(R.id.edit_floating_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,7 +186,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             }
         });
 
-        FloatingActionButton fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
+        fab_play = (FloatingActionButton) findViewById(R.id.play_floating_button);
         fab_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -199,8 +205,13 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             tripStatus = "Done";
             fab.setVisibility(View.INVISIBLE);
             fab_play.setVisibility(View.GONE);
+        }else if(trip.getTripStatus() == DBConstants.STATUS_CANCELLED){
+            tripStatus = "Canceled";
+            fab.setVisibility(View.INVISIBLE);
+            fab_play.setVisibility(View.GONE);
+
         }else if(trip.getTripStatus() == DBConstants.STATUS_PENDING){
-            tripStatus = "Departure";
+            tripStatus = "Pending";
         }else {
             tripStatus = "Upcoming";
         }
@@ -240,8 +251,12 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userId + "/trips");
 
-        if (trip != null)
+        Log.i("trip ", "destroy: "+ trip.toString());
+
+        if (trip != null) {
+            Log.i("trip ", "destroy: saved");
             db.child(trip.getTripId()).setValue(trip);
+        }
 
     }
 
@@ -255,36 +270,44 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_trip_details, menu);
+        if (trip.getTripStatus() == DBConstants.STATUS_DONE || (trip.getTripStatus() == DBConstants.STATUS_CANCELLED)){
+            inflater.inflate(R.menu.menu_trip_details_past, menu);
+        }else {
+            inflater.inflate(R.menu.menu_trip_details, menu);
+        }
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                ///deleteTrip();
-                Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
-                trip=null;
-                return true;
-            case R.id.action_done:
-                doneTrip();
-                return true;
-//            case R.id.home:
-//                finish();
-//                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if ((trip.getTripStatus() == DBConstants.STATUS_DONE) || (trip.getTripStatus() == DBConstants.STATUS_CANCELLED)){
+            // Handle item selection
+            switch (item.getItemId()) {
+                case R.id.action_delete_past:
+                    ///deleteTrip();
+                    Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                    trip = null;
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }else{
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        ///deleteTrip();
+                        Alert.showConfimDeleteDialog(TripDetailsActivity.this, trip);
+                        trip = null;
+                        return true;
+                    case R.id.action_done:
+                        confimDoneDialog(trip);
+                        doneTrip();
+                        return true;
+                    default:
+                        return super.onOptionsItemSelected(item);
+            }
         }
     }
 
-    private void doneTrip() {
 
-       Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-
-
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -418,7 +441,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                     uncompeletedText.setVisibility(View.VISIBLE);
                     completeView.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -431,7 +453,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
 
 
-
+    /*======================== Loading Image ========================================*/
     ////////////// load image from internal storage
     private Bitmap loadImageFromStorage(String path, String placeId)
     {
@@ -465,7 +487,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
 
 
-
+    /*=========================== Date / Time ================================*/
 
     private void prepareDateTime(Trip trip){
         Calendar calendar = Calendar.getInstance();
@@ -492,6 +514,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         }
     }
 
+    /*============================== Location ======================================*/
     private void getUsersLocation(){
         //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
         ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
@@ -595,6 +618,42 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+    }
+
+    public void confimDoneDialog(final Trip trip) {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(TripDetailsActivity.this).create();
+        alertDialog.setTitle("Mark as Done");
+        alertDialog.setMessage("Are you sure you want to Mark "+trip.getTripTitle()+" as Done?");
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Mark as Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Deleting alarm
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+
+                Trip t = trip;
+                t.setTripStatus(DBConstants.STATUS_DONE);
+                db.child(trip.getTripId()).setValue(trip);
+
+                TripServices.deleteAlarm(TripDetailsActivity.this, t);
+
+                fab.setVisibility(View.GONE);
+                fab_play.setVisibility(View.GONE);
+                tv_tripStatus.setText("Done");
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+    private void doneTrip() {
+
+        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
 
     }
 }

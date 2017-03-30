@@ -108,6 +108,7 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
         super.onResume();
 
         for (Trip trip : trips) {
+            Log.i("history trip", trip.getTripStartLongLat() + "&destination=" + trip.getTripEndLongLat());
             String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + trip.getTripStartLongLat() + "&destination=" + trip.getTripEndLongLat() + "&key=AIzaSyCTJY-IKKDKRNA_YSOemPS5EqkbTX7NM_g";
             draw(url);
         }
@@ -171,6 +172,11 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
                     }
                 }
                 mMap.addPolyline(new PolylineOptions().addAll(points).width(8).color(new Random().nextInt()+100));
+                Log.i("history", String.valueOf(latitudeSource == null));
+                Log.i("history", String.valueOf(longitudeSource == null));
+                Log.i("history", String.valueOf(latitudeDest == null));
+                Log.i("history", String.valueOf(longitudeDest == null));
+
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeSource, longitudeSource)));
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeDest, longitudeDest)));
 

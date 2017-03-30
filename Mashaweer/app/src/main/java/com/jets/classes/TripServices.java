@@ -61,18 +61,23 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         }
         Log.i("Tag act", action);
         Log.i("Tag not", notificationId +"");
+        //remove notification from notification drawer
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
+        //collapse notification drawer
+        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        context.sendBroadcast(it);
     }
 
     public void cancelTrip(Trip trip){
         Log.i("TAG", "cancel Trip");
+        //delete form db
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         db = database.getReference("users/" + userID + "/trips");
-
         trip.setTripStatus(DBConstants.STATUS_CANCELLED);
-
         db.child(trip.getTripId()).setValue(trip);
+
+        deleteAlarm(getApplicationContext(), trip);
     }
 
     public void startTrip(Trip trip){
