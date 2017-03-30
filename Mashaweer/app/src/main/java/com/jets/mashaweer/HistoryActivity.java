@@ -1,11 +1,7 @@
 package com.jets.mashaweer;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,9 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.jets.classes.Trip;
-import com.jets.classes.VolleySingleton;
 import com.jets.fragments.NavBarFragment;
-import com.jets.fragments.PastTripsFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;

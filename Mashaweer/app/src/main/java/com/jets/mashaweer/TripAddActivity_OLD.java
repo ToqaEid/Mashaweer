@@ -1,19 +1,11 @@
 package com.jets.mashaweer;
 
-import android.app.AlarmManager;
-import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -21,15 +13,9 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.jets.classes.Alarm;
 import com.jets.classes.Trip;
-import com.jets.classes.TripServices;
 import com.jets.constants.SharedPreferenceInfo;
-import com.jets.mashaweer.DB_Adapter;
 
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -44,15 +30,6 @@ public class TripAddActivity_OLD extends AppCompatActivity {
     DatabaseReference db;
 
     private Calendar calender;
-
-    ////// hint:: Mohem Gdn Gdn Gdnzzzz
-    /////////////// for DB and TripBean
-    //////////////////// StartLongitude will hold Long&Lat for start location "Semicolon Separated"
-    //////////////////// StartLatitude  will hold PlaceName for start location
-    //////////////////// EndLongitude will hold Long&Lat for destination location "Semicolon Separated"
-    //////////////////// EndLatitude  will hold PlaceName for destination location
-    //////////////////// TripDateTime will hold "22/10/2019 10:45" [separated by space]
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
