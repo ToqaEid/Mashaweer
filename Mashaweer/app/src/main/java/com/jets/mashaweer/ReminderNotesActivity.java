@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,8 +44,6 @@ public class ReminderNotesActivity extends Activity {
     @BindView(R.id.reminder_complete_line)
     View completeView;
 
-
-
     private Intent intent;
     private Trip trip;
     private ArrayList<String> checkedNotes;
@@ -56,7 +56,14 @@ public class ReminderNotesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_notes);
+        this.setFinishOnTouchOutside(false);
         ButterKnife.bind(this);
+
+        Window window = getWindow();
+        if(!window.isActive()) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        }
 
         intent = getIntent();
         trip = (Trip) intent.getSerializableExtra("trip");
@@ -70,16 +77,6 @@ public class ReminderNotesActivity extends Activity {
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        trip.setTripCheckedNotes(checkedNotes);
-        trip.setTripUncheckedNotes(uncheckedNotes);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference db = database.getReference("users/" + TripServices.getTripUniqueId(trip.getTripId()) + "/trips");
-        db.child(trip.getTripId()).setValue(trip);
-    }
-
     /*===================================== HELPFUL FUNCTIONS ========================================*/
     private void notesPreparation(){
 
@@ -89,8 +86,6 @@ public class ReminderNotesActivity extends Activity {
 
         uncheckedNotes = trip.getTripUncheckedNotes();
         checkedNotes = trip.getTripCheckedNotes();
-
-
 
         if(uncheckedNotes == null ){
             uncheckedNotes = new ArrayList<>();
@@ -128,55 +123,6 @@ public class ReminderNotesActivity extends Activity {
         uncheckedNotesAdapter.notifyDataSetChanged();
         ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
 
-
-        uncheckedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                checkedNotes.add(uncheckedNotes.get(position));
-                uncheckedNotes.remove(position);
-                uncheckedNotesAdapter.notifyDataSetChanged();
-                checkedNotesAdapter.notifyDataSetChanged();
-                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-                ListFormat.setListViewHeightBasedOnChildren(checkedList);
-                if(checkedNotes.size() > 0){
-                    completeText.setVisibility(View.VISIBLE);
-                    completeView.setVisibility(View.VISIBLE);
-                }
-                if(uncheckedNotes.size() ==0){
-                    uncompeletedText.setVisibility(View.GONE);
-                    completeView.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        checkedList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                uncheckedNotes.add(checkedNotes.get(position));
-                checkedNotes.remove(position);
-                uncheckedNotesAdapter.notifyDataSetChanged();
-                checkedNotesAdapter.notifyDataSetChanged();
-                ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-                ListFormat.setListViewHeightBasedOnChildren(checkedList);
-                if(checkedNotes.size() == 0){
-                    completeText.setVisibility(View.GONE);
-                    completeView.setVisibility(View.GONE);
-                }
-                if(uncheckedNotes.size() >0){
-                    uncompeletedText.setVisibility(View.VISIBLE);
-                    completeView.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-//        uncheckedList.setAdapter(uncheckedNotesAdapter);
-//        checkedList.setAdapter(checkedNotesAdapter);
-//
-//        ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
-//        ListFormat.setListViewHeightBasedOnChildren(checkedList);
 
     }
 

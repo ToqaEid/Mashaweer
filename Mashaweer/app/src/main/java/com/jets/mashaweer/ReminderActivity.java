@@ -97,11 +97,6 @@ public class ReminderActivity extends Activity {
         Intent intent = getIntent();
         trip = (Trip) intent.getSerializableExtra("Trip");
 
-        if (trip != null)
-            Log.i("3lama2", trip.toString());
-        else
-            Log.i("3lama2", "Null trip object ya kbeer");
-
         tripIdInt = TripServices.getTripUniqueId(trip.getTripId());
 
 
@@ -113,18 +108,14 @@ public class ReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-
                 ActivityCompat.requestPermissions(ReminderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-               // new TripServices().startTrip(trip);
             }
         });
         laterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.i("MyTag", "onLaterClick >> tripType >> " + trip.getTripType());
-                Log.i("MyTag", "onLaterClick >> tripStatus >> " + trip.getTripStatus());
                 notifyLater(tripIdInt);
                 finish();
             }
@@ -132,13 +123,7 @@ public class ReminderActivity extends Activity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    ReminderActivity.this.finishAndRemoveTask();
-//                }else{
-//                int FINISH_TASK_WITH_ROOT_ACTIVITY = 1;
-//                finish(FINISH_TASK_WITH_ROOT_ACTIVITY);
-//                }
-//                android:autoRemoveFromRecents="true"
+
                 TripServices tripServices = new TripServices();
                 tripServices.cancelTrip(trip);
                 finish();
@@ -248,12 +233,7 @@ public class ReminderActivity extends Activity {
 
             }
         });
-
-
     }
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -262,7 +242,7 @@ public class ReminderActivity extends Activity {
         notifyLater(tripIdInt);
 
     }
-
+//
 //    @Override
 //    protected void onPause() {
 //        super.onPause();
@@ -287,7 +267,6 @@ public class ReminderActivity extends Activity {
 
         String START_ACTION = "START_ACTION";
         String CANCEL_ACTION = "CANCEL_ACTION";
-        String DETAIL_ACTION = "DETAIL_ACTION";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ReminderActivity.this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo));
@@ -311,7 +290,6 @@ public class ReminderActivity extends Activity {
         builder.setOngoing(true);
         builder.setAutoCancel(true);
 
-        //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
         builder.setContentTitle("Mashaweer");
         builder.setContentText(trip.getTripTitle() + " is postponed");
         builder.setSubText("Click to Start Trip Now");
@@ -324,10 +302,6 @@ public class ReminderActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Will display the notification in the notification bar
         notificationManager.notify(notificationId, builder.build());
-
-        Log.i("MyTag", "onNotify >> tripType >> " + trip.getTripType());
-        Log.i("MyTag", "onNotify >> tripStatus >> " + trip.getTripStatus());
-
 
     }
 

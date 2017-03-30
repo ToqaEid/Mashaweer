@@ -615,6 +615,17 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                     // Permission Granted
 
                     getUsersLocation();
+                    String tripStatus;
+                    if (trip.getTripType() == DBConstants.TYPE_ONE_WAY ||
+                            ((trip.getTripType() == DBConstants.TYPE_ROUND_TRIP) && trip.getTripStatus() == DBConstants.STATUS_PENDING)){
+                        tripStatus = "Done";
+                        fab.setVisibility(View.INVISIBLE);
+                        fab_play.setVisibility(View.INVISIBLE);
+                    }else {
+                        tripStatus = "Pending";
+                    }
+
+                    tv_tripStatus.setText(tripStatus);
 
                     new TripServices().startTrip(trip);
 
