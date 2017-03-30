@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -256,6 +258,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                 trip=null;
                 return true;
             case R.id.action_done:
+                confimDoneDialog(trip);
                 doneTrip();
                 return true;
 //            case R.id.home:
@@ -269,8 +272,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private void doneTrip() {
 
        Toast.makeText(this, "done trip", Toast.LENGTH_SHORT).show();
-
-
 
     }
 
@@ -584,5 +585,30 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+    }
+
+    public void confimDoneDialog(final Trip trip) {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(TripDetailsActivity.this).create();
+        alertDialog.setTitle("Mark as Done");
+        alertDialog.setMessage("Are you sure you want to Mark "+trip.getTripTitle()+" as Done?");
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Mark as Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Deleting alarm
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+
+                Trip t = trip;
+                t.setTripStatus(DBConstants.STATUS_DONE);
+                db.child(trip.getTripId()).setValue(trip);
+
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 }

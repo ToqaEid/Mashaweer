@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -304,20 +305,25 @@ public class UpcomingTripsFragment extends Fragment {
             case 2://Done
                 Trip markedDone = upcomingTrips.get(selectedtrip);
                 //TODO: add the trip to the history arraylist (Can't be found)
-                upcomingTrips.remove(selectedtrip);
-                adapter.notifyDataSetChanged();
 
-                markedDone.setTripStatus(DBConstants.STATUS_DONE);
-                markedDone.setTripDateTime(System.currentTimeMillis());
-                db.child(markedDone.getTripId()).setValue(markedDone);
+                confimDoneDialog(markedDone, upcomingTrips);
+//                upcomingTrips.remove(selectedtrip);
+//                adapter.notifyDataSetChanged();
 
-                Toast.makeText(getActivity(), "Trip Marked Done successfully", Toast.LENGTH_SHORT).show();
+//                markedDone.setTripStatus(DBConstants.STATUS_DONE);
+//                markedDone.setTripDateTime(System.currentTimeMillis());
+//                db.child(markedDone.getTripId()).setValue(markedDone);
+//                db.child(markedDone.getTripId()).getKey();
+
+//                db.child(markedDone.getTripId()).setValue("Mazaryta");
+//                Toast.makeText(getActivity(), "key: " +  db.child(markedDone.getTripId()).getKey(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Trip Marked Done successfully", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3://Delete
                 Trip toDelete = upcomingTrips.get(selectedtrip);
                 confimDeleteDialog(toDelete, upcomingTrips);
-                //Alert.showConfimDeleteDialog(getActivity(), toDelete);
+//                Alert.showConfimDeleteDialog(getActivity(), toDelete);
 //                db.child(toDelete.getTripId()).removeValue();
 //
 //                upcomingTrips.remove(selectedtrip);
@@ -352,6 +358,33 @@ public class UpcomingTripsFragment extends Fragment {
                 TripServices.deleteAlarm(getActivity(), trip);
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
                 db.child(trip.getTripId()).removeValue();
+                trips.remove(trip);
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+    public void confimDoneDialog(final Trip trip, final ArrayList<Trip> trips) {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle("Mark as Done");
+        alertDialog.setMessage("Are you sure you want to Mark "+trip.getTripTitle()+" as Done?");
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Mark as Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Deleting alarm
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("users/" + SharedPreferenceInfo.getUserId(getApplicationContext()) + "/trips");
+
+                Trip t = trip;
+                t.setTripStatus(DBConstants.STATUS_DONE);
+                db.child(trip.getTripId()).setValue(trip);
                 trips.remove(trip);
                 adapter.notifyDataSetChanged();
 
