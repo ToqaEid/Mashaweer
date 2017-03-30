@@ -103,7 +103,7 @@
 
                     <TextView
                         android:id="@+id/tripDetails_tv_date"
-                        android:text="Monday 7th Sep 2016"
+                        android:text="30, Sep 2016"
                         android:textSize="18sp"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -117,11 +117,12 @@
                         android:orientation="horizontal"
                         android:layout_weight="3"
                         android:weightSum="2"
+                        android:layout_marginLeft="60dp"
                         android:gravity="center"
                         >
 
                         <TextView
-                            android:text="7:00"
+                            android:text="07:00"
                             android:textStyle="bold"
                             android:textSize="38sp"
                             android:layout_width="match_parent"

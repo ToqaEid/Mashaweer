@@ -500,16 +500,24 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         tv_tripDate.setText( mDay + ", " + TripServices.getMonthName(mMonth) +" "+ mYear );
 
+        String minutes = null, hours = null;
+        
         if ( mHour >= 12 )
         {
-            tv_tripTime_1.setText( (mHour-12) + ":" + mMinute);
+            mHour = mHour-12;
             tv_tripTime_2.setText("PM");
 
         }else
         {
-            tv_tripTime_1.setText( mHour + ":" + mMinute);
             tv_tripTime_2.setText("AM");
         }
+        if(mHour< 10){
+            hours = "0" + mHour;
+        }
+        if(mMinute < 10){
+            minutes ="0"+ mMinute;
+        }
+        tv_tripTime_1.setText(hours+":"+minutes);
     }
 
     /*============================== Location ======================================*/
