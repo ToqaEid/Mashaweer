@@ -32,6 +32,17 @@
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
+
+            <ImageView
+                android:id="@+id/tripDetails_roundImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.35"
+                android:layout_gravity="bottom"
+                android:src="@drawable/round"/>
+
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

@@ -302,6 +302,16 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
     }
 
+
+    /////////// get PastTripsArrayList to History
+
+    public ArrayList<Trip> getPastTripsArrayList (){
+
+        return pastTrips;
+    }
+
+
+
     ////////////// load image from internal storage
     private Bitmap loadImageFromStorage(String path, String placeId)
     {

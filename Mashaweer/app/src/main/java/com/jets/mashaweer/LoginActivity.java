@@ -262,6 +262,9 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                             Log.i("MyTag","Login Success");
 
+                            SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());
+
+
                             // TODO: Get user image from google place api and save it in internal storage
 
                             // reading and updating data from database
@@ -361,6 +364,7 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
+                                    Log.i("MyTag","OnCanceled ");
                                     progressDialog.dismiss();
                                 }
                             });
