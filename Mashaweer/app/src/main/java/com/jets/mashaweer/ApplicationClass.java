@@ -14,5 +14,6 @@ public class ApplicationClass extends Application {
         super.onCreate();
     /* Enable disk persistence  */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
     }
 }

@@ -22,4 +22,9 @@ public class Alarm extends BroadcastReceiver {
         editIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         context.getApplicationContext().startActivity(editIntent);
     }
+
+    public static void deleteAlarm(){
+
+
+    }
 }
