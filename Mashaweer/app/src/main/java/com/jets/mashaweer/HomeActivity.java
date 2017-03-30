@@ -109,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     public void onResume() {
         super.onResume();
 
-        Log.i("onResume", "here");
+        Log.i("trip", "onResume here");
 
         final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -125,7 +125,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("onResume", "onDataChange");
+                Log.i("trip", "onResume onDataChange");
 
                 upcomingTrips.clear();
                 roundTrips.clear();
