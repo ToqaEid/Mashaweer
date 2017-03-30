@@ -434,4 +434,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         Toast.makeText(HomeActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
+
+
+    public ArrayList<Trip> getPastTrips(){
+        return pastTrips;
+    }
 }

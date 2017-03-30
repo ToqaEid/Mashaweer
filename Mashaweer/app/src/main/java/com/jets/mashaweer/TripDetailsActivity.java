@@ -251,8 +251,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userId + "/trips");
 
-        Log.i("trip ", "destroy: "+ trip.toString());
-
         if (trip != null) {
             Log.i("trip ", "destroy: saved");
             db.child(trip.getTripId()).setValue(trip);

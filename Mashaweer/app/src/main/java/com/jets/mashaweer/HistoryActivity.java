@@ -1,5 +1,6 @@
 package com.jets.mashaweer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -65,8 +66,8 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
         requestQueue = singleton.getRequestQueue();
         rootParser = new RootParser();
 
-
-        trips = PastTripsFragment.pastTrips;
+        Intent intent = getIntent();
+        trips = (ArrayList<Trip>) intent.getSerializableExtra("pastTrips");
 
 //        Trip trip1 = new Trip();
 //        trip1.setTripStartLongLat("30.026509,31.046681");
