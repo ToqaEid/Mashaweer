@@ -71,12 +71,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
     public void cancelTrip(Trip trip){
         Log.i("TAG", "cancel Trip");
+        //delete form db
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         db = database.getReference("users/" + userID + "/trips");
-
         trip.setTripStatus(DBConstants.STATUS_CANCELLED);
-
         db.child(trip.getTripId()).setValue(trip);
+
+        deleteAlarm(getApplicationContext(), trip);
     }
 
     public void startTrip(Trip trip){

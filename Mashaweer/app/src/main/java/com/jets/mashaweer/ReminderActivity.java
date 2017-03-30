@@ -118,7 +118,8 @@ public class ReminderActivity extends Activity {
 //                finish(FINISH_TASK_WITH_ROOT_ACTIVITY);
 //                }
 //                android:autoRemoveFromRecents="true"
-
+                TripServices tripServices = new TripServices();
+                tripServices.cancelTrip(trip);
                 finish();
             }
         });
