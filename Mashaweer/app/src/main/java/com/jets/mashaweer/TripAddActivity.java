@@ -626,8 +626,8 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
                                 }
                                 noteInput.setText("");
                                 //hide keyboard
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
+//                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.hideSoftInputFromWindow(noteInput.getWindowToken(), 0);
                                 return true;
                             default:
                                 break;

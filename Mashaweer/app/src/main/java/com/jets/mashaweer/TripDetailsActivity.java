@@ -42,18 +42,11 @@ import android.widget.Toast;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.Places;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
-import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
 import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
-import com.jets.classes.Alarm;
 import com.jets.classes.ListFormat;
-import com.jets.classes.Note;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
 import com.jets.constants.Alert;
@@ -79,6 +72,8 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private ImageView imageViewTrip;
     Toolbar toolbar;
     private FloatingActionButton fab, fab_play;
+    private CollapsingToolbarLayout toolbarLayout;
+    private ImageView roundImage;
 
     //Location References
     private LocationManager locationManager;
@@ -94,36 +89,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     private ArrayList<String> checkedNotes;
     private DatabaseReference db;
     private String userID;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        if (trip != null) {
-            CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-            ImageView roundImage = (ImageView) findViewById(R.id.tripDetails_roundImage);
-            toolbarLayout.setTitle(trip.getTripTitle());
-
-            int tripType = trip.getTripType();
-            switch(tripType){
-                case DBConstants.TYPE_ONE_WAY:
-                    roundImage.setVisibility(View.GONE);
-                    break;
-                case DBConstants.TYPE_ROUND_TRIP:
-                    roundImage.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,11 +108,10 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         db = database.getReference("users/" + userID + "/trips");
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         toolbarLayout.setTitle(trip.getTripTitle());
+        roundImage = (ImageView) findViewById(R.id.tripDetails_roundImage);
 
         Log.i("3lama", toolbarLayout.getTitle().toString());
 
@@ -155,7 +119,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         int tripType = trip.getTripType();
         switch(tripType){
             case DBConstants.TYPE_ONE_WAY:
-                roundImage.setVisibility(View.GONE);
+                roundImage.setVisibility(View.INVISIBLE);
                 break;
             case DBConstants.TYPE_ROUND_TRIP:
                 roundImage.setVisibility(View.VISIBLE);
@@ -165,6 +129,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         }
 
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.setTitle(trip.getTripTitle());
         setSupportActionBar(toolbar);
 
@@ -232,11 +197,11 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         if (trip.getTripStatus() == DBConstants.STATUS_DONE){
             tripStatus = "Done";
             fab.setVisibility(View.INVISIBLE);
-            fab_play.setVisibility(View.GONE);
+            fab_play.setVisibility(View.INVISIBLE);
         }else if(trip.getTripStatus() == DBConstants.STATUS_CANCELLED){
             tripStatus = "Canceled";
             fab.setVisibility(View.INVISIBLE);
-            fab_play.setVisibility(View.GONE);
+            fab_play.setVisibility(View.INVISIBLE);
 
         }else if(trip.getTripStatus() == DBConstants.STATUS_PENDING){
             tripStatus = "Pending";
@@ -348,7 +313,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
                 //TODO: change the title of the toolbar
 
-                toolbar.setTitle(newTrip.getTripTitle());
+                toolbarLayout.setTitle(newTrip.getTripTitle());
 
                 Log.i("3lama", "new title      " + newTrip.getTripTitle());
 
@@ -361,6 +326,16 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                     tripStatus = "Upcomming";
                 }
 
+                switch(newTrip.getTripType()){
+                    case DBConstants.TYPE_ONE_WAY:
+                        roundImage.setVisibility(View.INVISIBLE);
+                        break;
+                    case DBConstants.TYPE_ROUND_TRIP:
+                        roundImage.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        break;
+                }
                 tv_tripStatus.setText(tripStatus);
 
                 tv_tripFrom.setText(newTrip.getTripStartLocation());
@@ -377,8 +352,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
                 if (img != null)
                     imageViewTrip.setImageBitmap( img );
-                //TODO: change the notes view
-
             }
         }
     }
@@ -530,20 +503,21 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         String minutes = null, hours = null;
         
-        if ( mHour >= 12 )
-        {
+        if ( mHour >= 12 ) {
             mHour = mHour-12;
             tv_tripTime_2.setText("PM");
 
-        }else
-        {
+        }else {
             tv_tripTime_2.setText("AM");
         }
+
         if(mHour< 10){
             hours = "0" + mHour;
         }
         if(mMinute < 10){
             minutes ="0"+ mMinute;
+        }else{
+            minutes = String.valueOf(mMinute);
         }
         tv_tripTime_1.setText(hours+":"+minutes);
     }

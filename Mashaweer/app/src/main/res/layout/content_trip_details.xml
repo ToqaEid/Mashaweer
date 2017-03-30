@@ -14,19 +14,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1">
-        <TextView
-            android:id="@+id/tripDetails_tv_status"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/details_status_padding_left"
-            android:paddingTop="@dimen/details_status_padding_top"
-            android:paddingBottom="@dimen/details_status_padding_bottom"
-            android:textSize="16sp"
-            android:text="UpComming"
-            android:textColor="@color/card_section_title_color"
+            android:weightSum="2"
+            android:orientation="horizontal"
             android:backgroundTint="@color/card_activated"
-            android:background="@color/card_activated"
-            android:layout_weight="0.17" />
+            android:background="@color/card_activated">
+            <ImageView
+                android:id="@+id/tripDetails_roundImage"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.2"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="left|center_vertical"
+                android:src="@drawable/round"/>
+            <TextView
+                android:id="@+id/tripDetails_tv_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/details_status_padding_top"
+                android:paddingBottom="@dimen/details_status_padding_bottom"
+                android:textSize="16sp"
+                android:text="UpComming"
+                android:textColor="@color/card_section_title_color"
+                android:layout_weight="0.6" />
+
+
+        </LinearLayout>
+
 
         <android.support.percent.PercentRelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
