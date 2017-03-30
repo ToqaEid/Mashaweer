@@ -71,6 +71,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        Log.i("Test","onCreate_ HomeActivity");
+
         setTitle("Mashaweer");
 
         setContentView(R.layout.activity_main_home);
@@ -86,6 +89,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     public void onResume() {
         super.onResume();
+
+
+        Log.i("Test","onResume_ HomeActivity");
 
         Log.i("trip", "onResume here");
 
@@ -229,18 +235,18 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        Log.i("Test","onTabSelected HomeActivity");
         viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        Log.i("Test","onTabUnselected HomeActivity");
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        Log.i("Test","onTabReselected HomeActivity");
     }
 
     @Override

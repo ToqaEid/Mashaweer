@@ -55,6 +55,9 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
 
     public UpcomingCustomAdapter(Context context, ArrayList<Trip> trips) {
         super(context, R.layout.list_item_upcoming_library, R.id.upcoming_tripName, trips);
+
+        Log.i("Test","constructor UpcomingCustomAdapter");
+
         this.context = context;
 
         this.trips = trips;
@@ -63,6 +66,9 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
     @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
+
+        Log.i("Test","getView UpcomingCustomAdapter");
 
         View rowView = convertView;
         final UpcomingListViewHolder holder;
@@ -104,6 +110,12 @@ public class UpcomingCustomAdapter extends ArrayAdapter<Trip> implements  Google
         if(mHour > 12){
             mHour = mHour - 12;
             holder.getTripTime_tv().setText( mHour + ":"+ mMinute + " P.M."  );
+
+            if(mMinute <10)
+                holder.getTripTime_tv().setText( mHour + ":0"+ mMinute + " P.M."  );
+            else
+                holder.getTripTime_tv().setText( mHour + ":"+ mMinute + " P.M."  );
+
         }else{
 
             if (mHour < 10)
