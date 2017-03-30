@@ -1,4 +1,4 @@
-package com.jets.classes;
+package com.jets.adapters.upcoming;
 
 import android.view.View;
 import android.widget.ImageView;

@@ -1,16 +1,11 @@
 package com.jets.mashaweer;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,14 +18,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.jets.classes.RootParser;
 import com.jets.classes.Trip;
 import com.jets.classes.VolleySingleton;
 import com.jets.fragments.NavBarFragment;
-import com.jets.fragments.PastTripsFragment;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +34,7 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
 
     MapView mapView;
     SupportMapFragment mapFragment;
-    VolleySingleton_1 singleton;
+    VolleySingleton singleton;
     RequestQueue requestQueue;
     RootParser rootParser;
     ArrayList<Trip> trips;
@@ -62,47 +55,20 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
 
         mapFragment.getMapAsync(this);
 
-        singleton = VolleySingleton_1.getInstance(getApplicationContext());
+        singleton = VolleySingleton.getInstance(getApplicationContext());
         requestQueue = singleton.getRequestQueue();
         rootParser = new RootParser();
 
         Intent intent = getIntent();
         trips = (ArrayList<Trip>) intent.getSerializableExtra("pastTrips");
 
-//        Trip trip1 = new Trip();
-//        trip1.setTripStartLongLat("30.026509,31.046681");
-//        trip1.setTripEndLongLat("30.027787,31.322885");
-//
-//
-//
-//        Trip trip2 = new Trip();
-//        trip2.setTripStartLongLat("31.202765,29.878381");
-//        trip2.setTripEndLongLat("31.191830,29.949958");
-//
-//        Trip trip3 = new Trip();
-//        trip3.setTripStartLongLat("30.202765,28.878381");
-//        trip3.setTripEndLongLat("27.191830,26.949958");
-//
-//
-//
-//        trips.add(trip1);
-//        trips.add(trip2);
-//        trips.add(trip3);
-//        mapFragment.onCreate(savedInstanceState);
-
         mapFragment.getMapAsync(this);
-
         mapFragment.onResume();
     }
-
-
 
     ///////////// ramadaaaan
     ////// 1.   AIzaSyDzKDkgQVKv6HrxWxk5Prg2fsfN11igaDQ  >>> my Account
     ///// 2.    AIzaSyCTJY-IKKDKRNA_YSOemPS5EqkbTX7NM_g  >>>> mashaweer account
-
-
-
 
     @Override
     protected void onResume() {
@@ -113,12 +79,7 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
             String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + trip.getTripStartLongLat() + "&destination=" + trip.getTripEndLongLat() + "&key=AIzaSyCTJY-IKKDKRNA_YSOemPS5EqkbTX7NM_g";
             draw(url);
         }
-
-
     }
-
-
-
 
     public void draw(String url) {
         final ArrayList<LatLng> points= new ArrayList<>();
@@ -136,12 +97,10 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
 
                     if ( status.equalsIgnoreCase("ZERO_RESULTS") )
                     {
-                        Toast.makeText(getApplicationContext(), "OOPS! ... Network Error Occurred!", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "OOPS! ... Network Error Occurred!", Toast.LENGTH_SHORT).show();
 
                         return;
                     }
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -173,15 +132,10 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
                     }
                 }
                 mMap.addPolyline(new PolylineOptions().addAll(points).width(8).color(new Random().nextInt()+100));
-                Log.i("history", String.valueOf(latitudeSource == null));
-                Log.i("history", String.valueOf(longitudeSource == null));
-                Log.i("history", String.valueOf(latitudeDest == null));
-                Log.i("history", String.valueOf(longitudeDest == null));
-
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeSource, longitudeSource)));
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeDest, longitudeDest)));
 
-                Toast.makeText(getApplicationContext(), "Preparing Your Map History", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Preparing Your Map History", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -192,12 +146,6 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
         });
         singleton.addToRequestQueue(jsonObjectRequest);
     }
-
-
-
-
-
-
 
 
     @Override

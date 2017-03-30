@@ -1,13 +1,9 @@
 package com.jets.classes;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.jets.adapters.UpcomingCustomAdapter;
 
 /**
  * Created by toqae on 3/22/2017.
@@ -31,7 +27,6 @@ public class ListFormat {
 
         ViewGroup.LayoutParams params = mListView.getLayoutParams();
         params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
-        //params.height = 100 + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
         mListView.setLayoutParams(params);
         mListView.requestLayout();
     }

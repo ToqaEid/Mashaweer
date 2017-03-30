@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,13 +16,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -44,10 +38,6 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.adapters.notes.AddEditNoteAdapter.AddEditNoteAdapter;
-import com.jets.adapters.notes.checkednotes.CheckedNoteAdatper;
-import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
-import com.jets.adapters.notes.uncheckednotes.NotesAdapter;
-import com.jets.adapters.notes.uncheckednotes.NotesViewHolder;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
@@ -576,7 +566,7 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(TripAddActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
+//        Toast.makeText(TripAddActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
 

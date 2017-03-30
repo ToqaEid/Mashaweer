@@ -1,6 +1,5 @@
 package com.jets.classes;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,15 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jets.constants.DBConstants;
-import com.jets.classes.Trip;
 import com.jets.constants.SharedPreferenceInfo;
-import com.jets.mashaweer.TripDetailsActivity;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -109,12 +105,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         }
 
         trip.setTripDateTime(System.currentTimeMillis());
+        //add to db
         db.child(trip.getTripId()).setValue(trip);
+        //open map
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+ endLongLat +"&mode=d");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mapIntent.setPackage("com.google.android.apps.maps");
         getApplicationContext().startActivity(mapIntent);
+        //delete alarm after starting
         deleteAlarm(getApplicationContext(), trip);
     }
 

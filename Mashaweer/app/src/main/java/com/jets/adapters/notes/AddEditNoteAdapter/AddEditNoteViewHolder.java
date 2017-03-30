@@ -1,17 +1,12 @@
 package com.jets.adapters.notes.AddEditNoteAdapter;
 
-import android.content.Context;
 import android.graphics.Paint;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.jets.mashaweer.R;
-
-import java.util.ArrayList;
 
 /**
  * Created by toqae on 3/27/2017.
@@ -28,13 +23,10 @@ public class AddEditNoteViewHolder {
         {
             convertedView = view ;
         }
-
         public CheckBox getNoteCheck() {
-
             if(noteCheck == null) {
                 noteCheck = (CheckBox) convertedView.findViewById(R.id.checkBox2);
             }
-
             return noteCheck;
         }
 

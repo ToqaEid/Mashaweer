@@ -1,56 +1,39 @@
 package com.jets.fragments;
 
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.jets.adapters.DB_Adapter;
 import com.jets.adapters.round.RoundListAdapter;
-import com.jets.classes.TripServices;
-import com.jets.constants.Alert;
-import com.jets.constants.DBConstants;
+import com.jets.adapters.upcoming.UpcomingCustomAdapter;
 import com.jets.classes.ListFormat;
-import com.jets.mashaweer.DB_Adapter;
-import com.jets.mashaweer.LoginActivity;
-import com.jets.mashaweer.R;
 import com.jets.classes.Trip;
+import com.jets.classes.TripServices;
+import com.jets.constants.DBConstants;
 import com.jets.constants.SharedPreferenceInfo;
-import com.jets.adapters.UpcomingCustomAdapter;
 import com.jets.interfaces.Communicator;
+import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
-import com.jets.mashaweer.TripDetailsActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
@@ -192,7 +175,6 @@ public class UpcomingTripsFragment extends Fragment {
 
             case 2://Done
                 Trip markedDone = upcomingTrips.get(selectedtrip);
-                //TODO: add the trip to the history arraylist (Can't be found)
                 upcomingTrips.remove(selectedtrip);
 
 //                if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
@@ -205,28 +187,11 @@ public class UpcomingTripsFragment extends Fragment {
                 adapter.notifyDataSetChanged();
 
                 confimDoneDialog(markedDone, upcomingTrips);
-//                upcomingTrips.remove(selectedtrip);
-//                adapter.notifyDataSetChanged();
-
-//                markedDone.setTripStatus(DBConstants.STATUS_DONE);
-//                markedDone.setTripDateTime(System.currentTimeMillis());
-//                db.child(markedDone.getTripId()).setValue(markedDone);
-//                db.child(markedDone.getTripId()).getKey();
-
-//                db.child(markedDone.getTripId()).setValue("Mazaryta");
-//                Toast.makeText(getActivity(), "key: " +  db.child(markedDone.getTripId()).getKey(), Toast.LENGTH_SHORT).show();
-//                Toast.makeText(getActivity(), "Trip Marked Done successfully", Toast.LENGTH_SHORT).show();
                 break;
 
             case 3://Delete
                 Trip toDelete = upcomingTrips.get(selectedtrip);
                 confimDeleteDialog(toDelete, upcomingTrips);
-//                Alert.showConfimDeleteDialog(getActivity(), toDelete);
-//                db.child(toDelete.getTripId()).removeValue();
-//
-//                upcomingTrips.remove(selectedtrip);
-//                adapter.notifyDataSetChanged();
-//                Toast.makeText(getActivity(), "Trip Deleted Successfully", Toast.LENGTH_SHORT).show();
                 break;
 
         }

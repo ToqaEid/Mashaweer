@@ -1,14 +1,10 @@
-package com.jets.adapters;
+package com.jets.adapters.upcoming;
 
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +14,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.Places;
-import com.jets.classes.ListFormat;
-import com.jets.constants.DBConstants;
-import com.jets.fragments.UpcomingTripsFragment;
-import com.jets.mashaweer.R;
-import com.jets.classes.UpcomingListViewHolder;
 import com.jets.classes.Trip;
+import com.jets.constants.DBConstants;
+import com.jets.mashaweer.R;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.jets.classes.Trip;
 
-import static com.jets.mashaweer.DB_Adapter.DB_Helper.COL_1_10;
+import static com.jets.adapters.DB_Adapter.DB_Helper.COL_1_10;
 
 /**
  * Created by mohamed on 16/03/2017.

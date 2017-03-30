@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.jets.adapters.UpcomingCustomAdapter;
+
+import com.jets.adapters.DB_Adapter;
+import com.jets.adapters.upcoming.UpcomingCustomAdapter;
 import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
 import com.jets.interfaces.Communicator;
-import com.jets.mashaweer.DB_Adapter;
 import com.jets.mashaweer.R;
+
 import java.util.ArrayList;
 
 
@@ -88,6 +90,17 @@ public class PastTripsFragment extends Fragment {
     }
 
 
+
+    public void refreshData(ArrayList<Trip> tripsData){
+        //if (!isEmpty) {
+            pastTrips.clear();
+            pastTrips.addAll(tripsData);
+
+            adapter.notifyDataSetChanged();
+            ListFormat.setListViewHeightBasedOnChildren(past_listView);
+        //}
+
+    }
 //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 //        super.onCreateContextMenu(menu, v, menuInfo);
@@ -123,16 +136,5 @@ public class PastTripsFragment extends Fragment {
 //
 //        return super.onContextItemSelected(item);
 //    }
-
-    public void refreshData(ArrayList<Trip> tripsData){
-        //if (!isEmpty) {
-            pastTrips.clear();
-            pastTrips.addAll(tripsData);
-
-            adapter.notifyDataSetChanged();
-            ListFormat.setListViewHeightBasedOnChildren(past_listView);
-        //}
-
-    }
 
 }

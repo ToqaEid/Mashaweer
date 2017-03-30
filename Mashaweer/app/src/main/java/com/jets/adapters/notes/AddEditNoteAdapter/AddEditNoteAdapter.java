@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import com.jets.adapters.notes.checkednotes.CheckedNoteViewHolder;
 import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
 
@@ -20,16 +19,13 @@ import java.util.ArrayList;
  */
 
 public class AddEditNoteAdapter extends ArrayAdapter<String> {
-
     private ArrayList<String> notes;
     private String activityFlag;
-
     private Context context;
 
     public AddEditNoteAdapter(Context context, ArrayList<String> notes) {
         super(context, R.layout.list_item_notes_checked, R.id.note_text, notes);
         this.context = context;
-
         this.notes = notes;
     }
 
@@ -40,32 +36,20 @@ public class AddEditNoteAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         View rowView = convertView;
         final AddEditNoteViewHolder holder;
 
-
-        if (rowView == null)
-        {
+        if (rowView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             rowView = layoutInflater.inflate(R.layout.list_item_notes_checked, parent, false);
-
             holder = new AddEditNoteViewHolder(rowView);
-
             rowView.setTag(holder);
-
         }
         else{
-
             holder = (AddEditNoteViewHolder) rowView.getTag();
         }
-
-
         holder.setActivityFlag(activityFlag);
-
         holder.getNoteItem().setText(   notes.get(position)   );
-
         holder.getNoteItem().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus){
@@ -92,10 +76,8 @@ public class AddEditNoteAdapter extends ArrayAdapter<String> {
         }
         return  rowView;
     }
-
     @Override
     public int getCount() {
-        Log.i("Tag size", String.valueOf(notes.size()));
         return notes.size();
     }
 }

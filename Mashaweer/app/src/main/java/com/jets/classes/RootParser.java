@@ -1,4 +1,4 @@
-package com.jets.mashaweer;
+package com.jets.classes;
 
 import com.google.android.gms.maps.model.LatLng;
 

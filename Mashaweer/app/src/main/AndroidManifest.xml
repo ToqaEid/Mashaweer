@@ -78,13 +78,6 @@
         <!-- End of TripAddActivity -->
 
 
-        <!-- *** TripEditActivity *** -->
-        <activity
-            android:name=".TripEditActivity"
-            android:screenOrientation="portrait" />
-        <!-- End of TripEditActivity -->
-
-
         <!-- *** TripDetailsActivity *** -->
         <activity
             android:name=".TripDetailsActivity"

@@ -1,14 +1,11 @@
 package com.jets.mashaweer;
 
-import android.*;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,16 +15,12 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
-import android.os.Vibrator;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
-import android.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,11 +31,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
-
-import java.io.Serializable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -146,8 +138,8 @@ public class ReminderActivity extends Activity {
                     // Permission Granted
 
                     getUsersLocation();
-
                     new TripServices().startTrip(trip);
+                    finish();
 
                 } else {
                     // Permission Denied
@@ -242,7 +234,7 @@ public class ReminderActivity extends Activity {
         notifyLater(tripIdInt);
 
     }
-//
+
 //    @Override
 //    protected void onPause() {
 //        super.onPause();

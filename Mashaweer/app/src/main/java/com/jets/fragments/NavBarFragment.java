@@ -2,19 +2,15 @@ package com.jets.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,16 +23,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.jets.classes.ListFormat;
 import com.jets.classes.Trip;
 import com.jets.classes.TripServices;
+import com.jets.constants.Alert;
 import com.jets.constants.DBConstants;
+import com.jets.constants.SharedPreferenceInfo;
 import com.jets.mashaweer.HistoryActivity;
 import com.jets.mashaweer.HomeActivity;
 import com.jets.mashaweer.LoginActivity;
 import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
-import com.jets.constants.SharedPreferenceInfo;
 
 import java.util.ArrayList;
 
@@ -112,14 +108,13 @@ public class NavBarFragment extends Fragment{
 
                 if (isNetworkAvailable( getContext() ,networks) && !(getActivity() instanceof TripAddActivity))
                 {
-                    Toast.makeText(getContext(), "Good Internet Connection", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Good Internet Connection", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), TripAddActivity.class));
 //                    getActivity().finish();
                     getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
                 else{
-
-                    Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    Alert.showErrorMsg("Connection Error", "Please make sure you are connected to the internet to add a new trip", getContext());
                 }
 //                if(!(getActivity() instanceof TripAddActivity)) {
 //                    startActivity(new Intent(getActivity(), TripAddActivity.class));

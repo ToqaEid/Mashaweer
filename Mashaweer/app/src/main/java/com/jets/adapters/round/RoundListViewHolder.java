@@ -1,7 +1,6 @@
 package com.jets.adapters.round;
 
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
