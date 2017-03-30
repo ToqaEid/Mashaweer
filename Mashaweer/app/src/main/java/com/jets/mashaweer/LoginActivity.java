@@ -294,10 +294,10 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                             db.addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                {
-                                    Log.i("MyTag","Login Success -----");
-
-                                }
+//                                {
+//                                    Log.i("MyTag","Login Success -----");
+//
+//                                }
 
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -364,13 +364,12 @@ public class LoginActivity extends AppCompatActivity implements  GoogleApiClient
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    Log.i("MyTag","OnCanceled ");
                                     progressDialog.dismiss();
                                 }
                             });
 
 
-                                    progressDialog.dismiss();
+                            progressDialog.dismiss();
                             SharedPreferenceInfo.addUserDataToSharedPreference(LoginActivity.this, auth.getCurrentUser().getUid());
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);

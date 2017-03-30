@@ -67,7 +67,7 @@ public class NavBarFragment extends Fragment{
             @Override
             public void onClick(View v) {
 
-                if(!(getActivity() instanceof HomeActivity)) {
+                if(!(getActivity() instanceof HomeActivity) ) {
 
                     startActivity(new Intent(getActivity(), HomeActivity.class));
                     getActivity().finish();
@@ -82,21 +82,21 @@ public class NavBarFragment extends Fragment{
             public void onClick(View v) {
 
                 if(!(getActivity() instanceof HistoryActivity)) {
+                    if(getActivity() instanceof  HomeActivity){
+                        ArrayList<Trip> pastTrips = ((HomeActivity) getActivity()).getPastTrips();
+                        if ( pastTrips.size() == 0 ) {
+                            Toast.makeText(getContext() , "You History is Empty!", Toast.LENGTH_SHORT).show();
 
+                        }else{
+                            Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                            intent.putExtra("pastTrips", pastTrips);
+                            startActivity(intent);
+                            getActivity().finish();
+                            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 
-                    ArrayList<Trip> pastTrips = PastTripsFragment.pastTrips;
-
-                    if ( pastTrips.size() == 0 ) {
-
-                        Toast.makeText(getContext() , "You History is Empty!", Toast.LENGTH_SHORT).show();
-
-                    }else{
-
-                        startActivity(new Intent(getActivity(), HistoryActivity.class));
-                        getActivity().finish();
-                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-
+                        }
                     }
+
 
 
                 }
