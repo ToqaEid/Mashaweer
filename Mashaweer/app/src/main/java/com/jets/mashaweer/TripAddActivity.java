@@ -178,7 +178,7 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
         int mYear = calender.get(Calendar.YEAR);
         int mMonth = calender.get(Calendar.MONTH);
         int mDay = calender.get(Calendar.DAY_OF_MONTH);
-        int mHour = calender.get(Calendar.HOUR);
+        int mHour = calender.get(Calendar.HOUR_OF_DAY);
         int mMinute = calender.get(Calendar.MINUTE);
 
         //Setting date
