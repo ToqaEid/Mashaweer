@@ -112,7 +112,7 @@ public class PastTripsFragment extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        menu.add(0, 1, 0, "Delete");
+        menu.add(0, 0, 0, "Delete");
 
     }
 

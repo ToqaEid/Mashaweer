@@ -106,12 +106,12 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
+        Log.i("onResume", "here");
 
-        final ProgressDialog progressDialog = new ProgressDialog(this,
-                R.style.AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.show();
@@ -125,11 +125,11 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("onResume", "onDataChange");
 
                 upcomingTrips.clear();
                 roundTrips.clear();
                 pastTrips.clear();
-                //TODO: clear all the other lists as well
 
                 Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
@@ -153,6 +153,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                         trip.setTripUncheckedNotes(new ArrayList<String>());
                     }
 
+                    Log.i("onResume", trip.toString());
 
                     switch (trip.getTripStatus()) {
 
@@ -220,6 +221,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     public void sendMsg(Trip trip) {
 
         Toast.makeText(this, "Going To TripDetailsActivity", Toast.LENGTH_SHORT).show();
+        Log.i("trip", "sendMsg: "+ trip.toString());
 
         Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
         intent.putExtra("selectedTrip", trip);

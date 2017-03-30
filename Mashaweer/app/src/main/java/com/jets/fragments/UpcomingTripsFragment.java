@@ -122,6 +122,7 @@ public class UpcomingTripsFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     Trip selectedTrip = upcomingTrips.get(position);
+                    Log.i("trip", "setOnItemClickListener: "+ upcomingTrips.get(position).toString());
 
                     communicator.sendMsg(selectedTrip);
                 }

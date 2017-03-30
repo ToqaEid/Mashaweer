@@ -100,12 +100,16 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_details2);
 
-        if (savedInstanceState == null) {
+//        if (savedInstanceState == null) {
             previousIntent = getIntent();
             trip = (Trip) previousIntent.getSerializableExtra("selectedTrip");
-        } else {
-            trip = (Trip) savedInstanceState.getSerializable("trip");
-        }
+//        } else {
+//            if()
+//            trip = (Trip) savedInstanceState.getSerializable("trip");
+//        }
+
+        Log.i("trip", trip.toString());
+
         userID = SharedPreferenceInfo.getUserId(getApplicationContext());
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -233,16 +237,20 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference db = database.getReference("users/" + userId + "/trips");
 
-        if (trip != null)
+        Log.i("trip ", "destroy: "+ trip.toString());
+
+        if (trip != null) {
+            Log.i("trip ", "destroy: saved");
             db.child(trip.getTripId()).setValue(trip);
+        }
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("trip", trip);
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putSerializable("trip", trip);
+//    }
 
     /*====================== MENU ==============================*/
     @Override
@@ -424,7 +432,6 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                     uncompeletedText.setVisibility(View.VISIBLE);
                     completeView.setVisibility(View.VISIBLE);
                 }
-
             }
         });
 
@@ -437,10 +444,9 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
 
 
-
+    /*======================== Loading Image ========================================*/
     ////////////// load image from internal storage
-    private Bitmap loadImageFromStorage(String path, String placeId)
-    {
+    private Bitmap loadImageFromStorage(String path, String placeId) {
         Bitmap b = null;
 
         Log.i("MyTag","Loading image from internal storage ... ");
@@ -471,7 +477,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
     }
 
 
-
+    /*=========================== Date / Time ================================*/
 
     private void prepareDateTime(Trip trip){
         Calendar calendar = Calendar.getInstance();
@@ -498,6 +504,7 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         }
     }
 
+    /*============================== Location ======================================*/
     private void getUsersLocation(){
         //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
         ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
