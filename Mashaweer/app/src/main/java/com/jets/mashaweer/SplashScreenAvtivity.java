@@ -22,7 +22,7 @@ public class SplashScreenAvtivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
         String authorized = sharedPreferences.getString(SharedPreferenceInfo.USER_ID, null);
 
-        System.out.println(authorized);
+        //System.out.println(authorized);
 
         if (authorized == null) {
             intent = new Intent(SplashScreenAvtivity.this, LoginActivity.class);

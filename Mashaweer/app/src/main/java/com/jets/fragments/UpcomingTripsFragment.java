@@ -82,6 +82,8 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.i("Test","onCreate UpcomingTripsFragment");
     }
 
 
@@ -89,6 +91,8 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.i("Test","onCreate UpcomingTripsFragment");
 
         View rootView = null;
         if (! isEmpty)
@@ -152,6 +156,9 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
+        Log.i("Test","onActivityCreated UpcomingTripsFragment");
 
         communicator = (Communicator) getActivity();
     }
@@ -231,6 +238,8 @@ public class UpcomingTripsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        Log.i("Test","onResume UpcomingTripsFragment");
+
 
 //        if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
 //        {
@@ -299,6 +308,9 @@ public class UpcomingTripsFragment extends Fragment {
     }
 
     public void refreshData(ArrayList<Trip> upcomingTripsData, ArrayList<Trip> roundTripsData){
+
+        Log.i("Test","refreshData UpcomingTripsFragment");
+
         //if (!isEmpty) {
         upcomingTrips.clear();
         roundTrips.clear();
