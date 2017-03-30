@@ -250,6 +250,8 @@ public class TripEditActivity extends AppCompatActivity {
 
                 }
 
+                Log.i("MyTag", "EDIT trip title >>> " + tripName.getEditText().getText().toString());
+
                 trip.setTripTitle( tripName.getEditText().getText().toString() );
 
                 db.child(trip.getTripId()).setValue(trip);

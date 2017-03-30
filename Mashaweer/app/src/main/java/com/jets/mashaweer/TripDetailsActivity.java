@@ -95,6 +95,18 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
         super.onStart();
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if (trip != null) {
+            CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+
+            toolbarLayout.setTitle(trip.getTripTitle());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,8 +1,13 @@
 package com.jets.mashaweer;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -14,6 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResult;
+import com.google.android.gms.location.places.Places;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,9 +41,16 @@ import com.jets.fragments.PastTripsFragment;
 import com.jets.fragments.UpcomingTripsFragment;
 import com.jets.interfaces.Communicator;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator {
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class HomeActivity extends AppCompatActivity implements ActionBar.TabListener , Communicator , GoogleApiClient.OnConnectionFailedListener {
 
     private ViewPager viewPager;
     private TabsAdapter tabsAdapter;
@@ -46,6 +64,8 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     private ArrayList<Trip> roundTrips;
 
 
+    public static int imagesCount =0, loadedCount =0;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +153,22 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
                 Iterable<DataSnapshot> trips = dataSnapshot.child("trips").getChildren();
 
+
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SharedPreferenceInfo.PREFS_NAME, MODE_PRIVATE);
                 boolean alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
+//                int countOfTrips =0;
+//                while (trips.iterator().hasNext())
+//                { countOfTrips++; }
+
                 while (trips.iterator().hasNext()) {
 
+                    imagesCount++;
+
                     DataSnapshot returnedData = trips.iterator().next();
-                    Trip trip = returnedData.getValue(Trip.class);
+                    final Trip trip = returnedData.getValue(Trip.class);
                     trip.setTripId(returnedData.getKey());
 
                     //changing notes to empty array if null
@@ -160,6 +187,54 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                             upcomingTrips.add(trip);
                             Log.i("3lama", "Alaram Flag " + alarmflag);
                             if (alarmflag) {
+
+
+//                                //TODO Check if image exists in internal storage
+//                                // TODO if NOT, Then downLoad it
+//
+//                                Log.i("MyTag", "Getting Images internal");
+//
+//                                 Bitmap tripImage = loadImageFromStorage( getFilesDir().getAbsolutePath() , trip.getTripPlaceId());
+//
+//                                Log.i("MyTag","Back from internal storage");
+//
+//                                if (tripImage == null)
+//                                {
+//                                    new Thread() {
+//                                        public void run() {
+//
+//                                            Log.i("MyTag" , "Thread is running ....");
+//                                            Log.i("MyTag" , "Getting >> " + trip.getTripPlaceId());
+//
+//                                            Bitmap bitmap = downloadBitmap(  trip.getTripPlaceId() );
+//
+//
+//                                            if (bitmap == null){
+//
+//                                                Log.i("MyTag" ,"Image Not Found ");
+//
+//                                            }
+//                                            else {
+//
+//                                                ///////////// ---- saving photo to internal storage
+//                                                String path = saveToInternalStorage(bitmap, trip.getTripPlaceId());
+//                                                Log.i("MyTag" ,"Image is Saved in " + path);
+//
+//                                            }
+//
+//                                            loadedCount++;
+//
+////                                            if (loadedCount == imagesCount)
+////                                                progressDialog.dismiss();
+//
+//
+//                                        }
+//                                    }.start();
+//
+//                                }
+
+
+
                                 if (trip.getTripDateTime() > System.currentTimeMillis())
                                     TripServices.setAlarm(HomeActivity.this, trip);
 
@@ -186,6 +261,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                 alarmflag = sharedPreferences.getBoolean(SharedPreferenceInfo.ALARMS_SET, false);
 
                 Log.i("3lama", "changing flag to false Flag " + alarmflag );
+
+
+
                 progressDialog.dismiss();
             }
 
@@ -224,6 +302,139 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
         Intent intent = new Intent(getApplicationContext(),TripDetailsActivity.class);
         intent.putExtra("selectedTrip", trip);
         startActivity(intent);
+
+    }
+
+    ////////////// load image from internal storage
+    private Bitmap loadImageFromStorage(String path, String placeId)
+    {
+        Bitmap b = null;
+
+        Log.i("MyTag","Loading image from internal storage ... ");
+
+        try {
+
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+            // Create imageDir
+            File f=new File(directory.getAbsolutePath(), placeId + ".jpg");
+
+
+            //File f=new File(path+"/", placeId+".jpg");
+            Log.i("MyTag","Image Path .. " + directory.getAbsolutePath() + "/" +  placeId+".jpg");
+            b = BitmapFactory.decodeStream(new FileInputStream(f));
+            Log.i("MyTag","Image successfully found");
+            return  b;
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        Log.i("MyTag","Image not found");
+        return b;
+    }
+
+
+    ////////////////////// ---- download image
+    private Bitmap downloadBitmap(String url) {
+
+        Bitmap bitmap = null;
+
+        Log.i("MyTag" , "Downloading Image now ...  ");
+
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(HomeActivity.this)
+                    // .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+
+            mGoogleApiClient.connect();
+        }
+        else if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+
+        PlacePhotoMetadataResult result = Places.GeoDataApi
+                .getPlacePhotos(mGoogleApiClient, url).await();
+
+        if (result.getStatus().isSuccess()) {
+
+            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+
+            if (photoMetadataBuffer.getCount() > 0) {
+
+                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
+
+                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
+
+                bitmap = photo.getScaledPhoto(mGoogleApiClient, 300, 300).await().getBitmap();
+
+            }
+            else{
+                bitmap = null;
+            }
+
+            photoMetadataBuffer.release();
+        }
+
+        return bitmap;
+    }
+
+
+
+    ///////////// save image to internal storage
+    private String saveToInternalStorage(Bitmap bitmapImage, String targetPlaceId){
+
+        Log.i("MyTag", "Saving into internal");
+
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+
+        // Create imageDir
+        File mypath=new File(directory, targetPlaceId + ".jpg");
+
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(mypath);
+
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+            Log.i("MyTag", "Saved into internal");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+        finally {
+
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.i("MyTag", "image to be returned");
+
+        return directory.getAbsolutePath();
+    }
+
+
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+        Toast.makeText(HomeActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
 }

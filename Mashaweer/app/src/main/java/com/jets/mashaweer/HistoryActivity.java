@@ -27,6 +27,7 @@ import com.jets.classes.VolleySingleton;
 import com.jets.fragments.NavBarFragment;
 import com.jets.fragments.PastTripsFragment;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -126,22 +127,38 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
                 Log.i("MyTag"," ------------------- success"+response);
 
 
-             //   System.out.println(" ------------------- success");
-               // System.out.println(response);
-//                System.out.println(rootParser.parse(response));
+                try {
+                    String status = response.getString("status");
+
+                    Log.i("MyTag",">>> History Result Status >>> " + status);
+
+                    if ( status.equalsIgnoreCase("ZERO_RESULTS") )
+                    {
+                        Toast.makeText(getApplicationContext(), "OOPS! ... Network Error Occurred!", Toast.LENGTH_SHORT).show();
+
+                        return;
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 List<List<HashMap<String, String>>> roots = rootParser.parse(response);
-                // Traversing through all the routes
+
                 for (int i = 0; i < roots.size(); i++) {
-                    // Fetching i-th route
+
                     List<HashMap<String, String>> path = roots.get(i);
 
-                    // Fetching all the points in i-th route
                     for (int j = 0; j < path.size(); j++) {
+
                         HashMap<String, String> point = path.get(j);
 
                         double lat = Double.parseDouble(point.get("lat"));
                         double lng = Double.parseDouble(point.get("lng"));
                         LatLng position = new LatLng(lat, lng);
+
                         if (j == 0) {
                             latitudeSource = lat;
                             longitudeSource = lng;
@@ -150,23 +167,20 @@ public class HistoryActivity extends AppCompatActivity implements OnMapReadyCall
                             latitudeDest = lat;
                             longitudeDest = lng;
                         }
-                        System.out.println("Lat and lang    >" + lat + "    " + lng);
                         points.add(position);
                     }
-                    System.out.println("gwa el function     >" + points.get(2).longitude);
-
-                    System.out.println("ana hena done gedan we kolo zy el fol");
                 }
                 mMap.addPolyline(new PolylineOptions().addAll(points).width(8).color(new Random().nextInt()+100));
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeSource, longitudeSource)));
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitudeDest, longitudeDest)));
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getApplicationContext(), "Preparing Your Map History", Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("error   >" + error.getMessage());
-                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getApplicationContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
             }
         });
         singleton.addToRequestQueue(jsonObjectRequest);

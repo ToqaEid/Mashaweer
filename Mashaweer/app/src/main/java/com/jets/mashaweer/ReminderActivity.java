@@ -1,13 +1,19 @@
 package com.jets.mashaweer;
 
+import android.*;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,6 +21,9 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -53,6 +62,15 @@ public class ReminderActivity extends Activity {
 
     private Trip trip;
     private int tripIdInt;
+
+
+    //Location References
+    private LocationManager locationManager;
+    private LocationProvider locationProvider;
+    private double longitude = 0, latitude = 0;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +113,10 @@ public class ReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                new TripServices().startTrip(trip);
+
+                ActivityCompat.requestPermissions(ReminderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+               // new TripServices().startTrip(trip);
             }
         });
         laterBtn.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +145,114 @@ public class ReminderActivity extends Activity {
         });
 
     }
+
+
+
+    ///// for start button GPS permission
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+
+        switch (requestCode) {
+            case 1:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+
+                    getUsersLocation();
+
+                    new TripServices().startTrip(trip);
+
+                } else {
+                    // Permission Denied
+                    Toast.makeText(ReminderActivity.this, "Sorry, GPS is required to start your trip." , Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+    }
+
+
+    private void getUsersLocation(){
+        //////////// 1. check if GPS and [WIFI OR MobileData] are ENABLED
+        ////////////////// A. Enabled, then get his current location "XY" and Navigate to Google Maps
+
+        ///////////////// B. NOT Enabled
+        ///////////////////////// Ask for a permission to turn them ON
+
+        ///////////////////////////////// Accepted? .... then get his current location "XY" and Navigate to Google Maps
+
+        ///////////////////////////////// Not Accepted? .... Do Nothing; JUST a Toast
+
+        if (ActivityCompat.checkSelfPermission(ReminderActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(ReminderActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+
+            ActivityCompat.requestPermissions(ReminderActivity.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        }
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationProvider = locationManager.getProvider(locationManager.GPS_PROVIDER);
+
+
+        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!enabled) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
+        Log.i("MyTag","Done______________");
+
+        /////////------////////----------/////// test if all permissions are ENABLED
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+
+            {
+
+                Log.i("MyTag","Done______________I'm in");
+            }
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Log.i("MyTag","Done___>>______"+longitude+" ;; " + latitude);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+
+
+    }
+
+
+
 
     @Override
     public void onBackPressed() {

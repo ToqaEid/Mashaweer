@@ -90,6 +90,10 @@ public class UpcomingTripsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = null;
+
+        //isEmpty = upcomingTrips.size() == 0? true : false;
+
+
         if (! isEmpty)
         {
              rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
@@ -305,6 +309,14 @@ public class UpcomingTripsFragment extends Fragment {
                 Trip markedDone = upcomingTrips.get(selectedtrip);
                 //TODO: add the trip to the history arraylist (Can't be found)
                 upcomingTrips.remove(selectedtrip);
+
+//                if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
+//                {
+//                    isEmpty = true;
+//                }else{
+//                    isEmpty = false;
+//                }
+
                 adapter.notifyDataSetChanged();
 
                 markedDone.setTripStatus(DBConstants.STATUS_DONE);
@@ -333,6 +345,15 @@ public class UpcomingTripsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
+//        if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
+//        {
+//            isEmpty = true;
+//        }else{
+//            isEmpty = false;
+//        }
+
 
         adapter.notifyDataSetChanged();
         roundListAdapter.notifyDataSetChanged();
@@ -371,6 +392,14 @@ public class UpcomingTripsFragment extends Fragment {
         roundTrips.clear();
         upcomingTrips.addAll(upcomingTripsData);
         roundTrips.addAll(roundTripsData);
+
+
+//        if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
+//        {
+//            isEmpty = true;
+//        }else{
+//            isEmpty = false;
+//        }
 
         adapter.notifyDataSetChanged();
         roundListAdapter.notifyDataSetChanged();
