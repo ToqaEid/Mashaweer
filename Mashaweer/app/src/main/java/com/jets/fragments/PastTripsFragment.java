@@ -1,8 +1,10 @@
 package com.jets.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.jets.classes.Trip;
 import com.jets.interfaces.Communicator;
 import com.jets.mashaweer.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -50,6 +53,8 @@ public class PastTripsFragment extends Fragment {
             past_listView = (ListView)  rootView.findViewById(R.id.past_listView);
 
             adapter = new UpcomingCustomAdapter(getActivity(),pastTrips );
+//        }
+
 
             adapter.notifyDataSetChanged();
 
@@ -96,8 +101,14 @@ public class PastTripsFragment extends Fragment {
             pastTrips.clear();
             pastTrips.addAll(tripsData);
 
-            adapter.notifyDataSetChanged();
-            ListFormat.setListViewHeightBasedOnChildren(past_listView);
+            Log.i("Test", tripsData.toString());
+            Log.i("Test", String.valueOf(adapter== null));
+
+            if(adapter != null) {
+                adapter.notifyDataSetChanged();
+                ListFormat.setListViewHeightBasedOnChildren(past_listView);
+            }
+
         //}
 
     }

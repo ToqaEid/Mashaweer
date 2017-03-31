@@ -15,7 +15,6 @@ public class Alarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Alarm", Toast.LENGTH_SHORT).show();
         Intent editIntent = new Intent(context.getApplicationContext(), ReminderActivity.class);
         Trip trip = (Trip) intent.getSerializableExtra("Trip");
         editIntent.putExtra("Trip", trip);

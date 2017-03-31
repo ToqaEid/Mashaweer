@@ -115,6 +115,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         getApplicationContext().startActivity(mapIntent);
         //delete alarm after starting
         deleteAlarm(getApplicationContext(), trip);
+        //delete notification
+        NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(getTripUniqueId(trip.getTripId()));
+        //collapse notification drawer
     }
 
     /***

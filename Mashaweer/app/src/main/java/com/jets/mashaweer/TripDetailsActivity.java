@@ -502,12 +502,15 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
 
         if(mHour< 10){
             hours = "0" + mHour;
+        }else{
+            hours = String.valueOf(mHour);
         }
         if(mMinute < 10){
             minutes ="0"+ mMinute;
         }else{
             minutes = String.valueOf(mMinute);
         }
+
         tv_tripTime_1.setText(hours+":"+minutes);
     }
 

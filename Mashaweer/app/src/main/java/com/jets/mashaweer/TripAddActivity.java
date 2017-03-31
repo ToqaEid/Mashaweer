@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -72,6 +73,7 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
     @BindView(R.id.checked_list) ListView checkedList;
     @BindView(R.id.unchecked_list) ListView uncheckedList;
     @BindView(R.id.note_input) EditText noteInput;
+    @BindView(R.id.imageView3) ImageView addImage;
 
     //Arrays of year Months
     String[] monthsOfYear = {"JAN", "FEB", "MAR", "April", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
@@ -600,6 +602,18 @@ public class TripAddActivity extends AppCompatActivity implements  GoogleApiClie
 
         }
 
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(noteInput.getText().toString().trim().length() != 0) {
+                    uncheckedNotes.add(noteInput.getText().toString());
+                    notesAdap.notifyDataSetChanged();
+                    ListFormat.setListViewHeightBasedOnChildren(uncheckedList);
+
+                }
+                noteInput.setText("");
+            }
+        });
             //handle enter action
             noteInput.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {

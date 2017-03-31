@@ -68,6 +68,9 @@ public class NavBarFragment extends Fragment{
                     startActivity(new Intent(getActivity(), HomeActivity.class));
                     getActivity().finish();
                     getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                }else{
+                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    getActivity().finish();
                 }
 
             }
@@ -87,6 +90,7 @@ public class NavBarFragment extends Fragment{
                             Intent intent = new Intent(getActivity(), HistoryActivity.class);
                             intent.putExtra("pastTrips", pastTrips);
                             startActivity(intent);
+
                             getActivity().finish();
                             getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 

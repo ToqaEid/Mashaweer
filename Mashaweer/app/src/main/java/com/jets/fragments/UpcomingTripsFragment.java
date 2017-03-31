@@ -4,6 +4,7 @@ package com.jets.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +33,7 @@ import com.jets.interfaces.Communicator;
 import com.jets.mashaweer.R;
 import com.jets.mashaweer.TripAddActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -62,34 +64,29 @@ public class UpcomingTripsFragment extends Fragment {
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Log.i("Test","onCreate UpcomingTripsFragment");
-    }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.i("Test","onCreate UpcomingTripsFragment");
-
         View rootView = null;
+
         if (! isEmpty)
         {
-             rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
 
-            upcoming_listView = (ListView)  rootView.findViewById(R.id.upcoming_listView);
+            rootView = inflater.inflate(R.layout.fragment_upcoming, container, false);
+
+            upcoming_listView = (ListView) rootView.findViewById(R.id.upcoming_listView);
 
             round_listView = (ListView) rootView.findViewById(R.id.round_listView);
 
-            upcomingHeader = (LinearLayout) rootView.findViewById(R.id.round_title);
 
-            adapter = new UpcomingCustomAdapter(getContext(),upcomingTrips );
+            adapter = new UpcomingCustomAdapter(getContext(), upcomingTrips);
             roundListAdapter = new RoundListAdapter(getContext(), roundTrips);
+
+            Log.i("Test", "oncreate "+String.valueOf(adapter== null));
+            Log.i("Test", "oncreate "+String.valueOf(roundListAdapter== null));
+            upcomingHeader = (LinearLayout) rootView.findViewById(R.id.round_title);
 
             adapter.notifyDataSetChanged();
             roundListAdapter.notifyDataSetChanged();
@@ -275,6 +272,10 @@ public class UpcomingTripsFragment extends Fragment {
     public void refreshData(ArrayList<Trip> upcomingTripsData, ArrayList<Trip> roundTripsData){
 
         Log.i("Test","refreshData UpcomingTripsFragment");
+        Log.i("Test", upcomingTripsData.toString());
+        Log.i("Test", roundTripsData.toString());
+        Log.i("Test", String.valueOf(adapter== null));
+        Log.i("Test", String.valueOf(roundListAdapter== null));
 
         //if (!isEmpty) {
         upcomingTrips.clear();
@@ -290,20 +291,23 @@ public class UpcomingTripsFragment extends Fragment {
 //            isEmpty = false;
 //        }
 
-        adapter.notifyDataSetChanged();
-        roundListAdapter.notifyDataSetChanged();
-        ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
-        ListFormat.setListViewHeightBasedOnChildren(round_listView);
 
-        if(roundTrips.size() == 0){
-        round_listView.setVisibility(View.GONE);
-        upcomingHeader.setVisibility(View.GONE);
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+            roundListAdapter.notifyDataSetChanged();
+            ListFormat.setListViewHeightBasedOnChildren(upcoming_listView);
+            ListFormat.setListViewHeightBasedOnChildren(round_listView);
+            if(roundTrips.size() == 0){
+                round_listView.setVisibility(View.GONE);
+                upcomingHeader.setVisibility(View.GONE);
 
-        }else {
-        round_listView.setVisibility(View.VISIBLE);
-        upcomingHeader.setVisibility(View.VISIBLE);
+            }else {
+                round_listView.setVisibility(View.VISIBLE);
+                upcomingHeader.setVisibility(View.VISIBLE);
 
+            }
         }
+
         //}
 
     }

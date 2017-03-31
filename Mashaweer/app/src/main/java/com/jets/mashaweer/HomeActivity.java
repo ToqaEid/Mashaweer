@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -15,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
@@ -36,7 +36,6 @@ import com.jets.fragments.NavBarFragment;
 import com.jets.fragments.PastTripsFragment;
 import com.jets.fragments.UpcomingTripsFragment;
 import com.jets.interfaces.Communicator;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -72,6 +71,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
         setContentView(R.layout.activity_main_home);
 
+        if(savedInstanceState == null){
+
+        }
         NavBarFragment fragment = (NavBarFragment) getSupportFragmentManager().findFragmentById(R.id.navbar);
         fragment.setBtnColor("home");
 
@@ -79,6 +81,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
 
     }
+
 
     @Override
     public void onResume() {
@@ -140,53 +143,6 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                             Log.i("3lama", "Alaram Flag " + alarmflag);
                             if (alarmflag) {
 
-
-//                                //TODO Check if image exists in internal storage
-//                                // TODO if NOT, Then downLoad it
-//
-//                                Log.i("MyTag", "Getting Images internal");
-//
-//                                 Bitmap tripImage = loadImageFromStorage( getFilesDir().getAbsolutePath() , trip.getTripPlaceId());
-//
-//                                Log.i("MyTag","Back from internal storage");
-//
-//                                if (tripImage == null)
-//                                {
-//                                    new Thread() {
-//                                        public void run() {
-//
-//                                            Log.i("MyTag" , "Thread is running ....");
-//                                            Log.i("MyTag" , "Getting >> " + trip.getTripPlaceId());
-//
-//                                            Bitmap bitmap = downloadBitmap(  trip.getTripPlaceId() );
-//
-//
-//                                            if (bitmap == null){
-//
-//                                                Log.i("MyTag" ,"Image Not Found ");
-//
-//                                            }
-//                                            else {
-//
-//                                                ///////////// ---- saving photo to internal storage
-//                                                String path = saveToInternalStorage(bitmap, trip.getTripPlaceId());
-//                                                Log.i("MyTag" ,"Image is Saved in " + path);
-//
-//                                            }
-//
-//                                            loadedCount++;
-//
-////                                            if (loadedCount == imagesCount)
-////                                                progressDialog.dismiss();
-//
-//
-//                                        }
-//                                    }.start();
-//
-//                                }
-
-
-
                                 if (trip.getTripDateTime() > System.currentTimeMillis())
                                     TripServices.setAlarm(HomeActivity.this, trip);
 
@@ -206,7 +162,10 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
                 }
                 Log.i("home", "Home "+pastTrips.size());
 
+                Log.i("Test", pastTripsFragment.toString());
+                Log.i("Test", upcomingTripsFragment.toString());
                 pastTripsFragment.refreshData(pastTrips);
+
                 upcomingTripsFragment.refreshData(upcomingTrips, roundTrips);
                 editor.putBoolean(SharedPreferenceInfo.ALARMS_SET, false);
                 editor.commit();
@@ -225,7 +184,8 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
     }
 
-    //////////////////////// tabs ya basha
+
+//////////////////////// tabs ya basha
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -265,6 +225,9 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
         pastTripsFragment = tabsAdapter.getPastTripsFragment();
         upcomingTripsFragment = tabsAdapter.getUpcomingTripsFragment();
+
+        Log.i("Test", "tabs "+pastTripsFragment.toString());
+        Log.i("Test", "tabs "+upcomingTripsFragment.toString());
 
         viewPager.setAdapter(tabsAdapter);
 

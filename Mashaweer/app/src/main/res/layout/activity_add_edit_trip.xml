@@ -311,12 +311,14 @@
                 android:paddingTop="10dp"
                 android:textSize="20dp"/>
 
+            <!--Notes goes here-->
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:paddingTop="10dp">
+
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dip"
@@ -333,8 +335,6 @@
                     android:textSize="17dp"
                     android:paddingBottom="10dp"
                     android:textColor="#212121"/>
-                />
-
 
 
                 <ListView
@@ -399,7 +399,6 @@
                     android:layout_marginLeft="20dp"
                     android:id="@+id/checked_list"/>
 
-                <!--Notes goes here-->
 
 
             </LinearLayout>
