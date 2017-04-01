@@ -91,7 +91,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
             Log.i("Tag start", "here "+ endLongLat);
             trip.setTripStatus(DBConstants.STATUS_DONE);
 
-        }else{
+        }else{      //type == round
             if (trip.getTripStatus() == DBConstants.STATUS_UPCOMING){
                 //status pending trip
                 endLongLat = trip.getTripEndLongLat();
@@ -105,6 +105,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         }
 
         trip.setTripDateTime(System.currentTimeMillis());
+
         //add to db
         db.child(trip.getTripId()).setValue(trip);
         //open map

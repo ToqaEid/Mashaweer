@@ -1,6 +1,8 @@
 package com.jets.fragments;
 
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -172,7 +174,7 @@ public class UpcomingTripsFragment extends Fragment {
 
             case 2://Done
                 Trip markedDone = upcomingTrips.get(selectedtrip);
-                upcomingTrips.remove(selectedtrip);
+//                upcomingTrips.remove(selectedtrip);
 
 //                if (upcomingTrips.size() == 0 && roundTrips.size() == 0)
 //                {
@@ -181,7 +183,7 @@ public class UpcomingTripsFragment extends Fragment {
 //                    isEmpty = false;
 //                }
 
-                adapter.notifyDataSetChanged();
+//                adapter.notifyDataSetChanged();
 
                 confimDoneDialog(markedDone, upcomingTrips);
                 break;
@@ -258,6 +260,11 @@ public class UpcomingTripsFragment extends Fragment {
                 db.child(trip.getTripId()).setValue(trip);
                 trips.remove(trip);
                 adapter.notifyDataSetChanged();
+
+                //delete notification
+                NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(TripServices.getTripUniqueId(trip.getTripId()));
+
 
             }
         });

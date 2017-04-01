@@ -273,127 +273,127 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
 
 
     ////////////// load image from internal storage
-    private Bitmap loadImageFromStorage(String path, String placeId)
-    {
-        Bitmap b = null;
-
-        Log.i("MyTag","Loading image from internal storage ... ");
-
-        try {
-
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-
-            // path to /data/data/yourapp/app_data/imageDir
-            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-            // Create imageDir
-            File f=new File(directory.getAbsolutePath(), placeId + ".jpg");
-
-
-            //File f=new File(path+"/", placeId+".jpg");
-            Log.i("MyTag","Image Path .. " + directory.getAbsolutePath() + "/" +  placeId+".jpg");
-            b = BitmapFactory.decodeStream(new FileInputStream(f));
-            Log.i("MyTag","Image successfully found");
-            return  b;
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        Log.i("MyTag","Image not found");
-        return b;
-    }
-
-
-    ////////////////////// ---- download image
-    private Bitmap downloadBitmap(String url) {
-
-        Bitmap bitmap = null;
-
-        Log.i("MyTag" , "Downloading Image now ...  ");
-
-        if (mGoogleApiClient == null)
-        {
-            mGoogleApiClient = new GoogleApiClient.Builder(HomeActivity.this)
-                    // .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Places.GEO_DATA_API)
-                    .build();
-
-            mGoogleApiClient.connect();
-        }
-        else if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
-
-        PlacePhotoMetadataResult result = Places.GeoDataApi
-                .getPlacePhotos(mGoogleApiClient, url).await();
-
-        if (result.getStatus().isSuccess()) {
-
-            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
-
-            if (photoMetadataBuffer.getCount() > 0) {
-
-                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
-
-                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
-
-                bitmap = photo.getScaledPhoto(mGoogleApiClient, 300, 300).await().getBitmap();
-
-            }
-            else{
-                bitmap = null;
-            }
-
-            photoMetadataBuffer.release();
-        }
-
-        return bitmap;
-    }
-
-
-
-    ///////////// save image to internal storage
-    private String saveToInternalStorage(Bitmap bitmapImage, String targetPlaceId){
-
-        Log.i("MyTag", "Saving into internal");
-
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-        // Create imageDir
-        File mypath=new File(directory, targetPlaceId + ".jpg");
-
-        FileOutputStream fos = null;
-
-        try {
-            fos = new FileOutputStream(mypath);
-
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-            Log.i("MyTag", "Saved into internal");
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-        finally {
-
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Log.i("MyTag", "image to be returned");
-
-        return directory.getAbsolutePath();
-    }
+//    private Bitmap loadImageFromStorage(String path, String placeId)
+//    {
+//        Bitmap b = null;
+//
+//        Log.i("MyTag","Loading image from internal storage ... ");
+//
+//        try {
+//
+//            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+//
+//            // path to /data/data/yourapp/app_data/imageDir
+//            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+//
+//            // Create imageDir
+//            File f=new File(directory.getAbsolutePath(), placeId + ".jpg");
+//
+//
+//            //File f=new File(path+"/", placeId+".jpg");
+//            Log.i("MyTag","Image Path .. " + directory.getAbsolutePath() + "/" +  placeId+".jpg");
+//            b = BitmapFactory.decodeStream(new FileInputStream(f));
+//            Log.i("MyTag","Image successfully found");
+//            return  b;
+//        }
+//        catch (FileNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        Log.i("MyTag","Image not found");
+//        return b;
+//    }
+//
+//
+//    ////////////////////// ---- download image
+//    private Bitmap downloadBitmap(String url) {
+//
+//        Bitmap bitmap = null;
+//
+//        Log.i("MyTag" , "Downloading Image now ...  ");
+//
+//        if (mGoogleApiClient == null)
+//        {
+//            mGoogleApiClient = new GoogleApiClient.Builder(HomeActivity.this)
+//                    // .addConnectionCallbacks(this)
+//                    .addOnConnectionFailedListener(this)
+//                    .addApi(Places.GEO_DATA_API)
+//                    .build();
+//
+//            mGoogleApiClient.connect();
+//        }
+//        else if (!mGoogleApiClient.isConnected()) {
+//            mGoogleApiClient.connect();
+//        }
+//
+//        PlacePhotoMetadataResult result = Places.GeoDataApi
+//                .getPlacePhotos(mGoogleApiClient, url).await();
+//
+//        if (result.getStatus().isSuccess()) {
+//
+//            PlacePhotoMetadataBuffer photoMetadataBuffer = result.getPhotoMetadata();
+//
+//            if (photoMetadataBuffer.getCount() > 0) {
+//
+//                int rand = (int) (Math.floor(Math.random()) * photoMetadataBuffer.getCount());
+//
+//                PlacePhotoMetadata photo = photoMetadataBuffer.get(rand);
+//
+//                bitmap = photo.getScaledPhoto(mGoogleApiClient, 300, 300).await().getBitmap();
+//
+//            }
+//            else{
+//                bitmap = null;
+//            }
+//
+//            photoMetadataBuffer.release();
+//        }
+//
+//        return bitmap;
+//    }
+//
+//
+//
+//    ///////////// save image to internal storage
+//    private String saveToInternalStorage(Bitmap bitmapImage, String targetPlaceId){
+//
+//        Log.i("MyTag", "Saving into internal");
+//
+//        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+//
+//        // path to /data/data/yourapp/app_data/imageDir
+//        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+//
+//        // Create imageDir
+//        File mypath=new File(directory, targetPlaceId + ".jpg");
+//
+//        FileOutputStream fos = null;
+//
+//        try {
+//            fos = new FileOutputStream(mypath);
+//
+//            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//
+//            Log.i("MyTag", "Saved into internal");
+//
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//
+//        }
+//        finally {
+//
+//            try {
+//                fos.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        Log.i("MyTag", "image to be returned");
+//
+//        return directory.getAbsolutePath();
+//    }
 
 
 
@@ -401,7 +401,7 @@ public class HomeActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(HomeActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
+//        Toast.makeText(HomeActivity.this, "Connecion Lost >> " + connectionResult.getErrorMessage() , Toast.LENGTH_SHORT).show();
 
     }
 

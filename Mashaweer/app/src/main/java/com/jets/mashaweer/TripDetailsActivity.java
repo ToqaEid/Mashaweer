@@ -2,6 +2,7 @@ package com.jets.mashaweer;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -51,6 +52,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TripDetailsActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
@@ -650,6 +653,10 @@ public class TripDetailsActivity extends AppCompatActivity implements  GoogleApi
                 db.child(trip.getTripId()).setValue(trip);
 
                 TripServices.deleteAlarm(TripDetailsActivity.this, t);
+                //delete notification
+                NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(TripServices.getTripUniqueId(trip.getTripId()));
+
 
                 fab.setVisibility(View.GONE);
                 fab_play.setVisibility(View.GONE);
